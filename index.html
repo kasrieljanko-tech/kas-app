@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793242454"><script>(function(){var B="1793242454";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793242636"><script>(function(){var B="1793242636";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -611,6 +611,7 @@ html.mapon .nav{z-index:31}
 .pvtoggles{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem;color:var(--muted)}
 .pvtoggles label{display:flex;gap:6px;align-items:center}.pvtoggles input{accent-color:#ff375f;width:18px;height:18px}
 .pvin{border:0;background:none;color:var(--fg);font:inherit;font-size:1rem;line-height:1.45;resize:none;outline:none;padding:0;width:100%;min-height:1.45em;overflow:hidden}
+.pvfrom{height:auto!important}
 .pvin::placeholder{color:var(--muted)}
 .pvhearts{display:flex;gap:2px}
 .pvhearts button{border:0;background:none;font-size:1.35rem;line-height:1;padding:2px 3px;color:#ff375f;opacity:.2;cursor:pointer}
@@ -1533,7 +1534,7 @@ function openPerson(person,keepScroll){
   if(!person)return editPerson(null);
   const p=person,first=String(p.name||"").split(" ")[0],age=pAge(p);
   const photo=p.photoId?imgSrc(p.photoId):"";
-  const sub=[p.city||p.region,p.whereMet?"met on "+p.whereMet:""].filter(Boolean).join(" · ");
+  const sub=[p.from?"From "+p.from:"",p.city||p.region,p.whereMet?"met on "+p.whereMet:""].filter(Boolean).join(" · ");
   const up=upcoming(p)[0],past=pastDates(p);
   const fmtW=d=>{const w=parseLocal(d.when);return w.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+" · "+w.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})};
   let dg=String(p.contact||"").replace(/\D/g,"");if(dg.length===10)dg="1"+dg;const ig=p.instagram?igHandle(p.instagram):"";
@@ -1559,6 +1560,8 @@ function openPerson(person,keepScroll){
       <div class="pvcard"><span class="pvh">What she likes</span><div class="pvtags">${likes.map((x,i)=>`<span>${esc(x)}<button class="pvtx" data-rm="${i}" aria-label="Remove ${esc(x)}">×</button></span>`).join("")}<input id="pv-tag" class="pvtagin" placeholder="+ Add" enterkeyhint="done"></div>
         ${likes.length<6?`<div class="pvsug">${["Sushi","Cocktails","Wine","Live music","Dancing","Rooftops","Coffee","Italian","Doesn't drink","Gym"].filter(x=>!likes.some(l=>l.toLowerCase()===x.toLowerCase())).slice(0,6).map(x=>`<button data-sug="${esc(x)}">+ ${esc(x)}</button>`).join("")}</div>`:""}
         <div class="pvtoggles"><label><input type="checkbox" id="pv-kosher" ${p.keepsKosher?"checked":""}> Keeps kosher</label><label><input type="checkbox" id="pv-shabbat" ${p.shomerShabbat?"checked":""}> Shomer Shabbat</label></div></div>
+      <div class="pvcard"><span class="pvh">Where she's from</span><input class="pvin pvfrom" data-k="from" value="${esc(p.from||"")}" placeholder="e.g. Brazil, Tel Aviv, Long Island…" enterkeyhint="done">
+        ${p.from?"":`<div class="pvsug">${["Brazil","Israel","New York","Long Island","New Jersey","Russia","France"].map(x=>`<button data-from="${esc(x)}">+ ${esc(x)}</button>`).join("")}</div>`}</div>
       ${txtCard("nextStep","Next step","Text her Thursday about Friday…")}
       <div class="pvcard"><span class="pvh">Your vibe check</span>${PRATES.map(([k,l])=>`<div class="pvr"><span>${esc(l)}</span><span class="pvhearts">${[1,2,3,4,5].map(n=>`<button data-rk="${k}" data-rn="${n}" class="${n<=(rt[k]||0)?"on":""}" aria-label="${esc(l)} ${n}">♥</button>`).join("")}</span></div>`).join("")}</div>
       <div class="pvcard"><span class="pvh">Dates${past.length?` · ${past.length} so far`:""}</span>${up||past.length?[...upcoming(p).map(d=>dateRow(d,true)),...past.slice(0,5).map(d=>dateRow(d,false))].join(""):`<div class="muted">No dates yet.</div>`}<button class="pvlink" id="pv-plan2">+ Plan a date</button></div>
@@ -1576,13 +1579,15 @@ function openPerson(person,keepScroll){
   sh.querySelectorAll("[data-rk]").forEach(b=>b.onclick=async()=>{const k=b.dataset.rk,n=+b.dataset.rn;const r={...(rt)};r[k]=r[k]===n?0:n;if(await pvSave(p.id,{ratings:r}))re()});
   const tin=$("pv-tag");const addTag=async()=>{const v=tin.value.trim();if(!v)return;tin.value="";if(await pvSave(p.id,{likes:[...likes,v].join(", ")})){re();setTimeout(()=>{const t=$("pv-tag");if(t)t.focus()},30)}};
   tin.onkeydown=e=>{if(e.key==="Enter"||e.key===","){e.preventDefault();addTag()}};tin.onblur=()=>{if(tin.value.trim())addTag()};
+  sh.querySelectorAll("[data-from]").forEach(b=>b.onclick=async()=>{if(await pvSave(p.id,{from:b.dataset.from}))re()});
   sh.querySelectorAll("[data-sug]").forEach(b=>b.onclick=async()=>{if(await pvSave(p.id,{likes:[...likes,b.dataset.sug].join(", ")}))re()});
   sh.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{const l=likes.filter((_,i)=>i!==+b.dataset.rm);if(await pvSave(p.id,{likes:l.join(", ")}))re()});
   $("pv-kosher").onchange=async e=>{if(await pvSave(p.id,{keepsKosher:e.target.checked}))re()};
   $("pv-shabbat").onchange=async e=>{if(await pvSave(p.id,{shomerShabbat:e.target.checked}))re()};
   sh.querySelectorAll(".pvin").forEach(a=>{const fit=()=>{a.style.height="auto";a.style.height=a.scrollHeight+"px"};fit();a.oninput=fit;
     a.onblur=async()=>{const k=a.dataset.k,v=a.value.trim();if(v!==(p[k]||"").trim()&&await pvSave(p.id,{[k]:v})){p[k]=v;toast("Saved")}};
-    if(a.dataset.k==="nextStep")a.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();a.blur()}}});
+    if(a.dataset.k==="from")a.onblur=async()=>{const v=a.value.trim();if(v!==(p.from||"")&&await pvSave(p.id,{from:v}))re()};
+    if(a.dataset.k==="nextStep"||a.dataset.k==="from")a.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();a.blur()}}});
   const ph=$("pv-photo");if(ph)ph.onchange=async e=>{const f=e.target.files[0];if(!f)return;toast("Uploading photo…");try{const b=await shrink(f);const upd=await S.assets.upload(b,{type:b.type});const old=p.photoId;if(await pvSave(p.id,{photoId:upd.id})){toast("Photo saved");if(old&&S.assets.delete)S.assets.delete(old).catch(()=>{});re()}}catch(err){toast("Couldn't upload that photo. Try another.")}};
   $("bg").onclick=e=>{if(e.target.id==="bg")closeSheet()};
 }
@@ -1605,6 +1610,7 @@ function editPerson(person){
       <div class="field"><label for="p-contact">Number</label><input id="p-contact" value="${esc(p.contact)}" placeholder="Optional" inputmode="tel"></div>
       <div class="field"><label for="p-ig">Instagram</label><input id="p-ig" value="${esc(p.instagram?"@"+igHandle(p.instagram):"")}" placeholder="@handle" autocapitalize="off"></div>
       <div class="field"><label for="p-region">Lives in</label><select id="p-region"><option value="">Not set</option>${REGIONS.map(r=>`<option value="${r[0]}" ${p.region===r[0]?"selected":""}>${r[0]}</option>`).join("")}</select></div>
+      <div class="field"><label for="p-from">Where she's from</label><input id="p-from" value="${esc(p.from||"")}" placeholder="e.g. Brazil, Tel Aviv"></div>
       <div class="field"><label for="p-city">City / neighborhood</label><input id="p-city" value="${esc(p.city||"")}" placeholder="e.g. Upper West Side, Tel Aviv"></div>
       <div class="field full"><label for="p-addr">Her address</label><input id="p-addr" value="${esc(p.address||"")}" placeholder="Street, apt, city" autocomplete="off">${p.address?`<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}" target="_blank" rel="noopener" style="font-size:.85rem;margin-top:4px;display:inline-block">Open in Maps</a>`:""}</div>
       <div class="field full"><label>Observance</label><div style="display:flex;gap:18px;flex-wrap:wrap"><label class="check" style="min-height:44px"><input type="checkbox" id="p-kosher" ${p.keepsKosher?"checked":""}> Keeps kosher</label><label class="check" style="min-height:44px"><input type="checkbox" id="p-shabbat" ${p.shomerShabbat?"checked":""}> Shomer Shabbat</label></div></div>
@@ -1622,7 +1628,7 @@ function editPerson(person){
     <div class="actions"><div id="pdel-area">${person?`<button type="button" class="btn danger" id="pdel">Delete</button>`:""}</div>
       <div class="btns"><button type="button" class="btn" id="pcancel">Cancel</button><button class="btn pri" type="submit">Save</button></div></div>
   </form></div>`;
-  const collect=()=>Object.assign(p,{name:$("p-name").value.trim(),status:$("p-status").value,whereMet:$("p-met").value.trim(),contact:$("p-contact").value.trim(),age:$("p-age").value?+$("p-age").value:"",region:$("p-region").value,city:$("p-city").value.trim(),address:$("p-addr").value.trim(),kind:$("p-kind").value,birthday:$("p-bday").value,keepsKosher:$("p-kosher").checked,shomerShabbat:$("p-shabbat").checked,instagram:igHandle($("p-ig").value),likes:$("p-likes").value.trim(),nextStep:$("p-next").value.trim(),notes:$("p-notes").value.trim(),review:$("p-review").value.trim(),ratings:{...pr}});
+  const collect=()=>Object.assign(p,{name:$("p-name").value.trim(),status:$("p-status").value,whereMet:$("p-met").value.trim(),contact:$("p-contact").value.trim(),age:$("p-age").value?+$("p-age").value:"",region:$("p-region").value,city:$("p-city").value.trim(),from:$("p-from").value.trim(),address:$("p-addr").value.trim(),kind:$("p-kind").value,birthday:$("p-bday").value,keepsKosher:$("p-kosher").checked,shomerShabbat:$("p-shabbat").checked,instagram:igHandle($("p-ig").value),likes:$("p-likes").value.trim(),nextStep:$("p-next").value.trim(),notes:$("p-notes").value.trim(),review:$("p-review").value.trim(),ratings:{...pr}});
   async function save(silent){collect();if(!p.name){$("p-name").focus();return false}if(!S.db){toast("Sign in to claude.ai to save");return false}
     const ref=p.id?S.db.collection("people").doc(p.id):S.db.collection("people").doc();
     const oldPhoto=person&&person.photoId||"";
