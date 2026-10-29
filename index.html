@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793242636"><script>(function(){var B="1793242636";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793243207"><script>(function(){var B="1793243207";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -619,6 +619,11 @@ html.mapon .nav{z-index:31}
 .pvlink{align-self:flex-start;border:0;background:none;color:#ff375f;font:700 .95rem -apple-system,system-ui,sans-serif;padding:4px 0;cursor:pointer}
 .pvgl svg{width:18px;height:18px;display:block}
 label.pvgl{display:inline-flex;align-items:center}
+.cfmsg{width:100%;border:0;border-radius:14px;background:var(--fill);color:var(--fg);font:inherit;font-size:1rem;line-height:1.45;padding:12px 14px;resize:none}
+.cfbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cfbtns .btn{text-align:center;text-decoration:none}
+.pvnext{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--fill);border-radius:16px;padding:12px 14px}
+.pvnext div{display:flex;flex-direction:column;min-width:0}.pvnext b{font-size:1.05rem}.pvnext span:last-child{color:var(--muted);font-size:.85rem}
+.pvsend{flex:none;border:0;background:#ff375f;color:#fff;font:700 .85rem -apple-system,system-ui,sans-serif;border-radius:999px;padding:10px 14px;cursor:pointer}
 /* Steady app frame: the page itself never moves; only the content area scrolls up/down */
 html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
 body{position:fixed;inset:0;width:100%}
@@ -1272,8 +1277,23 @@ async function saveDate(spotId,btn){
   S.plan={who:"",newName:"",vibe:"",area:"",chosen:""};
   if(wantCal){const ok=await addToCalendar({name:body.name},d);if(ok){d.cal=true;try{await ref.update({dates:body.dates})}catch(e){}}}
   else toast("Date saved");
-  go("home");
+  go("home");const pid=ref.id||(body&&body.id);setTimeout(()=>openConfirm({...body,id:pid},d),400);
 }
+
+function confirmMsg(p,d){const w=parseLocal(d.when),sp=spotOf(d),first=String(p.name||"").split(" ")[0];
+  const day=w.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}),tm=w.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+  const place=placeName(d),addr=sp&&sp.address?sp.address:"",map=sp?mapUrl(sp):"";
+  return `Hey ${first}! Confirming ${day} at ${tm} at ${place}${addr?" ("+addr+")":""}.${map?"\n"+map:""}\nCan't wait to see you`}
+function openConfirm(p,d){const msg=confirmMsg(p,d);let dg=String(p.contact||"").replace(/\D/g,"");if(dg.length===10)dg="1"+dg;const ig=p.instagram?igHandle(p.instagram):"";const enc=encodeURIComponent(msg);
+  $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet"><h2>Send ${esc(String(p.name).split(" ")[0])} the details</h2>
+    <textarea id="cf-msg" class="cfmsg" rows="5">${esc(msg)}</textarea>
+    <div class="cfbtns">${dg?`<a class="btn pri" id="cf-sms" href="sms:+${dg}&body=${enc}">Text her</a><a class="btn" id="cf-wa" href="https://wa.me/${dg}?text=${enc}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+      <button class="btn" id="cf-copy">${ig?"Copy for Instagram DM":"Copy message"}</button>${ig?`<a class="btn" href="https://ig.me/m/${esc(ig)}" target="_blank" rel="noopener">Open DM</a>`:""}</div>
+    ${dg?"":`<span class="muted" style="font-size:.85rem">Add her number in her profile to text her straight from here.</span>`}
+    <button class="btn" id="cf-close">Done</button></div></div>`;
+  const upd=()=>{const m=encodeURIComponent($("cf-msg").value);const s=$("cf-sms"),wa=$("cf-wa");if(s)s.href=`sms:+${dg}&body=${m}`;if(wa)wa.href=`https://wa.me/${dg}?text=${m}`};$("cf-msg").oninput=upd;
+  $("cf-copy").onclick=async()=>{try{await navigator.clipboard.writeText($("cf-msg").value);toast("Copied")}catch(e){$("cf-msg").select();toast("Select and copy the text")}};
+  $("cf-close").onclick=closeSheet;$("bg").onclick=e=>{if(e.target.id==="bg")closeSheet()}}
 
 /* ---------- people ---------- */
 const KINDS=["Serious","Religious","Sneaky link"];
@@ -1556,6 +1576,7 @@ function openPerson(person,keepScroll){
     <div class="pvbody">
       <div class="pvstat"><span class="pvsel"><select id="pv-status" aria-label="Status">${PSTAT.map(o=>`<option ${o===(p.status||"Talking")?"selected":""}>${o}</option>`).join("")}</select></span>${up?`<span>Next: ${esc(fmtW(up))} · ${esc(placeName(up))}</span>`:`<span>No date yet</span>`}</div>
       ${acts.length?`<div class="pvacts" style="grid-template-columns:repeat(${acts.length},1fr)">${acts.join("")}</div>`:`<button class="pvaddc" data-edit="1">+ Add her number or Instagram</button>`}
+      ${up?`<div class="pvnext"><div><span class="pvh">Next date</span><b>${esc(placeName(up))}</b><span>${esc(fmtW(up))}</span></div><button class="pvsend" id="pv-send">Send her the details</button></div>`:""}
       <button class="pvcta" id="pv-plan"><span>Plan a date with ${esc(first)}${p.keepsKosher||p.shomerShabbat?`<small>${[p.keepsKosher?"Kosher spots only":"",p.shomerShabbat?"Sat after Shabbat":""].filter(Boolean).join(" · ")}</small>`:""}</span><span aria-hidden="true">›</span></button>
       <div class="pvcard"><span class="pvh">What she likes</span><div class="pvtags">${likes.map((x,i)=>`<span>${esc(x)}<button class="pvtx" data-rm="${i}" aria-label="Remove ${esc(x)}">×</button></span>`).join("")}<input id="pv-tag" class="pvtagin" placeholder="+ Add" enterkeyhint="done"></div>
         ${likes.length<6?`<div class="pvsug">${["Sushi","Cocktails","Wine","Live music","Dancing","Rooftops","Coffee","Italian","Doesn't drink","Gym"].filter(x=>!likes.some(l=>l.toLowerCase()===x.toLowerCase())).slice(0,6).map(x=>`<button data-sug="${esc(x)}">+ ${esc(x)}</button>`).join("")}</div>`:""}
@@ -1575,6 +1596,7 @@ function openPerson(person,keepScroll){
   $("pv-x").onclick=closeSheet;$("pv-edit").onclick=()=>editPerson(S.people.find(x=>x.id===p.id)||p);
   sh.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editPerson(S.people.find(x=>x.id===p.id)||p));
   $("pv-plan").onclick=plan;$("pv-plan2").onclick=plan;
+  const sd=$("pv-send");if(sd)sd.onclick=()=>openConfirm(S.people.find(x=>x.id===p.id)||p,up);
   $("pv-status").onchange=async e=>{if(await pvSave(p.id,{status:e.target.value})){toast("Saved");re()}};
   sh.querySelectorAll("[data-rk]").forEach(b=>b.onclick=async()=>{const k=b.dataset.rk,n=+b.dataset.rn;const r={...(rt)};r[k]=r[k]===n?0:n;if(await pvSave(p.id,{ratings:r}))re()});
   const tin=$("pv-tag");const addTag=async()=>{const v=tin.value.trim();if(!v)return;tin.value="";if(await pvSave(p.id,{likes:[...likes,v].join(", ")})){re();setTimeout(()=>{const t=$("pv-tag");if(t)t.focus()},30)}};
