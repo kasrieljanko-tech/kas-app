@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793244234"><script>(function(){var B="1793244234";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793244600"><script>(function(){var B="1793244600";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -627,6 +627,10 @@ label.pvgl{display:inline-flex;align-items:center}
 .cfcard{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;border:0;border-radius:18px;padding:14px 16px;background:linear-gradient(90deg,#ff375f,#ff6b4a);color:#fff;cursor:pointer;box-shadow:0 8px 20px rgba(255,55,95,.25)}
 .cfcard b{display:block;font-size:1.05rem}.cfcard small{display:block;opacity:.92;font-size:.85rem;margin-top:2px}
 .cfgo{flex:none;background:#fff;color:#ff375f;font-weight:800;border-radius:999px;padding:8px 14px;font-size:.85rem}
+.plfilters{display:flex;flex-direction:column;gap:8px}
+.plfilters .plchips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:0 18px}.plfilters .plchips::-webkit-scrollbar{display:none}
+.plfilters .plc{flex:none;padding:7px 13px;font-size:.84rem}
+.plsort{border:0;background:var(--surface);color:var(--fg);border-radius:999px;padding:9px 14px;font:600 .88rem -apple-system,system-ui,sans-serif}
 /* Steady app frame: the page itself never moves; only the content area scrolls up/down */
 html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
 body{position:fixed;inset:0;width:100%}
@@ -1216,7 +1220,7 @@ function bookBlock(s,pp){
 }
 function renderPlan(){
   const P=S.plan;if(!P.area)P.area="Anywhere";
-  {const lk=[P.who,P.newName,P.vibe,P.area].join("|");if(P.limKey!==lk){P.limKey=lk;P.lim=8}}
+  {const lk=String(P.who);if(P.limKey!==lk){P.limKey=lk;P.lim=30;P.kos=undefined}}
   const people=[...S.people].filter(p=>p.status!=="Done"&&(vis(p)||p.id===P.who)).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
   const pp=S.people.find(p=>p.id===P.who);const pname=(pp||{}).name||P.newName;const first=String(pname||"").split(" ")[0];
   const t0=new Date();t0.setHours(0,0,0,0);
@@ -1228,28 +1232,32 @@ function renderPlan(){
   [[fri,"Fri"],[sat,"Sat"]].forEach(([d,l])=>{const k=dk(d);if(!whens.some(w=>w[1]===k))whens.push([l+" "+d.getDate(),k])});
   const custom=P.whenDay&&!whens.some(w=>w[1]===P.whenDay);
   const ready=!!((P.who&&P.who!=="__new")||P.newName);
-  const allPicks=ready?planPicks():[];const lim=P.lim||8;let picks=allPicks.slice(0,lim);
-  if(P.chosen&&!picks.some(k=>k.s.id===P.chosen)){const c=allPicks.find(k=>k.s.id===P.chosen);if(c)picks.push(c)}
-  const big=(k,i)=>{const s=k.s,ph=(s.photos&&s.photos[0])||s.photoId,open=P.chosen===s.id;
-    return `<div class="pick ${i===0&&!k.repeat?"best":""}">${ph?`<img class="pkimg" src="${esc(imgSrc(ph))}" alt="">`:""}
-      <div class="ph"><div style="min-width:0"><div class="pn">${esc(s.name)}</div><div class="muted" style="font-size:.9rem">${esc([s.area,s.type==="Drinks"?"Bar":s.type,s.price].filter(Boolean).join(" · "))}</div></div>
-        ${k.repeat?`<span class="pill warn">Repeat</span>`:i===0?`<span class="pill ink">Best match</span>`:""}</div>
-      ${k.why?`<div class="why">${esc(k.why)}</div>`:""}
-      ${open?bookBlock(s,pp)+`<div class="btns"><button class="btn pri flex" data-act="savedate:${esc(s.id)}" id="pl-save">Save the date</button><button class="btn" data-act="unchoose">Cancel</button></div>
-        ${bookLinks(s)?`<div class="sheet-links"><span class="muted">Need a table?</span>${bookLinks(s)}</div>`:""}`
-      :`<div class="btns"><button class="btn pri flex" data-act="choose:${esc(s.id)}">Pick this</button><a class="btn flex" href="${mapUrl(s)}" target="_blank" rel="noopener">Map</a></div>`}</div>`};
-  const row=k=>{const s=k.s;const ph=(s.photos&&s.photos[0])||s.photoId;
+  const FT={All:null,Bars:s=>["Drinks","Late night"].includes(s.type),Dinner:s=>s.type==="Dinner",Coffee:s=>s.type==="Coffee",Fun:s=>["Activity","Active","Outdoors"].includes(s.type),Rooftop:s=>isRoof(s)};
+  if(P.kos===undefined)P.kos=!!(pp&&pp.keepsKosher);
+  const ft=P.ft||"All",area=P.area||"Anywhere",price=P.price||"Any",show=P.show||"All",sort=P.sort||"fav",q=(P.q||"").trim().toLowerCase();
+  let list=S.spots.filter(s=>!s.closed&&(!FT[ft]||FT[ft](s))&&(area==="Anywhere"||s.borough===area)&&(price==="Any"||s.price===price)&&(!P.kos||s.kosher)
+    &&(show==="All"||(show==="Favorites"&&s.fav)||(show==="Want to try"&&s.status!=="Been")||(show==="Been"&&s.status==="Been"))
+    &&(!q||[s.name,s.area,s.type,s.notes,s.vibe].join(" ").toLowerCase().includes(q)));
+  const rk=s=>+((String(s.notes||"").match(/Rated (\d\.\d)/)||[])[1]||s.rating||0);
+  list.sort(sort==="az"?(a,b)=>String(a.name).localeCompare(String(b.name)):sort==="rating"?(a,b)=>rk(b)-rk(a):sort==="new"?(a,b)=>(b.updatedAt||0)-(a.updatedAt||0):(a,b)=>(!!b.fav-!!a.fav)||(b.updatedAt||0)-(a.updatedAt||0));
+  const lim=P.lim||30;let shown=list.slice(0,lim);if(P.chosen&&!shown.some(s=>s.id===P.chosen)){const c=list.find(s=>s.id===P.chosen);if(c)shown.unshift(c)}
+  const allPicks=list;
+  const big=(k)=>{const s=k.s,ph=(s.photos&&s.photos[0])||s.photoId;
+    return `<div class="pick best">${ph?`<img class="pkimg" src="${esc(imgSrc(ph))}" alt="">`:""}
+      <div class="ph"><div style="min-width:0"><div class="pn">${esc(s.name)}</div><div class="muted" style="font-size:.9rem">${esc([s.area,s.type==="Drinks"?"Bar":s.type,s.price].filter(Boolean).join(" · "))}</div></div>${k.repeat?`<span class="pill warn">Repeat</span>`:""}</div>
+      ${bookBlock(s,pp)}<div class="btns"><button class="btn pri flex" data-act="savedate:${esc(s.id)}" id="pl-save">Save the date</button><button class="btn" data-act="unchoose">Cancel</button></div>
+      ${bookLinks(s)?`<div class="sheet-links"><span class="muted">Need a table?</span>${bookLinks(s)}</div>`:""}</div>`};
+  const row=k=>{const s=k.s;const ph=(s.photos&&s.photos[0])||s.photoId;const r=rk(s);
     return `<div class="prow">${ph?`<img src="${esc(imgSrc(ph))}" alt="">`:`<span class="prph" style="background:hsl(${hashHue(s.name)} 45% 45%)">${esc((s.name||"?")[0])}</span>`}
-      <button class="prtx" data-act="spot:${esc(s.id)}"><b>${esc(s.name)}</b><span>${esc([s.area,k.repeat?"Repeat with "+first:(s.status==="Been"&&s.rating>=4?"You loved it":s.status!=="Been"?"Want to try":"")].filter(Boolean).join(" · "))}</span></button>
+      <button class="prtx" data-act="spot:${esc(s.id)}"><b>${s.fav?"♥ ":""}${esc(s.name)}</b><span>${esc([s.area,s.type==="Drinks"?"Bar":s.type,s.price,r?"★ "+r:"",k.repeat?"Been with "+first:""].filter(Boolean).join(" · "))}</span></button>
       <button class="prpick" data-act="choose:${esc(s.id)}">Pick</button></div>`};
+  const wrap=s=>({s,repeat:!!(first&&beenWith(s).includes(pname))});
   let res="";
-  if(!ready)res=`<div class="plhint">Tap who it's with and your options show up here.</div>`;
-  else if(!allPicks.length)res=pp&&pp.keepsKosher?`<div class="empty"><strong>No kosher spots fit yet</strong>${esc(first)} keeps kosher, so only kosher places show. Try another vibe or area.</div>`:`<div class="empty"><strong>Nothing fits yet</strong>Try another vibe or area.</div>`;
-  else if((P.q||"").trim()){const q=P.q.trim().toLowerCase();const hits=S.spots.filter(s=>!s.closed&&[s.name,s.area,s.type,s.notes].join(" ").toLowerCase().includes(q)).slice(0,30).map(s=>({s,why:"",repeat:false}));
-    res=`<div class="plres"><b>${hits.length} match${hits.length===1?"":"es"} for "${esc(P.q.trim())}"</b><span>Searching all your places</span></div>`+(hits.length?hits.map(k=>P.chosen===k.s.id?big(k,1):row(k)).join(""):`<div class="plhint">No place called that. Add it in Places first.</div>`)}
-  else res=`<div class="plres"><b>${allPicks.length} place${allPicks.length===1?"":"s"} for you and ${esc(first)}</b>${pp&&(pp.keepsKosher||pp.shomerShabbat)?`<span>${pp.keepsKosher?"Kosher only. ":""}${pp.shomerShabbat?"Saturday after Shabbat.":""}</span>`:""}</div>`+
-    picks.map((k,i)=>(i===0||P.chosen===k.s.id)?big(k,i):row(k)).join("")+
-    (allPicks.length>picks.length?`<button class="btn recmorebtn" data-act="plmore">Show more (${allPicks.length-picks.length} more)</button>`:"");
+  if(!ready)res=`<div class="plhint">Tap who it's with, then filter and pick any place you want.</div>`;
+  else if(!list.length)res=`<div class="empty"><strong>Nothing matches these filters</strong>Clear a filter or search a different name.</div>`;
+  else res=`<div class="plres"><b>${list.length} place${list.length===1?"":"s"}</b>${P.kos?`<span>Kosher only</span>`:""}</div>`+
+    shown.map(s=>P.chosen===s.id?big(wrap(s)):row(wrap(s))).join("")+
+    (list.length>shown.length?`<button class="btn recmorebtn" data-act="plmore">Show more (${list.length-shown.length} more)</button>`:"");
   $("v-plan").innerHTML=`
     <div class="top" style="justify-content:flex-start"><button class="round" data-go="home" aria-label="Back">${ICON.back}</button><h1 style="font-size:1.7rem">Plan a date</h1></div>
     <div class="plq"><span class="plk">With</span><div class="plavs">
@@ -1257,12 +1265,18 @@ function renderPlan(){
       <button class="plav" aria-pressed="${P.who==="__new"}" data-act="who:__new"><span class="av plnew">+</span><span>New</span></button></div>
       ${P.who==="__new"?`<div class="field"><input id="pl-name" value="${esc(P.newName)}" placeholder="Her name"></div>`:""}</div>
     <div class="plq"><span class="plk">When</span><div class="plchips">${whens.map(([l,k])=>`<button class="plc" aria-pressed="${P.whenDay===k}" data-act="when:${k}">${l}</button>`).join("")}<label class="plc plpick" aria-pressed="${!!custom}">${custom?esc(parseLocal(P.whenDay+"T12:00").toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})):"Pick a day"}<input type="date" id="pl-day" min="${dk(t0)}" value="${custom?P.whenDay:""}"></label></div></div>
-    <div class="plq"><span class="plk">Vibe</span><div class="plchips"><button class="plc" aria-pressed="${!P.vibe}" data-act="vibe:">Any</button>${Object.keys(VIBE_TYPES).map(v=>`<button class="plc" aria-pressed="${P.vibe===v}" data-act="vibe:${v}">${v}</button>`).join("")}</div></div>
-    <div class="plq"><span class="plk">Where</span><div class="plchips">${["Anywhere","Manhattan","Brooklyn","Queens"].map(v=>`<button class="plc" aria-pressed="${P.area===v}" data-act="area:${v}">${v}</button>`).join("")}</div></div>
-    ${ready?`<input class="search" id="pl-q" type="search" placeholder="Or search any place you have…" value="${esc(P.q||"")}" autocomplete="off">`:""}
+    ${ready?`<div class="plfilters">
+      <input class="search" id="pl-q" type="search" placeholder="Search any place…" value="${esc(P.q||"")}" autocomplete="off">
+      <div class="plchips">${Object.keys(FT).map(v=>`<button class="plc" aria-pressed="${ft===v}" data-pf="ft:${v}">${v}</button>`).join("")}</div>
+      <div class="plchips">${["Anywhere","Manhattan","Brooklyn","Queens"].map(v=>`<button class="plc" aria-pressed="${area===v}" data-pf="area:${v}">${v}</button>`).join("")}</div>
+      <div class="plchips">${["Any","$","$$","$$$","$$$$"].map(v=>`<button class="plc" aria-pressed="${price===v}" data-pf="price:${v}">${v==="Any"?"Any price":v}</button>`).join("")}<button class="plc" aria-pressed="${!!P.kos}" data-pf="kos:${P.kos?"0":"1"}">Kosher</button></div>
+      <div class="plchips">${["All","Favorites","Want to try","Been"].map(v=>`<button class="plc" aria-pressed="${show===v}" data-pf="show:${v}">${v==="All"?"All places":v}</button>`).join("")}
+        <select class="plsort" id="pl-sort" aria-label="Sort">${[["fav","Favorites first"],["rating","Top rated"],["new","Newest"],["az","A to Z"]].map(([v,l])=>`<option value="${v}" ${sort===v?"selected":""}>${l}</option>`).join("")}</select></div>
+    </div>`:""}
     <div class="view" style="gap:10px">${res}</div>`;
   const nm=$("pl-name");if(nm){nm.oninput=e=>{const had=!!S.plan.newName;S.plan.newName=e.target.value.trim();if(had!==!!S.plan.newName){const pos=e.target.selectionStart;renderPlan();const n2=$("pl-name");n2.focus();try{n2.setSelectionRange(pos,pos)}catch(_){}}}}
   const pd=$("pl-day");if(pd){let pv=pd.value;pd.onchange=e=>{pv=e.target.value};pd.oninput=e=>{pv=e.target.value};pd.onblur=()=>{if(pv&&pv!==S.plan.whenDay){S.plan.whenDay=pv;S.plan.wd=pv;S.plan.wt="";renderPlan()}}}
+  const so=$("pl-sort");if(so)so.onchange=e=>{S.plan.sort=e.target.value;S.plan.lim=30;renderPlan()};
   const ps=$("pl-q");if(ps){ps.oninput=e=>{S.plan.q=e.target.value;const pos=e.target.selectionStart;renderPlan();const n=$("pl-q");n.focus();try{n.setSelectionRange(pos,pos)}catch(_){}}}
 }
 async function saveDate(spotId,btn){
@@ -1768,7 +1782,7 @@ document.addEventListener("click",e=>{
   const fv=e.target.closest("[data-fav]");if(fv){e.stopPropagation();toggleFav(fv.dataset.fav);return}
   if(e.target.closest('[data-act="pfreset"]')){S.pf="All";S.ps="All";S.q="";const qi=$("q");if(qi)qi.value="";renderSpots();return}
   const it=e.target.closest("[data-itab]");if(it){S.iTab=it.dataset.itab;S.dLim=20;renderDiscover();return}
-  if(e.target.closest('[data-act="plmore"]')){S.plan.lim=(S.plan.lim||8)+10;renderPlan();return}
+  if(e.target.closest('[data-act="plmore"]')){S.plan.lim=(S.plan.lim||30)+30;renderPlan();return}
   if(e.target.closest('[data-act="dmore"]')){S.dLim=(S.dLim||20)+30;renderDiscover();return}
   if(e.target.closest('[data-act="liveev"]')){runLive("events");return}
   if(e.target.closest('[data-act="livemovies"]')){runLive("movies");return}
@@ -1785,6 +1799,7 @@ document.addEventListener("click",e=>{
   const mt=e.target.closest("[data-mtab]");if(mt){const k=mt.dataset.mtab;S.mapCat=(S.mapCat===k&&k!=="all")?"all":k;$("mapcard").innerHTML="";drawPins(true);return}
   if(e.target.closest('[data-act="closemap"]')){closeMap();return}
   if(e.target.closest('[data-act="openmap"]')){openMap(e.target.closest('[data-act="openmap"]').dataset.kind);return}
+  const pf=e.target.closest("[data-pf]");if(pf){const [k,...v]=pf.dataset.pf.split(":");const val=v.join(":");if(k==="kos")S.plan.kos=val==="1";else S.plan[k]=val;S.plan.lim=30;S.plan.chosen="";renderPlan();return}
   const cfc=e.target.closest("[data-confirm]");if(cfc){const [pid,did]=cfc.dataset.confirm.split(":");const pp=S.people.find(x=>x.id===pid);const dd=pp&&(pp.dates||[]).find(x=>x.id===did);if(pp&&dd)openConfirm(pp,dd);return}
   const g=e.target.closest("[data-go]");if(g){closeMap();go(g.dataset.go);return}
   const a=e.target.closest("[data-act]");if(!a)return;
