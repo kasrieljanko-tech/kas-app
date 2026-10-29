@@ -527,14 +527,14 @@ html.mapon .nav{z-index:31}
 .gloc{position:absolute;z-index:600;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 100px);width:52px;height:52px;border-radius:16px;border:0;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}
 #mapcard:not(:empty)+.gloc{display:none}
 .gpinw{background:none;border:0}
-.gpin{width:30px;height:30px;border-radius:50%;background:var(--pc);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.gpin{width:32px;height:32px;border-radius:50%;background:var(--pc);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s}
 .gpin.on{transform:scale(1.35);box-shadow:0 3px 10px rgba(0,0,0,.4)}
 .glab{display:none;position:absolute;left:34px;top:5px;white-space:nowrap;font:600 12px -apple-system,system-ui,sans-serif;color:#3c4043;text-shadow:0 0 2px #fff,0 0 2px #fff,0 0 3px #fff;pointer-events:none;max-width:160px;overflow:hidden;text-overflow:ellipsis}
 .glabels .glab{display:block}
 .gme{width:18px;height:18px;border-radius:50%;background:#1a73e8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(26,115,232,.2)}
 #mapcard{bottom:calc(env(safe-area-inset-bottom,0px) + 92px)}
 .mcard{background:#fff;color:#202124}.mcard img{height:120px}.leaflet-control-attribution{font-size:9px!important;opacity:.7}.leaflet-bottom{bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}.mcard .mt span{color:#5f6368}
-@media (prefers-color-scheme:dark){.gsearch,.gchip,.gloc,.mcard{background:#2b2d31;color:#e8eaed}.gsearch input{color:#e8eaed}.gchip{color:#e8eaed}.glab{color:#e8eaed;text-shadow:0 0 2px #000,0 0 3px #000}.glist{background:#394457;color:#8ab4f8}.mcard .mt span{color:#9aa0a6}}
+@media (prefers-color-scheme:dark){#mapov{background:#242424}.gsearch,.gchip,.gloc,.mcard{background:#2b2d31;color:#e8eaed}.gsearch input{color:#e8eaed}.gchip{color:#e8eaed}.glab{color:#e8eaed;text-shadow:0 0 2px #000,0 0 3px #000}.glist{background:#394457;color:#8ab4f8}.mcard .mt span{color:#9aa0a6}}
 .drc{flex:none;width:160px;border:0;background:none;padding:0;text-align:left;color:var(--fg);display:flex;flex-direction:column;gap:2px;cursor:pointer}
 .drc img,.drph{width:160px;height:110px;border-radius:14px;object-fit:cover;display:block;margin-bottom:4px}.drc b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.drc span{font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mvtrl{font-size:.82rem;font-weight:700;color:var(--accent);text-decoration:none}
@@ -724,7 +724,9 @@ async function openMap(kind){
   if(S.mapObj){S.mapObj.remove();S.mapObj=null}
   const dark=matchMedia("(prefers-color-scheme: dark)").matches;
   const m=L.map("mapc",{zoomControl:false,attributionControl:true}).setView([40.718,-73.97],12);S.mapObj=m;
-  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,className:dark?"mapdark":"",attribution:"Esri, HERE, Garmin, OpenStreetMap"}).addTo(m);
+  const esri=s=>"https://server.arcgisonline.com/ArcGIS/rest/services/"+s+"/MapServer/tile/{z}/{y}/{x}";
+  if(dark){L.tileLayer(esri("Canvas/World_Dark_Gray_Base"),{maxZoom:16,maxNativeZoom:16,attribution:"Esri, HERE, Garmin, OpenStreetMap"}).addTo(m);L.tileLayer(esri("Canvas/World_Dark_Gray_Reference"),{maxZoom:19,maxNativeZoom:16}).addTo(m);m.setMaxZoom(18)}
+  else L.tileLayer(esri("World_Street_Map"),{maxZoom:19,attribution:"Esri, HERE, Garmin, OpenStreetMap"}).addTo(m);
   m.on("click",()=>{$("mapcard").innerHTML="";document.querySelectorAll(".gpin.on").forEach(e=>e.classList.remove("on"))});
   $("mapq").oninput=e=>{S.mapQ=e.target.value.trim().toLowerCase();drawPins(false)};
   $("gloc").onclick=()=>{if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(p=>{const ll=[p.coords.latitude,p.coords.longitude];if(S.meMk)S.meMk.remove();S.meMk=L.marker(ll,{icon:L.divIcon({className:"gme",iconSize:[18,18],iconAnchor:[9,9]})}).addTo(m);m.setView(ll,14)},()=>toast("Location is off for this app."))};
@@ -742,8 +744,8 @@ function drawPins(fit){
     mk.on("click",ev=>{L.DomEvent.stopPropagation(ev);document.querySelectorAll(".gpin.on").forEach(e=>e.classList.remove("on"));const el=mk.getElement();el&&el.querySelector(".gpin").classList.add("on");mapCard(x,!!it.spot);m.panTo([x.lat,x.lng])})});
   $("mapcard").innerHTML=pts.length?"":`<div class="mcard"><div class="mt" style="padding:14px">Nothing here for this filter yet.</div></div>`;
   if(fit!==false&&pts.length>1)m.fitBounds(pts,{padding:[60,60],maxZoom:14});else if(fit!==false&&pts.length===1)m.setView(pts[0],15);
-  m.getContainer().classList.toggle("glabels",m.getZoom()>=15);
-  if(!m._zl){m._zl=1;m.on("zoomend",()=>m.getContainer().classList.toggle("glabels",m.getZoom()>=15))}
+  m.getContainer().classList.toggle("glabels",m.getZoom()>=14);
+  if(!m._zl){m._zl=1;m.on("zoomend",()=>m.getContainer().classList.toggle("glabels",m.getZoom()>=14))}
 }
 function mapCard(x,isSpot){const pid=(x.photos&&x.photos[0])||x.photoId;const src=pid?imgSrc(pid):(x.photoUrl||"");
   const ev=x.list==="events";const added=isSpot?isMine(x):(!ev&&isSaved(x));
