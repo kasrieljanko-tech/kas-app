@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-title" content="Kas Upgrade"><meta name="robots" content="noindex,nofollow">
 <link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-180.png"><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793236431"><script>(function(){var B="1793236431";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793237018"><script>(function(){var B="1793237018";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -547,8 +547,6 @@ html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
 body{position:fixed;inset:0;width:100%}
 /* iOS home-screen apps can leave a dead strip at the bottom; --gap fills it */
 :root{padding-top:0!important}
-#scr,#mapov{bottom:calc(-1 * var(--gap,0px))!important}
-.nav{bottom:calc(-1 * var(--gap,0px))!important}
 .sbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:14;pointer-events:none}
 html.mapon .sbar{display:none}
 #scr{position:fixed;inset:0;overflow-y:auto;overscroll-behavior-y:none;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:none;padding-top:env(safe-area-inset-top,0px)}
@@ -556,7 +554,7 @@ html.mapon .sbar{display:none}
 
 </style>
 
-<div class="sbar"></div><script>(function(){function f(){var g=0;try{var sa=navigator.standalone||matchMedia("(display-mode: standalone)").matches;if(sa&&innerWidth<innerHeight){g=Math.max(0,Math.min(120,screen.height-innerHeight))}}catch(e){}document.documentElement.style.setProperty("--gap",g+"px")}f();addEventListener("resize",f);addEventListener("orientationchange",function(){setTimeout(f,300)})})();</script>
+<div class="sbar"></div>
 <div id="scr"><div class="wrap">
   <section class="view" id="v-home"></section>
   <section class="view" id="v-plan" hidden></section>
