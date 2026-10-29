@@ -19,6 +19,7 @@ window.kuKeypad=function(o){
   .kp-k small{font-size:.55rem;letter-spacing:.2em;font-weight:600;margin-top:2px;opacity:.8}
   .kp-k.t{background:none;font-size:1rem;font-weight:500}
   .kp-k.t:active{background:rgba(255,255,255,.12)}
+  .kp-k[data-f]{background:rgba(10,132,255,.35)}
   @media (prefers-reduced-motion:reduce){.kp-dots.shake{animation:none}}`;document.head.appendChild(st)}
   const d=document.createElement("div");d.id=o.id;d.className="kp";
   const me=g("ku.meimg");const L=["","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"];
@@ -129,9 +130,8 @@ window.kuKeypad=function(o){
   const faceSvg='<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8"/><path d="M22 24v4M42 24v4M32 26v10h-3M24 44c4 4 12 4 16 0"/></svg>';
   function lock(auto){
     if(!ok||!g("ku.faceid")||!g("ku.pin")||document.getElementById("fid-lock"))return;
-    const run=(d,msg)=>verify().then(()=>d.remove()).catch(()=>{msg.textContent="Face ID didn't work. Enter your code."});
-    const d=kuKeypad({id:"fid-lock",z:100,sub:"Face ID or your code",len:(g("ku.pin")||"").length||4,onCode:async c=>c===g("ku.pin")?true:"Wrong code, try again",faceId:run});
-    if(auto)setTimeout(()=>run(d,d.querySelector(".kp-s")),300);
+    const run=(d,msg)=>{msg.textContent="Look at your phone…";verify().then(()=>d.remove()).catch(()=>{msg.textContent="Tap Face ID to try again, or enter your code"})};
+    const d=kuKeypad({id:"fid-lock",z:100,sub:"Tap Face ID or enter your code",len:(g("ku.pin")||"").length||4,onCode:async c=>c===g("ku.pin")?true:"Wrong code, try again",faceId:run});
   }
   function offer(){
     if(!ok||g("ku.faceid")||!g("ku.pin")||+(g("ku.faceid.later")||0)>Date.now())return;
