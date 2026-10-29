@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793239853"><script>(function(){var B="1793239853";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793239887"><script>(function(){var B="1793239887";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -534,7 +534,7 @@ html.mapon .nav{z-index:31}
 .gme{width:18px;height:18px;border-radius:50%;background:#1a73e8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(26,115,232,.2)}
 #mapcard{bottom:calc(env(safe-area-inset-bottom,0px) + 92px)}
 .mcard{background:#fff;color:#202124}.mcard img{height:120px}.leaflet-control-attribution{font-size:9px!important;opacity:.7}.leaflet-bottom{bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}.mcard .mt span{color:#5f6368}
-@media (prefers-color-scheme:dark){#mapov{background:#242424}.gsearch,.gchip,.gloc,.mcard{background:#2b2d31;color:#e8eaed}.gsearch input{color:#e8eaed}.gchip{color:#e8eaed}.glab{color:#e8eaed;text-shadow:0 0 2px #000,0 0 3px #000}.glist{background:#394457;color:#8ab4f8}.mcard .mt span{color:#9aa0a6}}
+@media (prefers-color-scheme:dark){#mapov{background:#e9e5dc}.gsearch,.gchip,.gloc,.mcard{background:#2b2d31;color:#e8eaed}.gsearch input{color:#e8eaed}.gchip{color:#e8eaed}.glab{color:#e8eaed;text-shadow:0 0 2px #000,0 0 3px #000}.glist{background:#394457;color:#8ab4f8}.mcard .mt span{color:#9aa0a6}}
 .drc{flex:none;width:160px;border:0;background:none;padding:0;text-align:left;color:var(--fg);display:flex;flex-direction:column;gap:2px;cursor:pointer}
 .drc img,.drph{width:160px;height:110px;border-radius:14px;object-fit:cover;display:block;margin-bottom:4px}.drc b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.drc span{font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mvtrl{font-size:.82rem;font-weight:700;color:var(--accent);text-decoration:none}
@@ -788,8 +788,9 @@ async function openMap(kind){
   const dark=matchMedia("(prefers-color-scheme: dark)").matches;
   const m=L.map("mapc",{zoomControl:false,attributionControl:true}).setView([40.718,-73.97],12);S.mapObj=m;
   const esri=s=>"https://server.arcgisonline.com/ArcGIS/rest/services/"+s+"/MapServer/tile/{z}/{y}/{x}";
-  if(dark){L.tileLayer(esri("Canvas/World_Dark_Gray_Base"),{maxZoom:16,maxNativeZoom:16,attribution:"Esri, HERE, Garmin, OpenStreetMap"}).addTo(m);L.tileLayer(esri("Canvas/World_Dark_Gray_Reference"),{maxZoom:19,maxNativeZoom:16}).addTo(m);m.setMaxZoom(18)}
-  else L.tileLayer(esri("World_Street_Map"),{maxZoom:19,attribution:"Esri, HERE, Garmin, OpenStreetMap"}).addTo(m);
+  const base=L.tileLayer(esri("World_Street_Map"),{maxZoom:19,attribution:"Esri, HERE, Garmin, OpenStreetMap"}).addTo(m);
+  let bad=0,ok=0;base.on("tileload",()=>ok++);base.on("tileerror",()=>{if(++bad===4&&!ok){m.removeLayer(base);L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(m)}});
+  setTimeout(()=>m.invalidateSize(),250);
   m.on("click",()=>{$("mapcard").innerHTML="";document.querySelectorAll(".gpin.on").forEach(e=>e.classList.remove("on"))});
   $("mapq").oninput=e=>{S.mapQ=e.target.value.trim().toLowerCase();drawPins(false)};
   $("gloc").onclick=()=>{if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(p=>{const ll=[p.coords.latitude,p.coords.longitude];if(S.meMk)S.meMk.remove();S.meMk=L.marker(ll,{icon:L.divIcon({className:"gme",iconSize:[18,18],iconAnchor:[9,9]})}).addTo(m);m.setView(ll,14)},()=>toast("Location is off for this app."))};
