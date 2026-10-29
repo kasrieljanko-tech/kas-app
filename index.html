@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793240559"><script>(function(){var B="1793240559";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793240805"><script>(function(){var B="1793240805";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -600,6 +600,24 @@ html.mapon .nav{z-index:31}
 .pvgift{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--fill);border-radius:16px;padding:12px 14px}
 .pvgift b{display:block}.pvgift small{color:var(--muted);font-size:.8rem}
 .pvgift a{flex:none;background:color-mix(in srgb,#ff375f 15%,transparent);color:#ff375f;font-weight:700;text-decoration:none;border-radius:999px;padding:8px 16px}
+
+.pvsel select{appearance:none;-webkit-appearance:none;border:0;background:color-mix(in srgb,#ff375f 15%,transparent);color:#ff375f;font:700 .82rem -apple-system,system-ui,sans-serif;padding:6px 26px 6px 12px;border-radius:999px;background-image:linear-gradient(45deg,transparent 50%,#ff375f 50%),linear-gradient(135deg,#ff375f 50%,transparent 50%);background-position:calc(100% - 13px) 55%,calc(100% - 9px) 55%;background-size:4px 4px;background-repeat:no-repeat}
+.pvadd{opacity:.85;text-decoration:underline;cursor:pointer}
+.pvtags span{display:inline-flex;align-items:center;gap:4px}
+.pvtx{border:0;background:none;color:var(--muted);font-size:1rem;padding:0 0 0 2px;line-height:1;cursor:pointer}
+.pvtagin{border:1.5px dashed var(--line);background:none;color:var(--fg);border-radius:999px;padding:7px 13px;font:600 .88rem -apple-system,system-ui,sans-serif;width:8.5em;outline:none}
+.pvtagin:focus{border-style:solid;border-color:#ff375f;width:12em}
+.pvsug{display:flex;flex-wrap:wrap;gap:6px}.pvsug button{border:0;background:none;color:var(--muted);font:600 .82rem -apple-system,system-ui,sans-serif;padding:4px 8px;border-radius:999px;cursor:pointer}.pvsug button:active{background:var(--surface)}
+.pvtoggles{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem;color:var(--muted)}
+.pvtoggles label{display:flex;gap:6px;align-items:center}.pvtoggles input{accent-color:#ff375f;width:18px;height:18px}
+.pvin{border:0;background:none;color:var(--fg);font:inherit;font-size:1rem;line-height:1.45;resize:none;outline:none;padding:0;width:100%;min-height:1.45em;overflow:hidden}
+.pvin::placeholder{color:var(--muted)}
+.pvhearts{display:flex;gap:2px}
+.pvhearts button{border:0;background:none;font-size:1.35rem;line-height:1;padding:2px 3px;color:#ff375f;opacity:.2;cursor:pointer}
+.pvhearts button.on{opacity:1}
+.pvlink{align-self:flex-start;border:0;background:none;color:#ff375f;font:700 .95rem -apple-system,system-ui,sans-serif;padding:4px 0;cursor:pointer}
+.pvgl svg{width:18px;height:18px;display:block}
+label.pvgl{display:inline-flex;align-items:center}
 /* Steady app frame: the page itself never moves; only the content area scrolls up/down */
 html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
 body{position:fixed;inset:0;width:100%}
@@ -1505,7 +1523,9 @@ function openSpot(spot){
   if(!spot)setTimeout(()=>$("f-name").focus(),50);
 }
 
-function openPerson(person){
+async function pvSave(id,patch){const cur=S.people.find(x=>x.id===id);if(!cur||!S.db)return false;const {id:_,...body}={...cur,...patch,updatedAt:Date.now()};
+  try{await S.db.collection("people").doc(id).set(body);const i=S.people.findIndex(x=>x.id===id);if(i>=0)S.people[i]={...S.people[i],...patch};return true}catch(e){toast("Couldn't save. Try again.");return false}}
+function openPerson(person,keepScroll){
   if(!person)return editPerson(null);
   const p=person,first=String(p.name||"").split(" ")[0],age=pAge(p);
   const photo=p.photoId?imgSrc(p.photoId):"";
@@ -1513,35 +1533,53 @@ function openPerson(person){
   const up=upcoming(p)[0],past=pastDates(p);
   const fmtW=d=>{const w=parseLocal(d.when);return w.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+" · "+w.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})};
   let dg=String(p.contact||"").replace(/\D/g,"");if(dg.length===10)dg="1"+dg;const ig=p.instagram?igHandle(p.instagram):"";
-  const I={text:'<path d="M4 5h16v11H9l-5 4z"/>',call:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',wa:'<path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/>',dm:'<rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/>'};
+  const I={text:'<path d="M4 5h16v11H9l-5 4z"/>',call:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',wa:'<path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/>',dm:'<rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'};
   const ic=k=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${I[k]}</svg>`;
   const acts=[];if(dg){acts.push(`<a class="pvact" href="sms:+${dg}">${ic("text")}Text</a>`,`<a class="pvact" href="tel:+${dg}">${ic("call")}Call</a>`,`<a class="pvact" href="https://wa.me/${dg}" target="_blank" rel="noopener">${ic("wa")}WhatsApp</a>`)}
   if(ig)acts.push(`<a class="pvact" href="https://ig.me/m/${esc(ig)}" target="_blank" rel="noopener">${ic("dm")}DM</a>`);
-  const tags=[...String(p.likes||"").split(/[,;]+/).map(x=>x.trim()).filter(Boolean),p.keepsKosher?"Keeps kosher":"",p.shomerShabbat?"Shomer Shabbat":"",age&&!p.likes?"":""].filter(Boolean);
-  const rt=p.ratings||{};const hasR=PRATES.some(([k])=>rt[k]);
-  const g=giftFor(p);
+  const likes=String(p.likes||"").split(/[,;]+/).map(x=>x.trim()).filter(Boolean);
+  const rt=p.ratings||{};const g=giftFor(p);
   const dateRow=(d,isUp)=>`<button class="pvdate" data-act="date:${esc(p.id)}:${esc(d.id)}"><span class="pvdd ${isUp?"up":""}"><small>${esc(parseLocal(d.when).toLocaleDateString(undefined,{month:"short"}))}</small><b>${parseLocal(d.when).getDate()}</b></span><span class="pvdt"><b>${esc(placeName(d))}</b><span>${esc(fmtW(d))}${d.rating?" · "+"♥".repeat(d.rating):""}</span></span></button>`;
+  const txtCard=(key,label,ph)=>`<div class="pvcard"><span class="pvh">${label}</span><textarea class="pvin" data-k="${key}" rows="${key==="nextStep"?1:2}" placeholder="${ph}">${esc(p[key]||"")}</textarea></div>`;
+  const prevScroll=keepScroll&&document.querySelector(".pvs")?document.querySelector(".pvs").scrollTop:0;
   $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet pvs" role="dialog" aria-label="${esc(p.name)}">
     <div class="pvhero" style="${photo?`background-image:linear-gradient(180deg,rgba(0,0,0,.25),transparent 30%,transparent 50%,rgba(0,0,0,.8)),url('${esc(photo)}')`:`background:linear-gradient(160deg,hsl(${hashHue(p.name)} 55% 62%),hsl(${(hashHue(p.name)+30)%360} 50% 32%))`}">
       ${photo?"":`<span class="pvini">${esc(initials(p.name))}</span>`}
-      <div class="pvtop"><button class="pvgl" id="pv-x" aria-label="Close">✕</button><button class="pvgl" id="pv-edit">Edit</button></div>
-      <div class="pvname"><h2>${esc(first)}${age?`, ${age}`:""}</h2>${sub?`<span>${esc(sub)}</span>`:""}</div>
+      <div class="pvtop"><button class="pvgl" id="pv-x" aria-label="Close">✕</button><span style="display:flex;gap:8px">${S.assets?`<label class="pvgl" for="pv-photo" aria-label="${photo?"Change photo":"Add photo"}">${ic("cam")}</label><input type="file" id="pv-photo" accept="image/*" hidden>`:""}<button class="pvgl" id="pv-edit">Edit</button></span></div>
+      <div class="pvname"><h2>${esc(first)}${age?`, ${age}`:""}</h2>${sub?`<span>${esc(sub)}</span>`:`<span class="pvadd" data-edit="1">+ Add where she lives</span>`}${age?"":`<span class="pvadd" data-edit="1">+ Add her age or birthday</span>`}</div>
     </div>
     <div class="pvbody">
-      <div class="pvstat"><span class="pvpill">${esc(p.status||"Talking")}</span>${up?`<span>Next: ${esc(fmtW(up))} · ${esc(placeName(up))}</span>`:`<span>No date yet</span>`}</div>
-      ${acts.length?`<div class="pvacts" style="grid-template-columns:repeat(${acts.length},1fr)">${acts.join("")}</div>`:`<button class="pvaddc" id="pv-addc">Add her number or Instagram</button>`}
+      <div class="pvstat"><span class="pvsel"><select id="pv-status" aria-label="Status">${PSTAT.map(o=>`<option ${o===(p.status||"Talking")?"selected":""}>${o}</option>`).join("")}</select></span>${up?`<span>Next: ${esc(fmtW(up))} · ${esc(placeName(up))}</span>`:`<span>No date yet</span>`}</div>
+      ${acts.length?`<div class="pvacts" style="grid-template-columns:repeat(${acts.length},1fr)">${acts.join("")}</div>`:`<button class="pvaddc" data-edit="1">+ Add her number or Instagram</button>`}
       <button class="pvcta" id="pv-plan"><span>Plan a date with ${esc(first)}${p.keepsKosher||p.shomerShabbat?`<small>${[p.keepsKosher?"Kosher spots only":"",p.shomerShabbat?"Sat after Shabbat":""].filter(Boolean).join(" · ")}</small>`:""}</span><span aria-hidden="true">›</span></button>
-      ${tags.length?`<div class="pvtags">${tags.map(x=>`<span>${esc(x)}</span>`).join("")}</div>`:""}
-      ${p.nextStep?`<div class="pvcard"><span class="pvh">Next step</span><div>${esc(p.nextStep)}</div></div>`:""}
-      ${hasR?`<div class="pvcard"><span class="pvh">Your vibe check</span>${PRATES.map(([k,l])=>`<div class="pvr"><span>${esc(l)}</span><i>${"♥".repeat(rt[k]||0)}<em>${"♥".repeat(5-(rt[k]||0))}</em></i></div>`).join("")}</div>`:""}
-      <div class="pvcard"><span class="pvh">Dates${past.length?` · ${past.length} so far`:""}</span>${up||past.length?[...upcoming(p).map(d=>dateRow(d,true)),...past.slice(0,5).map(d=>dateRow(d,false))].join(""):`<div class="muted">No dates yet. Plan the first one.</div>`}</div>
-      ${p.review?`<div class="pvcard"><span class="pvh">Your take</span><div class="pvtxt">${esc(p.review)}</div></div>`:""}
-      ${p.notes?`<div class="pvcard"><span class="pvh">Notes</span><div class="pvtxt">${esc(p.notes)}</div></div>`:""}
+      <div class="pvcard"><span class="pvh">What she likes</span><div class="pvtags">${likes.map((x,i)=>`<span>${esc(x)}<button class="pvtx" data-rm="${i}" aria-label="Remove ${esc(x)}">×</button></span>`).join("")}<input id="pv-tag" class="pvtagin" placeholder="+ Add" enterkeyhint="done"></div>
+        ${likes.length<6?`<div class="pvsug">${["Sushi","Cocktails","Wine","Live music","Dancing","Rooftops","Coffee","Italian","Doesn't drink","Gym"].filter(x=>!likes.some(l=>l.toLowerCase()===x.toLowerCase())).slice(0,6).map(x=>`<button data-sug="${esc(x)}">+ ${esc(x)}</button>`).join("")}</div>`:""}
+        <div class="pvtoggles"><label><input type="checkbox" id="pv-kosher" ${p.keepsKosher?"checked":""}> Keeps kosher</label><label><input type="checkbox" id="pv-shabbat" ${p.shomerShabbat?"checked":""}> Shomer Shabbat</label></div></div>
+      ${txtCard("nextStep","Next step","Text her Thursday about Friday…")}
+      <div class="pvcard"><span class="pvh">Your vibe check</span>${PRATES.map(([k,l])=>`<div class="pvr"><span>${esc(l)}</span><span class="pvhearts">${[1,2,3,4,5].map(n=>`<button data-rk="${k}" data-rn="${n}" class="${n<=(rt[k]||0)?"on":""}" aria-label="${esc(l)} ${n}">♥</button>`).join("")}</span></div>`).join("")}</div>
+      <div class="pvcard"><span class="pvh">Dates${past.length?` · ${past.length} so far`:""}</span>${up||past.length?[...upcoming(p).map(d=>dateRow(d,true)),...past.slice(0,5).map(d=>dateRow(d,false))].join(""):`<div class="muted">No dates yet.</div>`}<button class="pvlink" id="pv-plan2">+ Plan a date</button></div>
+      ${txtCard("review","Your take","How it went, green flags, red flags…")}
+      ${txtCard("notes","Notes","Things she told you, her birthday, her dog's name…")}
       <div class="pvgift"><div><b>Spoil her</b><small>${esc(g.label)}, ${esc(g.why)}</small></div><a href="${g.url}" target="_blank" rel="noopener">Send</a></div>
     </div></div></div>`;
-  $("pv-x").onclick=closeSheet;$("pv-edit").onclick=()=>editPerson(person);
-  const ac=$("pv-addc");if(ac)ac.onclick=()=>editPerson(person);
-  $("pv-plan").onclick=()=>{closeSheet();S.plan={who:person.id,newName:"",vibe:"",area:"Anywhere",chosen:""};go("plan")};
+  const sh=document.querySelector(".pvs");if(prevScroll)sh.scrollTop=prevScroll;
+  const re=()=>openPerson(S.people.find(x=>x.id===p.id)||p,true);
+  const plan=()=>{closeSheet();S.plan={who:person.id,newName:"",vibe:"",area:"Anywhere",chosen:""};go("plan")};
+  $("pv-x").onclick=closeSheet;$("pv-edit").onclick=()=>editPerson(S.people.find(x=>x.id===p.id)||p);
+  sh.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editPerson(S.people.find(x=>x.id===p.id)||p));
+  $("pv-plan").onclick=plan;$("pv-plan2").onclick=plan;
+  $("pv-status").onchange=async e=>{if(await pvSave(p.id,{status:e.target.value})){toast("Saved");re()}};
+  sh.querySelectorAll("[data-rk]").forEach(b=>b.onclick=async()=>{const k=b.dataset.rk,n=+b.dataset.rn;const r={...(rt)};r[k]=r[k]===n?0:n;if(await pvSave(p.id,{ratings:r}))re()});
+  const tin=$("pv-tag");const addTag=async()=>{const v=tin.value.trim();if(!v)return;tin.value="";if(await pvSave(p.id,{likes:[...likes,v].join(", ")})){re();setTimeout(()=>{const t=$("pv-tag");if(t)t.focus()},30)}};
+  tin.onkeydown=e=>{if(e.key==="Enter"||e.key===","){e.preventDefault();addTag()}};tin.onblur=()=>{if(tin.value.trim())addTag()};
+  sh.querySelectorAll("[data-sug]").forEach(b=>b.onclick=async()=>{if(await pvSave(p.id,{likes:[...likes,b.dataset.sug].join(", ")}))re()});
+  sh.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{const l=likes.filter((_,i)=>i!==+b.dataset.rm);if(await pvSave(p.id,{likes:l.join(", ")}))re()});
+  $("pv-kosher").onchange=async e=>{if(await pvSave(p.id,{keepsKosher:e.target.checked}))re()};
+  $("pv-shabbat").onchange=async e=>{if(await pvSave(p.id,{shomerShabbat:e.target.checked}))re()};
+  sh.querySelectorAll(".pvin").forEach(a=>{const fit=()=>{a.style.height="auto";a.style.height=a.scrollHeight+"px"};fit();a.oninput=fit;
+    a.onblur=async()=>{const k=a.dataset.k,v=a.value.trim();if(v!==(p[k]||"").trim()&&await pvSave(p.id,{[k]:v})){p[k]=v;toast("Saved")}};
+    if(a.dataset.k==="nextStep")a.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();a.blur()}}});
+  const ph=$("pv-photo");if(ph)ph.onchange=async e=>{const f=e.target.files[0];if(!f)return;toast("Uploading photo…");try{const b=await shrink(f);const upd=await S.assets.upload(b,{type:b.type});const old=p.photoId;if(await pvSave(p.id,{photoId:upd.id})){toast("Photo saved");if(old&&S.assets.delete)S.assets.delete(old).catch(()=>{});re()}}catch(err){toast("Couldn't upload that photo. Try another.")}};
   $("bg").onclick=e=>{if(e.target.id==="bg")closeSheet()};
 }
 function editPerson(person){
