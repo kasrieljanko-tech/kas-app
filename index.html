@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793237018"><script>(function(){var B="1793237018";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793237863"><script>(function(){var B="1793237863";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -542,6 +542,64 @@ html.mapon .nav{z-index:31}
 /* lower floating tab bar */
 .nav{padding-bottom:max(8px,calc(env(safe-area-inset-bottom,0px) - 12px))!important}
 .wrap{padding-bottom:110px}
+
+/* plan v2 */
+.plq{display:flex;flex-direction:column;gap:8px}
+.plk{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.plavs{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:4px 18px}.plavs::-webkit-scrollbar{display:none}
+.plav{flex:none;border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--fg);font-size:.78rem;cursor:pointer;width:60px}
+.plav .av{width:56px;height:56px;font-size:1.1rem}
+.plav[aria-pressed="true"] .av{box-shadow:0 0 0 2.5px var(--bg),0 0 0 5px var(--accent)}
+.plav[aria-pressed="true"]{font-weight:700}
+.plnew{background:var(--fill);color:var(--accent);font-size:1.6rem!important}
+.plchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:2px 18px}.plchips::-webkit-scrollbar{display:none}
+.plc{flex:none;border:0;background:var(--surface);color:var(--fg);border-radius:999px;padding:9px 15px;font:600 .88rem -apple-system,system-ui,sans-serif;cursor:pointer;white-space:nowrap;position:relative}
+.plc[aria-pressed="true"]{background:var(--accent);color:#fff}
+.plpick input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
+.plhint{background:var(--surface);border-radius:14px;padding:16px;color:var(--muted);text-align:center}
+.plres{display:flex;flex-direction:column;gap:2px;margin-top:4px}.plres b{font-size:1.1rem}.plres span{color:var(--muted);font-size:.85rem}
+.prow{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:14px;padding:8px}
+.prow img,.prph{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.prtx{flex:1;min-width:0;border:0;background:none;padding:0;text-align:left;color:var(--fg);display:flex;flex-direction:column;cursor:pointer}
+.prtx b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.prtx span{color:var(--muted);font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prpick{flex:none;border:0;background:var(--fill);color:var(--accent);font-weight:700;border-radius:999px;padding:8px 16px;cursor:pointer}
+
+/* profile view */
+.pvs{padding:0!important;gap:0!important;overflow-y:auto;overflow-x:hidden;max-height:94vh}
+.pvs::before{position:absolute;left:50%;transform:translateX(-50%);top:8px;margin:0!important;background:rgba(255,255,255,.6);z-index:2}
+.pvs{position:relative}
+.pvhero{position:relative;flex:none;height:min(58vh,440px);background-size:cover;background-position:center 25%;display:flex;flex-direction:column;justify-content:space-between;padding:18px 16px 18px;color:#fff;border-radius:14px 14px 0 0}
+.pvini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:800 5rem var(--display);opacity:.35}
+.pvtop{position:relative;display:flex;justify-content:space-between}
+.pvgl{border:0;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border-radius:999px;padding:8px 14px;font:600 .9rem -apple-system,system-ui,sans-serif;cursor:pointer}
+.pvname{position:relative;display:flex;flex-direction:column;gap:2px;text-shadow:0 1px 10px rgba(0,0,0,.4)}
+.pvname h2{margin:0;font-size:2.1rem;font-weight:800;letter-spacing:-.02em}
+.pvname span{font-size:.95rem;opacity:.92}
+.pvbody{display:flex;flex-direction:column;gap:14px;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 24px)}
+.pvstat{display:flex;align-items:center;gap:10px;font-size:.9rem;color:var(--muted);flex-wrap:wrap}
+.pvpill{background:color-mix(in srgb,#ff375f 15%,transparent);color:#ff375f;font-weight:700;font-size:.8rem;padding:5px 12px;border-radius:999px}
+.pvacts{display:grid;gap:8px}
+.pvact{background:var(--fill);border-radius:14px;padding:11px 0 9px;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--fg);text-decoration:none;font-size:.78rem;font-weight:600}
+.pvact svg{color:#ff375f}
+.pvaddc{border:1.5px dashed var(--line);background:none;color:var(--muted);border-radius:14px;padding:12px;font:inherit;cursor:pointer}
+.pvcta{border:0;width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#ff375f,#ff6b4a);color:#fff;border-radius:18px;padding:16px 18px;font:700 1.1rem -apple-system,system-ui,sans-serif;box-shadow:0 8px 20px rgba(255,55,95,.3);cursor:pointer}
+.pvcta small{display:block;font-weight:500;font-size:.8rem;opacity:.9;margin-top:2px}
+.pvcta>span:last-child{font-size:1.6rem;line-height:1}
+.pvtags{display:flex;flex-wrap:wrap;gap:8px}
+.pvtags span{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.88rem;font-weight:600}
+.pvcard{background:var(--fill);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.pvh{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.pvtxt{white-space:pre-wrap;line-height:1.45}
+.pvr{display:flex;justify-content:space-between;align-items:center}
+.pvr i{font-style:normal;color:#ff375f;letter-spacing:3px}.pvr em{font-style:normal;opacity:.22}
+.pvdate{display:flex;align-items:center;gap:12px;border:0;background:none;padding:2px 0;color:var(--fg);text-align:left;cursor:pointer;width:100%}
+.pvdd{width:44px;flex:none;border-radius:10px;background:var(--surface);display:flex;flex-direction:column;align-items:center;padding:4px 0;line-height:1.1}
+.pvdd small{font-size:.62rem;font-weight:700;color:#ff375f;text-transform:uppercase}.pvdd b{font-size:1.15rem}
+.pvdd.up{background:#ff375f}.pvdd.up small,.pvdd.up b{color:#fff}
+.pvdt{display:flex;flex-direction:column;min-width:0}.pvdt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pvdt span{font-size:.8rem;color:var(--muted)}
+.pvgift{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--fill);border-radius:16px;padding:12px 14px}
+.pvgift b{display:block}.pvgift small{color:var(--muted);font-size:.8rem}
+.pvgift a{flex:none;background:color-mix(in srgb,#ff375f 15%,transparent);color:#ff375f;font-weight:700;text-decoration:none;border-radius:999px;padding:8px 16px}
 /* Steady app frame: the page itself never moves; only the content area scrolls up/down */
 html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
 body{position:fixed;inset:0;width:100%}
@@ -1088,10 +1146,10 @@ function spotRow(s){
 
 /* ---------- plan ---------- */
 function planPicks(){
-  const P=S.plan;if(!P.vibe||!P.area)return [];
-  const types=VIBE_TYPES[P.vibe]||[];
+  const P=S.plan;const area=P.area||"Anywhere";
+  const types=P.vibe?(VIBE_TYPES[P.vibe]||[]):null;
   const person=S.people.find(p=>p.id===P.who);const pname=person?person.name:P.newName;
-  let list=S.spots.filter(s=>!s.closed&&(!person||!person.keepsKosher||s.kosher)&&types.includes(s.type)&&(P.area==="Anywhere"||s.borough===P.area));
+  let list=S.spots.filter(s=>!s.closed&&(!person||!person.keepsKosher||s.kosher)&&(!types||types.includes(s.type))&&(area==="Anywhere"||s.borough===area));
   return list.map(s=>{
     const withNames=beenWith(s);const repeat=pname&&withNames.includes(pname);
     let score=0,why="";
@@ -1110,7 +1168,7 @@ function planPicks(){
 }
 function bookBlock(s,pp){
   const P=S.plan;
-  if(!P.wd){const dw=(pp&&pp.shomerShabbat?shabbatSafeWhen():defaultWhen());P.wd=dw.slice(0,10);P.wt=dw.slice(11,16);P.wl=P.wl||120}
+  if(!P.wd||!P.wt){const dw=(pp&&pp.shomerShabbat?shabbatSafeWhen():defaultWhen());P.wd=P.wd||dw.slice(0,10);P.wt=P.wt||dw.slice(11,16);P.wl=P.wl||120}
   setTimeout(()=>document.querySelectorAll('.bkrow [aria-pressed="true"]').forEach(b=>{const r=b.parentElement;r.scrollLeft=b.offsetLeft-r.clientWidth/2+b.clientWidth/2}),0);
   const days=[];const t0=new Date();t0.setHours(0,0,0,0);
   for(let i=0;i<14;i++){const d=new Date(t0);d.setDate(t0.getDate()+i);const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
@@ -1128,42 +1186,51 @@ function bookBlock(s,pp){
   </div>`;
 }
 function renderPlan(){
-  const P=S.plan;
+  const P=S.plan;if(!P.area)P.area="Anywhere";
   {const lk=[P.who,P.newName,P.vibe,P.area].join("|");if(P.limKey!==lk){P.limKey=lk;P.lim=8}}
   const people=[...S.people].filter(p=>p.status!=="Done"&&(vis(p)||p.id===P.who)).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-  const pname=(S.people.find(p=>p.id===P.who)||{}).name||P.newName;
-  const allPicks=planPicks();const lim=P.lim||8;let picks=allPicks.slice(0,lim);
+  const pp=S.people.find(p=>p.id===P.who);const pname=(pp||{}).name||P.newName;const first=String(pname||"").split(" ")[0];
+  const t0=new Date();t0.setHours(0,0,0,0);
+  const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  const plus=n=>{const d=new Date(t0);d.setDate(d.getDate()+n);return d};
+  const nextDow=w=>plus((w-t0.getDay()+7)%7);
+  const fri=nextDow(5),sat=nextDow(6);
+  const whens=[["Tonight",dk(t0)],["Tomorrow",dk(plus(1))]];
+  [[fri,"Fri"],[sat,"Sat"]].forEach(([d,l])=>{const k=dk(d);if(!whens.some(w=>w[1]===k))whens.push([l+" "+d.getDate(),k])});
+  const custom=P.whenDay&&!whens.some(w=>w[1]===P.whenDay);
+  const ready=!!((P.who&&P.who!=="__new")||P.newName);
+  const allPicks=ready?planPicks():[];const lim=P.lim||8;let picks=allPicks.slice(0,lim);
   if(P.chosen&&!picks.some(k=>k.s.id===P.chosen)){const c=allPicks.find(k=>k.s.id===P.chosen);if(c)picks.push(c)}
-  const ready=(P.who&&P.who!=="__new"||P.newName)&&P.vibe&&P.area;
+  const big=(k,i)=>{const s=k.s,ph=(s.photos&&s.photos[0])||s.photoId,open=P.chosen===s.id;
+    return `<div class="pick ${i===0&&!k.repeat?"best":""}">${ph?`<img class="pkimg" src="${esc(imgSrc(ph))}" alt="">`:""}
+      <div class="ph"><div style="min-width:0"><div class="pn">${esc(s.name)}</div><div class="muted" style="font-size:.9rem">${esc([s.area,s.type==="Drinks"?"Bar":s.type,s.price].filter(Boolean).join(" · "))}</div></div>
+        ${k.repeat?`<span class="pill warn">Repeat</span>`:i===0?`<span class="pill ink">Best match</span>`:""}</div>
+      ${k.why?`<div class="why">${esc(k.why)}</div>`:""}
+      ${open?bookBlock(s,pp)+`<div class="btns"><button class="btn pri flex" data-act="savedate:${esc(s.id)}" id="pl-save">Save the date</button><button class="btn" data-act="unchoose">Cancel</button></div>
+        ${bookLinks(s)?`<div class="sheet-links"><span class="muted">Need a table?</span>${bookLinks(s)}</div>`:""}`
+      :`<div class="btns"><button class="btn pri flex" data-act="choose:${esc(s.id)}">Pick this</button><a class="btn flex" href="${mapUrl(s)}" target="_blank" rel="noopener">Map</a></div>`}</div>`};
+  const row=k=>{const s=k.s;const ph=(s.photos&&s.photos[0])||s.photoId;
+    return `<div class="prow">${ph?`<img src="${esc(imgSrc(ph))}" alt="">`:`<span class="prph" style="background:hsl(${hashHue(s.name)} 45% 45%)">${esc((s.name||"?")[0])}</span>`}
+      <button class="prtx" data-act="spot:${esc(s.id)}"><b>${esc(s.name)}</b><span>${esc([s.area,k.repeat?"Repeat with "+first:(s.status==="Been"&&s.rating>=4?"You loved it":s.status!=="Been"?"Want to try":"")].filter(Boolean).join(" · "))}</span></button>
+      <button class="prpick" data-act="choose:${esc(s.id)}">Pick</button></div>`};
   let res="";
-  if(ready){
-    const pp=S.people.find(p=>p.id===P.who);
-    if(!picks.length)res=pp&&pp.keepsKosher?`<div class="empty"><strong>No kosher spots fit yet</strong>${esc(pp.name)} keeps kosher, so I only show kosher places. Try another vibe or area.</div>`:`<div class="empty"><strong>Nothing on your list fits yet</strong>Try another area or vibe, or add a spot.</div>`;
-    else res=`<h2>My picks for you and ${esc(pname)}</h2><span class="muted" style="font-size:.9rem">${allPicks.length} place${allPicks.length===1?"":"s"} fit. Best matches first.</span>${pp&&(pp.keepsKosher||pp.shomerShabbat)?`<span class="muted" style="font-size:.88rem">${pp.keepsKosher?"Kosher places only. ":""}${pp.shomerShabbat?"Suggesting Saturday night, after Shabbat.":""}</span>`:""}`+picks.map((k,i)=>{const s=k.s;const open=P.chosen===s.id||(!P.chosen&&i===0&&false);
-      const ph=(s.photos&&s.photos[0])||s.photoId;
-      return `<div class="pick ${i===0&&!k.repeat?"best":""}">${ph?`<img class="pkimg" src="${esc(imgSrc(ph))}" alt="">`:""}
-        <div class="ph"><div style="min-width:0"><div class="pn">${esc(s.name)}</div><div class="muted" style="font-size:.9rem">${esc([s.area,s.price,s.vibe].filter(Boolean).join(" · "))}</div></div>
-          ${k.repeat?`<span class="pill warn">Repeat</span>`:i===0?`<span class="pill ink">Best match</span>`:""}</div>
-        ${k.why?`<div class="why">${esc(k.why)}</div>`:""}
-        ${open?bookBlock(s,pp)+`
-          <div class="btns"><button class="btn pri flex" data-act="savedate:${esc(s.id)}" id="pl-save">Save the date</button><button class="btn" data-act="unchoose">Cancel</button></div>
-          ${bookLinks(s)?`<div class="sheet-links"><span class="muted">Need a table?</span>${bookLinks(s)}</div>`:""}`
-        :`<div class="btns"><button class="btn ${i===0&&!k.repeat?"pri":""} flex" data-act="choose:${esc(s.id)}">Pick this</button><a class="btn flex" href="${mapUrl(s)}" target="_blank" rel="noopener">Map</a>${s.instagram?`<a class="btn flex" href="${igUrl(s.instagram)}" target="_blank" rel="noopener">IG</a>`:""}</div>`}
-      </div>`}).join("")+(allPicks.length>picks.length?`<button class="btn recmorebtn" data-act="plmore">Show more (${allPicks.length-picks.length} more)</button>`:"");
-  }
+  if(!ready)res=`<div class="plhint">Tap who it's with and your options show up here.</div>`;
+  else if(!allPicks.length)res=pp&&pp.keepsKosher?`<div class="empty"><strong>No kosher spots fit yet</strong>${esc(first)} keeps kosher, so only kosher places show. Try another vibe or area.</div>`:`<div class="empty"><strong>Nothing fits yet</strong>Try another vibe or area.</div>`;
+  else res=`<div class="plres"><b>${allPicks.length} place${allPicks.length===1?"":"s"} for you and ${esc(first)}</b>${pp&&(pp.keepsKosher||pp.shomerShabbat)?`<span>${pp.keepsKosher?"Kosher only. ":""}${pp.shomerShabbat?"Saturday after Shabbat.":""}</span>`:""}</div>`+
+    picks.map((k,i)=>(i===0||P.chosen===k.s.id)?big(k,i):row(k)).join("")+
+    (allPicks.length>picks.length?`<button class="btn recmorebtn" data-act="plmore">Show more (${allPicks.length-picks.length} more)</button>`:"");
   $("v-plan").innerHTML=`
     <div class="top" style="justify-content:flex-start"><button class="round" data-go="home" aria-label="Back">${ICON.back}</button><h1 style="font-size:1.7rem">Plan a date</h1></div>
-    <div class="step"><span class="lab">1 · Who's it with?</span><div class="chips">
-      ${people.map(p=>`<button class="chip" aria-pressed="${P.who===p.id}" data-act="who:${esc(p.id)}">${esc(p.name)}</button>`).join("")}
-      <button class="chip" aria-pressed="${P.who==="__new"}" data-act="who:__new">+ Someone new</button></div>
-      ${P.who==="__new"?`<div class="newname"><div class="field" style="flex:1"><label for="pl-name">Her name</label><input id="pl-name" value="${esc(P.newName)}" placeholder="Her name"></div></div>`:""}
-    </div>
-    <div class="step"><span class="lab">2 · What's the vibe?</span><div class="tiles" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-      ${Object.keys(VIBE_TYPES).map(v=>`<button class="tile" aria-pressed="${P.vibe===v}" data-act="vibe:${v}">${v}</button>`).join("")}</div></div>
-    <div class="step"><span class="lab">3 · Where?</span><div class="tiles" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-      ${["Brooklyn","Manhattan","Queens","Anywhere"].map(v=>`<button class="tile" aria-pressed="${P.area===v}" data-act="area:${v}">${v}</button>`).join("")}</div></div>
+    <div class="plq"><span class="plk">With</span><div class="plavs">
+      ${people.map(p=>`<button class="plav" aria-pressed="${P.who===p.id}" data-act="who:${esc(p.id)}">${avatar(p,avStyle(p.name))}<span>${esc(String(p.name).split(" ")[0])}</span></button>`).join("")}
+      <button class="plav" aria-pressed="${P.who==="__new"}" data-act="who:__new"><span class="av plnew">+</span><span>New</span></button></div>
+      ${P.who==="__new"?`<div class="field"><input id="pl-name" value="${esc(P.newName)}" placeholder="Her name"></div>`:""}</div>
+    <div class="plq"><span class="plk">When</span><div class="plchips">${whens.map(([l,k])=>`<button class="plc" aria-pressed="${P.whenDay===k}" data-act="when:${k}">${l}</button>`).join("")}<label class="plc plpick" aria-pressed="${!!custom}">${custom?esc(parseLocal(P.whenDay+"T12:00").toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})):"Pick a day"}<input type="date" id="pl-day" min="${dk(t0)}" value="${custom?P.whenDay:""}"></label></div></div>
+    <div class="plq"><span class="plk">Vibe</span><div class="plchips"><button class="plc" aria-pressed="${!P.vibe}" data-act="vibe:">Any</button>${Object.keys(VIBE_TYPES).map(v=>`<button class="plc" aria-pressed="${P.vibe===v}" data-act="vibe:${v}">${v}</button>`).join("")}</div></div>
+    <div class="plq"><span class="plk">Where</span><div class="plchips">${["Anywhere","Manhattan","Brooklyn","Queens"].map(v=>`<button class="plc" aria-pressed="${P.area===v}" data-act="area:${v}">${v}</button>`).join("")}</div></div>
     <div class="view" style="gap:10px">${res}</div>`;
   const nm=$("pl-name");if(nm){nm.oninput=e=>{const had=!!S.plan.newName;S.plan.newName=e.target.value.trim();if(had!==!!S.plan.newName){const pos=e.target.selectionStart;renderPlan();const n2=$("pl-name");n2.focus();try{n2.setSelectionRange(pos,pos)}catch(_){}}}}
+  const pd=$("pl-day");if(pd)pd.onchange=e=>{if(e.target.value){S.plan.whenDay=e.target.value;S.plan.wd=e.target.value;renderPlan()}};
 }
 async function saveDate(spotId,btn){
   const P=S.plan;const when=$("pl-when").value;if(!when){$("pl-when").focus();return}
@@ -1438,6 +1505,45 @@ function openSpot(spot){
 }
 
 function openPerson(person){
+  if(!person)return editPerson(null);
+  const p=person,first=String(p.name||"").split(" ")[0],age=pAge(p);
+  const photo=p.photoId?imgSrc(p.photoId):"";
+  const sub=[p.city||p.region,p.whereMet?"met on "+p.whereMet:""].filter(Boolean).join(" · ");
+  const up=upcoming(p)[0],past=pastDates(p);
+  const fmtW=d=>{const w=parseLocal(d.when);return w.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+" · "+w.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})};
+  let dg=String(p.contact||"").replace(/\D/g,"");if(dg.length===10)dg="1"+dg;const ig=p.instagram?igHandle(p.instagram):"";
+  const I={text:'<path d="M4 5h16v11H9l-5 4z"/>',call:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',wa:'<path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/>',dm:'<rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/>'};
+  const ic=k=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${I[k]}</svg>`;
+  const acts=[];if(dg){acts.push(`<a class="pvact" href="sms:+${dg}">${ic("text")}Text</a>`,`<a class="pvact" href="tel:+${dg}">${ic("call")}Call</a>`,`<a class="pvact" href="https://wa.me/${dg}" target="_blank" rel="noopener">${ic("wa")}WhatsApp</a>`)}
+  if(ig)acts.push(`<a class="pvact" href="https://ig.me/m/${esc(ig)}" target="_blank" rel="noopener">${ic("dm")}DM</a>`);
+  const tags=[...String(p.likes||"").split(/[,;]+/).map(x=>x.trim()).filter(Boolean),p.keepsKosher?"Keeps kosher":"",p.shomerShabbat?"Shomer Shabbat":"",age&&!p.likes?"":""].filter(Boolean);
+  const rt=p.ratings||{};const hasR=PRATES.some(([k])=>rt[k]);
+  const g=giftFor(p);
+  const dateRow=(d,isUp)=>`<button class="pvdate" data-act="date:${esc(p.id)}:${esc(d.id)}"><span class="pvdd ${isUp?"up":""}"><small>${esc(parseLocal(d.when).toLocaleDateString(undefined,{month:"short"}))}</small><b>${parseLocal(d.when).getDate()}</b></span><span class="pvdt"><b>${esc(placeName(d))}</b><span>${esc(fmtW(d))}${d.rating?" · "+"♥".repeat(d.rating):""}</span></span></button>`;
+  $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet pvs" role="dialog" aria-label="${esc(p.name)}">
+    <div class="pvhero" style="${photo?`background-image:linear-gradient(180deg,rgba(0,0,0,.25),transparent 30%,transparent 50%,rgba(0,0,0,.8)),url('${esc(photo)}')`:`background:linear-gradient(160deg,hsl(${hashHue(p.name)} 55% 62%),hsl(${(hashHue(p.name)+30)%360} 50% 32%))`}">
+      ${photo?"":`<span class="pvini">${esc(initials(p.name))}</span>`}
+      <div class="pvtop"><button class="pvgl" id="pv-x" aria-label="Close">✕</button><button class="pvgl" id="pv-edit">Edit</button></div>
+      <div class="pvname"><h2>${esc(first)}${age?`, ${age}`:""}</h2>${sub?`<span>${esc(sub)}</span>`:""}</div>
+    </div>
+    <div class="pvbody">
+      <div class="pvstat"><span class="pvpill">${esc(p.status||"Talking")}</span>${up?`<span>Next: ${esc(fmtW(up))} · ${esc(placeName(up))}</span>`:`<span>No date yet</span>`}</div>
+      ${acts.length?`<div class="pvacts" style="grid-template-columns:repeat(${acts.length},1fr)">${acts.join("")}</div>`:`<button class="pvaddc" id="pv-addc">Add her number or Instagram</button>`}
+      <button class="pvcta" id="pv-plan"><span>Plan a date with ${esc(first)}${p.keepsKosher||p.shomerShabbat?`<small>${[p.keepsKosher?"Kosher spots only":"",p.shomerShabbat?"Sat after Shabbat":""].filter(Boolean).join(" · ")}</small>`:""}</span><span aria-hidden="true">›</span></button>
+      ${tags.length?`<div class="pvtags">${tags.map(x=>`<span>${esc(x)}</span>`).join("")}</div>`:""}
+      ${p.nextStep?`<div class="pvcard"><span class="pvh">Next step</span><div>${esc(p.nextStep)}</div></div>`:""}
+      ${hasR?`<div class="pvcard"><span class="pvh">Your vibe check</span>${PRATES.map(([k,l])=>`<div class="pvr"><span>${esc(l)}</span><i>${"♥".repeat(rt[k]||0)}<em>${"♥".repeat(5-(rt[k]||0))}</em></i></div>`).join("")}</div>`:""}
+      <div class="pvcard"><span class="pvh">Dates${past.length?` · ${past.length} so far`:""}</span>${up||past.length?[...upcoming(p).map(d=>dateRow(d,true)),...past.slice(0,5).map(d=>dateRow(d,false))].join(""):`<div class="muted">No dates yet. Plan the first one.</div>`}</div>
+      ${p.review?`<div class="pvcard"><span class="pvh">Your take</span><div class="pvtxt">${esc(p.review)}</div></div>`:""}
+      ${p.notes?`<div class="pvcard"><span class="pvh">Notes</span><div class="pvtxt">${esc(p.notes)}</div></div>`:""}
+      <div class="pvgift"><div><b>Spoil her</b><small>${esc(g.label)}, ${esc(g.why)}</small></div><a href="${g.url}" target="_blank" rel="noopener">Send</a></div>
+    </div></div></div>`;
+  $("pv-x").onclick=closeSheet;$("pv-edit").onclick=()=>editPerson(person);
+  const ac=$("pv-addc");if(ac)ac.onclick=()=>editPerson(person);
+  $("pv-plan").onclick=()=>{closeSheet();S.plan={who:person.id,newName:"",vibe:"",area:"Anywhere",chosen:""};go("plan")};
+  $("bg").onclick=e=>{if(e.target.id==="bg")closeSheet()};
+}
+function editPerson(person){
   const p=person?JSON.parse(JSON.stringify(person)):{status:"Talking",dates:[]};p.dates=p.dates||[];
   let pFile=null,pRemove=false;const pr={...(p.ratings||{})};
   $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><form class="sheet" id="pform">
@@ -1503,7 +1609,7 @@ function openPerson(person){
   if(person){
     $("p-plan").onclick=async()=>{await save(true);closeSheet();S.plan={who:person.id,newName:"",vibe:"",area:"",chosen:""};go("plan")};
     $("pdel").onclick=()=>{$("pdel-area").innerHTML=`<div class="confirm">Delete ${esc(person.name)}? <button type="button" class="btn danger" id="pyes">Yes, delete</button><button type="button" class="btn" id="pno">Keep</button></div>`;
-      $("pno").onclick=()=>openPerson(person);
+      $("pno").onclick=()=>editPerson(person);
       $("pyes").onclick=async()=>{try{await S.db.collection("people").doc(person.id).delete();closeSheet();toast("Deleted")}catch(e){toast("Couldn't delete. Try again.")}}};
   }
   $("pform").onsubmit=async e=>{e.preventDefault();const was=person&&person.status;if(await save()){closeSheet();if(person&&was!=="Done"&&p.status==="Done")showMotivation(p.name)}};
@@ -1612,9 +1718,10 @@ document.addEventListener("click",e=>{
   else if(act==="askclear"){S.ask={q:"",a:"",busy:false,err:""};renderHome();const i=$("askq");if(i)i.focus()}
   else if(act==="newperson")openPerson(null);
   else if(act==="who"){S.plan.who=S.plan.who===arg?"":arg;S.plan.chosen="";renderPlan();if(arg==="__new"&&$("pl-name"))$("pl-name").focus()}
+  else if(act==="when"){S.plan.whenDay=S.plan.whenDay===arg?"":arg;S.plan.wd=S.plan.whenDay;S.plan.wt="";renderPlan()}
   else if(act==="vibe"){S.plan.vibe=arg;S.plan.chosen="";renderPlan()}
   else if(act==="area"){S.plan.area=arg;S.plan.chosen="";renderPlan()}
-  else if(act==="choose"){S.plan.chosen=arg;S.plan.wd="";renderPlan()}
+  else if(act==="choose"){S.plan.chosen=arg;S.plan.wd=S.plan.whenDay||"";S.plan.wt="";renderPlan();setTimeout(()=>{const c=document.querySelector("#v-plan .pick .book");if(c)c.scrollIntoView({behavior:"smooth",block:"center"})},50)}
   else if(act==="unchoose"){S.plan.chosen="";renderPlan()}
   else if(act==="savedate")saveDate(arg,a);
   else if(act==="date"){const [pid,did]=arg.split(":");openDate(pid,did)}
@@ -1637,7 +1744,7 @@ render();
   const rerender=()=>{if(S.view!=="plan"||!S.plan.chosen)render()};
   db.collection("spots").onSnapshot(snap=>{S.spots=snap.docs.map(d=>({id:d.id,...d.data()}));if(S.loading)done();rerender()},()=>{S.loading=false;S.db=null;render()});
   db.doc("me/notes").onSnapshot(sn=>{S.notes=sn.exists?sn.data():null;if(S.view==="book")render()},()=>{});
-  db.doc("me/profile").onSnapshot(sn=>{S.profile=sn.exists?sn.data():null;if(S.view==="discover"||S.view==="home"||(S.view==="me"&&document.activeElement!==$("me-look")))render()},()=>{});
+  db.doc("me/profile").onSnapshot(sn=>{S.profile=sn.exists?sn.data():null;try{const ph=S.profile&&S.profile.photoId;localStorage.setItem("ku.meimg",ph?new URL(imgSrc(ph),location.href).href:"")}catch(e){}if(S.view==="discover"||S.view==="home"||(S.view==="me"&&document.activeElement!==$("me-look")))render()},()=>{});
   db.collection("discover").onSnapshot(sn=>{S.discover=sn.docs.map(d=>({id:d.id,...d.data()}));if(S.view==="discover"||S.view==="home")render()},()=>{});
   db.collection("people").onSnapshot(snap=>{S.people=snap.docs.map(d=>({id:d.id,...d.data()}));if(S.loading)done();rerender()},()=>{if(S.loading)done();render()});
 })();

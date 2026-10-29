@@ -1,3 +1,46 @@
+/* iPhone-style passcode screen, shared by the PIN gate and the Face ID lock */
+window.kuKeypad=function(o){
+  const g=k=>{try{return localStorage.getItem(k)||""}catch(e){return ""}};
+  const h=new Date().getHours(),hi=h<5?"Good night":h<12?"Good morning":h<18?"Good afternoon":"Good evening";
+  if(!document.getElementById("ku-kp-css")){const st=document.createElement("style");st.id="ku-kp-css";st.textContent=`
+  .kp{position:fixed;inset:0;z-index:${o.z||100};display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 7vh) 24px calc(env(safe-area-inset-bottom,0px) + 28px);font-family:-apple-system,system-ui,sans-serif;color:#fff;background:radial-gradient(120% 60% at 50% 0%,#1d3b6e 0%,rgba(10,20,40,0) 60%),linear-gradient(180deg,#0b1220,#000);-webkit-user-select:none;user-select:none}
+  .kp-me{width:84px;height:84px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.5)}
+  .kp-ic{width:76px;height:76px;border-radius:18px;box-shadow:0 10px 30px rgba(10,132,255,.35)}
+  .kp h2{margin:16px 0 4px;font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
+  .kp .kp-s{color:rgba(255,255,255,.65);font-size:.95rem;min-height:1.3em}
+  .kp-dots{display:flex;gap:18px;margin:22px 0 0}
+  .kp-dots i{width:14px;height:14px;border-radius:50%;border:1.6px solid #fff;transition:background .12s}
+  .kp-dots i.on{background:#fff}
+  .kp-dots.shake{animation:kpsh .4s}
+  @keyframes kpsh{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+  .kp-pad{margin-top:auto;display:grid;grid-template-columns:repeat(3,76px);gap:16px 26px}
+  .kp-k{width:76px;height:76px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font:400 2rem -apple-system,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .1s}
+  .kp-k:active{background:rgba(255,255,255,.4)}
+  .kp-k small{font-size:.55rem;letter-spacing:.2em;font-weight:600;margin-top:2px;opacity:.8}
+  .kp-k.t{background:none;font-size:1rem;font-weight:500}
+  .kp-k.t:active{background:rgba(255,255,255,.12)}
+  @media (prefers-reduced-motion:reduce){.kp-dots.shake{animation:none}}`;document.head.appendChild(st)}
+  const d=document.createElement("div");d.id=o.id;d.className="kp";
+  const me=g("ku.meimg");const L=["","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"];
+  d.innerHTML=`${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png" alt="">`}
+    <h2>${hi}, Kas</h2><div class="kp-s" id="${o.id}-s">${o.sub||"Enter your code"}</div>
+    <div class="kp-dots" id="${o.id}-d">${"<i></i>".repeat(o.len||4)}</div>
+    <div class="kp-pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="kp-k" data-n="${n}">${n}<small>${L[n-1]||"&nbsp;"}</small></button>`).join("")}
+      ${o.faceId?`<button class="kp-k t" data-f="1" aria-label="Face ID"><svg width="30" height="30" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8"/><path d="M22 24v4M42 24v4M32 26v10h-3M24 44c4 4 12 4 16 0"/></svg></button>`:`<span></span>`}
+      <button class="kp-k" data-n="0">0<small>&nbsp;</small></button><button class="kp-k t" data-x="1">Delete</button></div>`;
+  document.body.appendChild(d);
+  let code="",busy=false;const dots=d.querySelector(".kp-dots"),msg=d.querySelector(".kp-s");
+  const paint=()=>dots.querySelectorAll("i").forEach((i,k)=>i.classList.toggle("on",k<code.length));
+  const fail=t=>{dots.classList.remove("shake");void dots.offsetWidth;dots.classList.add("shake");try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}code="";paint();msg.textContent=t||"Wrong code, try again"};
+  const press=async n=>{if(busy||code.length>=(o.len||4))return;code+=n;paint();
+    if(code.length===(o.len||4)){busy=true;msg.textContent="…";let r;try{r=await o.onCode(code)}catch(e){r=e&&e.message||false}busy=false;
+      if(r===true){d.remove()}else fail(typeof r==="string"?r:null)}};
+  d.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+    if(b.dataset.n!==undefined)press(b.dataset.n);else if(b.dataset.x){code=code.slice(0,-1);paint()}else if(b.dataset.f&&o.faceId)o.faceId(d,msg)});
+  d.addEventListener("keydown",e=>{if(/^\d$/.test(e.key))press(e.key);else if(e.key==="Backspace"){code=code.slice(0,-1);paint()}});
+  d.tabIndex=-1;try{d.focus()}catch(e){}
+  return d;
+};
 /* Standalone runtime: replaces Claude's db/assets/calendar with a private Google Sheet via Apps Script */
 (function(){
   const API=window.KU_API;
@@ -57,14 +100,8 @@
   // PIN gate
   let openGate;const gate=new Promise(r=>openGate=r);
   function askPin(msg){
-    const d=document.createElement("div");d.id="pin-gate";
-    d.innerHTML=`<div style="position:fixed;inset:0;z-index:99;background:var(--bg,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;font-family:-apple-system,system-ui,sans-serif">
-      <div style="font-size:2rem;font-weight:800">The Kas Upgrade</div><div style="color:#8e8e93">${msg||"Enter your PIN"}</div>
-      <input id="pin-in" type="password" inputmode="numeric" autocomplete="current-password" style="font-size:1.6rem;text-align:center;letter-spacing:.4em;width:200px;padding:12px;border-radius:14px;border:0;background:rgba(127,127,127,.18);color:inherit">
-      <button id="pin-go" style="font-size:1.05rem;font-weight:600;padding:12px 40px;border-radius:999px;border:0;background:#0a84ff;color:#fff">Open</button></div>`;
-    document.body.appendChild(d);const i=d.querySelector("#pin-in");i.focus();
-    const go=async()=>{PIN=i.value.trim();try{await call({action:"ping"});put("ku.pin",PIN);d.remove();openGate();load().catch(e=>rejectReady(e))}catch(e){i.value="";d.querySelector("div div:nth-child(2)").textContent=e.code==="pin"?"Wrong PIN, try again":"Can't connect. Check your internet."}};
-    d.querySelector("#pin-go").onclick=go;i.onkeydown=e=>{if(e.key==="Enter")go()};
+    const sub=msg||(location.hostname.indexOf("github.io")>=0&&!localStorage.getItem("ku.pin")?"Enter your code to get started":"Enter your code");
+    kuKeypad({id:"pin-gate",z:99,sub,len:4,onCode:async c=>{PIN=c;try{await call({action:"ping"});put("ku.pin",PIN);openGate();load().catch(e=>rejectReady(e));return true}catch(e){PIN=null;return e.code==="pin"?"Wrong code, try again":"Can't connect. Check your internet."}}});
   }
   const start=()=>{if(PIN){openGate();load().catch(e=>{if(e.code==="pin"){put("ku.pin","");PIN=null;location.reload()}else{rejectReady(e)}})}else askPin()};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
@@ -92,17 +129,9 @@
   const faceSvg='<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8"/><path d="M22 24v4M42 24v4M32 26v10h-3M24 44c4 4 12 4 16 0"/></svg>';
   function lock(auto){
     if(!ok||!g("ku.faceid")||!g("ku.pin")||document.getElementById("fid-lock"))return;
-    const d=document.createElement("div");d.id="fid-lock";d.style.cssText=css;
-    d.innerHTML=`<img src="icon-180.png" alt="" style="width:76px;height:76px;border-radius:18px"><div style="font-size:1.6rem;font-weight:800">The Kas Upgrade</div>
-      <button id="fid-go" style="${btn};display:flex;align-items:center;gap:10px;margin-top:10px">Unlock with Face ID</button><div id="fid-msg" style="color:#8e8e93;min-height:1.2em"></div>
-      <button id="fid-pin" style="background:none;border:0;color:#8e8e93;font-size:.9rem;margin-top:24px">Use PIN instead</button>`;
-    document.body.appendChild(d);
-    const run=()=>verify().then(()=>d.remove()).catch(()=>{d.querySelector("#fid-msg").textContent="Tap to try again"});
-    d.querySelector("#fid-go").onclick=run;
-    d.querySelector("#fid-pin").onclick=()=>{const i=document.createElement("input");i.type="password";i.inputMode="numeric";i.placeholder="PIN";
-      i.style.cssText="font-size:1.4rem;text-align:center;letter-spacing:.3em;width:180px;padding:10px;border-radius:12px;border:0;background:#222;color:#fff";
-      d.querySelector("#fid-pin").replaceWith(i);i.focus();i.oninput=()=>{if(i.value===g("ku.pin"))d.remove()}};
-    if(auto)setTimeout(run,250);
+    const run=(d,msg)=>verify().then(()=>d.remove()).catch(()=>{msg.textContent="Face ID didn't work. Enter your code."});
+    const d=kuKeypad({id:"fid-lock",z:100,sub:"Face ID or your code",len:(g("ku.pin")||"").length||4,onCode:async c=>c===g("ku.pin")?true:"Wrong code, try again",faceId:run});
+    if(auto)setTimeout(()=>run(d,d.querySelector(".kp-s")),300);
   }
   function offer(){
     if(!ok||g("ku.faceid")||!g("ku.pin")||+(g("ku.faceid.later")||0)>Date.now())return;
