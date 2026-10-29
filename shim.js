@@ -3,17 +3,18 @@ window.kuKeypad=function(o){
   const g=k=>{try{return localStorage.getItem(k)||""}catch(e){return ""}};
   const h=new Date().getHours(),hi=h<5?"Good night":h<12?"Good morning":h<18?"Good afternoon":"Good evening";
   if(!document.getElementById("ku-kp-css")){const st=document.createElement("style");st.id="ku-kp-css";st.textContent=`
-  .kp{position:fixed;inset:0;z-index:${o.z||100};display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 7vh) 24px calc(env(safe-area-inset-bottom,0px) + 28px);font-family:-apple-system,system-ui,sans-serif;color:#fff;background:radial-gradient(90% 45% at 50% 22%,rgba(29,59,110,.85) 0%,rgba(10,20,40,0) 70%),#000;-webkit-user-select:none;user-select:none}
-  .kp-me{width:84px;height:84px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.5)}
+  .kp{position:fixed;inset:0;z-index:${o.z||100};display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 3vh) 24px calc(env(safe-area-inset-bottom,0px) + 20px);font-family:-apple-system,system-ui,sans-serif;color:#fff;background:radial-gradient(90% 45% at 50% 22%,rgba(29,59,110,.85) 0%,rgba(10,20,40,0) 70%),#000;-webkit-user-select:none;user-select:none}
+  .kp-logo{display:flex;align-items:center;gap:9px;margin-bottom:3.5vh}.kp-logo img{width:30px;height:30px;border-radius:8px}.kp-logo span{font:600 .95rem -apple-system,system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.92)}.kp-logo b{color:#ff375f;font-weight:800}
+  .kp-me{width:76px;height:76px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.5)}
   .kp-ic{width:76px;height:76px;border-radius:18px;box-shadow:0 10px 30px rgba(10,132,255,.35)}
-  .kp h2{margin:16px 0 4px;font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
+  .kp h2{margin:12px 0 4px;font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
   .kp .kp-s{color:rgba(255,255,255,.65);font-size:.95rem;min-height:1.3em}
   .kp-dots{display:flex;gap:18px;margin:22px 0 0}
   .kp-dots i{width:14px;height:14px;border-radius:50%;border:1.6px solid #fff;transition:background .12s}
   .kp-dots i.on{background:#fff}
   .kp-dots.shake{animation:kpsh .4s}
   @keyframes kpsh{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
-  .kp-pad{margin-top:auto;display:grid;grid-template-columns:repeat(3,76px);gap:16px 26px}
+  .kp-pad{margin-top:4.5vh;display:grid;grid-template-columns:repeat(3,76px);gap:16px 26px}
   .kp-k{width:76px;height:76px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font:400 2rem -apple-system,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .1s}
   .kp-k:active{background:rgba(255,255,255,.4)}
   .kp-k small{font-size:.55rem;letter-spacing:.2em;font-weight:600;margin-top:2px;opacity:.8}
@@ -23,7 +24,7 @@ window.kuKeypad=function(o){
   @media (prefers-reduced-motion:reduce){.kp-dots.shake{animation:none}}`;document.head.appendChild(st)}
   const d=document.createElement("div");d.id=o.id;d.className="kp";
   const me=g("ku.meimg");const L=["","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"];
-  d.innerHTML=`${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png" alt="">`}
+  d.innerHTML=`<div class="kp-logo"><img src="icon-180.png" alt=""><span>The Kas <b>Upgrade</b></span></div>${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png" alt="">`}
     <h2>${hi}, Kas</h2><div class="kp-s" id="${o.id}-s">${o.sub||"Enter your code"}</div>
     <div class="kp-dots" id="${o.id}-d">${"<i></i>".repeat(o.len||4)}</div>
     <div class="kp-pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="kp-k" data-n="${n}">${n}<small>${L[n-1]||"&nbsp;"}</small></button>`).join("")}

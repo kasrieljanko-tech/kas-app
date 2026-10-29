@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793240805"><script>(function(){var B="1793240805";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793241909"><script>(function(){var B="1793241909";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -552,7 +552,7 @@ html.mapon .nav{z-index:31}
 .plav[aria-pressed="true"] .av{box-shadow:0 0 0 2.5px var(--bg),0 0 0 5px var(--accent)}
 .plav[aria-pressed="true"]{font-weight:700}
 .plnew{background:var(--fill);color:var(--accent);font-size:1.6rem!important}
-.plchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:2px 18px}.plchips::-webkit-scrollbar{display:none}
+.plchips{display:flex;gap:8px;flex-wrap:wrap}.plchips::-webkit-scrollbar{display:none}
 .plc{flex:none;border:0;background:var(--surface);color:var(--fg);border-radius:999px;padding:9px 15px;font:600 .88rem -apple-system,system-ui,sans-serif;cursor:pointer;white-space:nowrap;position:relative}
 .plc[aria-pressed="true"]{background:var(--accent);color:#fff}
 .plpick input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
@@ -1235,6 +1235,8 @@ function renderPlan(){
   let res="";
   if(!ready)res=`<div class="plhint">Tap who it's with and your options show up here.</div>`;
   else if(!allPicks.length)res=pp&&pp.keepsKosher?`<div class="empty"><strong>No kosher spots fit yet</strong>${esc(first)} keeps kosher, so only kosher places show. Try another vibe or area.</div>`:`<div class="empty"><strong>Nothing fits yet</strong>Try another vibe or area.</div>`;
+  else if((P.q||"").trim()){const q=P.q.trim().toLowerCase();const hits=S.spots.filter(s=>!s.closed&&[s.name,s.area,s.type,s.notes].join(" ").toLowerCase().includes(q)).slice(0,30).map(s=>({s,why:"",repeat:false}));
+    res=`<div class="plres"><b>${hits.length} match${hits.length===1?"":"es"} for "${esc(P.q.trim())}"</b><span>Searching all your places</span></div>`+(hits.length?hits.map(k=>P.chosen===k.s.id?big(k,1):row(k)).join(""):`<div class="plhint">No place called that. Add it in Places first.</div>`)}
   else res=`<div class="plres"><b>${allPicks.length} place${allPicks.length===1?"":"s"} for you and ${esc(first)}</b>${pp&&(pp.keepsKosher||pp.shomerShabbat)?`<span>${pp.keepsKosher?"Kosher only. ":""}${pp.shomerShabbat?"Saturday after Shabbat.":""}</span>`:""}</div>`+
     picks.map((k,i)=>(i===0||P.chosen===k.s.id)?big(k,i):row(k)).join("")+
     (allPicks.length>picks.length?`<button class="btn recmorebtn" data-act="plmore">Show more (${allPicks.length-picks.length} more)</button>`:"");
@@ -1247,9 +1249,11 @@ function renderPlan(){
     <div class="plq"><span class="plk">When</span><div class="plchips">${whens.map(([l,k])=>`<button class="plc" aria-pressed="${P.whenDay===k}" data-act="when:${k}">${l}</button>`).join("")}<label class="plc plpick" aria-pressed="${!!custom}">${custom?esc(parseLocal(P.whenDay+"T12:00").toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})):"Pick a day"}<input type="date" id="pl-day" min="${dk(t0)}" value="${custom?P.whenDay:""}"></label></div></div>
     <div class="plq"><span class="plk">Vibe</span><div class="plchips"><button class="plc" aria-pressed="${!P.vibe}" data-act="vibe:">Any</button>${Object.keys(VIBE_TYPES).map(v=>`<button class="plc" aria-pressed="${P.vibe===v}" data-act="vibe:${v}">${v}</button>`).join("")}</div></div>
     <div class="plq"><span class="plk">Where</span><div class="plchips">${["Anywhere","Manhattan","Brooklyn","Queens"].map(v=>`<button class="plc" aria-pressed="${P.area===v}" data-act="area:${v}">${v}</button>`).join("")}</div></div>
+    ${ready?`<input class="search" id="pl-q" type="search" placeholder="Or search any place you have…" value="${esc(P.q||"")}" autocomplete="off">`:""}
     <div class="view" style="gap:10px">${res}</div>`;
   const nm=$("pl-name");if(nm){nm.oninput=e=>{const had=!!S.plan.newName;S.plan.newName=e.target.value.trim();if(had!==!!S.plan.newName){const pos=e.target.selectionStart;renderPlan();const n2=$("pl-name");n2.focus();try{n2.setSelectionRange(pos,pos)}catch(_){}}}}
-  const pd=$("pl-day");if(pd)pd.onchange=e=>{if(e.target.value){S.plan.whenDay=e.target.value;S.plan.wd=e.target.value;renderPlan()}};
+  const pd=$("pl-day");if(pd){let pv=pd.value;pd.onchange=e=>{pv=e.target.value};pd.oninput=e=>{pv=e.target.value};pd.onblur=()=>{if(pv&&pv!==S.plan.whenDay){S.plan.whenDay=pv;S.plan.wd=pv;S.plan.wt="";renderPlan()}}}
+  const ps=$("pl-q");if(ps){ps.oninput=e=>{S.plan.q=e.target.value;const pos=e.target.selectionStart;renderPlan();const n=$("pl-q");n.focus();try{n.setSelectionRange(pos,pos)}catch(_){}}}
 }
 async function saveDate(spotId,btn){
   const P=S.plan;const when=$("pl-when").value;if(!when){$("pl-when").focus();return}
@@ -1283,7 +1287,7 @@ if(S.preg===undefined){try{S.preg=localStorage.getItem("ku.preg")||"Anywhere"}ca
 const PF0={region:"Anywhere",ageMin:18,ageMax:60,kinds:[],statuses:[]};
 if(!S.pf2){try{S.pf2=Object.assign({},PF0,JSON.parse(localStorage.getItem("ku.pfilt")||"{}"))}catch(e){S.pf2=Object.assign({},PF0)}if(S.preg&&S.preg!=="Anywhere"&&S.pf2.region==="Anywhere")S.pf2.region=S.preg}
 const savePF=()=>{S.preg=S.pf2.region;try{localStorage.setItem("ku.pfilt",JSON.stringify(S.pf2));localStorage.setItem("ku.preg",S.preg)}catch(e){}};
-function pAge(p){if(p.birthday){const b=new Date(p.birthday+"T12:00"),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;return a>0&&a<100?a:null}return p.age?+p.age:null}
+function pAge(p){if(p.birthday){const b=new Date(p.birthday+"T12:00"),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;if(a>0&&a<100)return a}return p.age?+p.age:null}
 const isRel=p=>p.kind==="Religious"||p.keepsKosher||p.shomerShabbat;
 function pfPass(p){const F=S.pf2;
   if(F.region!=="Anywhere"&&p.region!==F.region)return false;
