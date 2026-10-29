@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793245672"><script>(function(){var B="1793245672";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793245998"><script>(function(){var B="1793245998";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -471,6 +471,7 @@ html,body{overscroll-behavior:none;max-width:100%}
 html{overflow-x:clip}
 body{overflow-x:clip;position:relative;width:100%}
 .sheet{overflow-x:hidden;overscroll-behavior:contain;max-width:min(560px,100vw)}
+.sheet>.grab{position:sticky;top:-20px;z-index:6;flex:none;height:30px;width:calc(100% + 120px);max-width:none;box-sizing:border-box;margin:-20px -60px 0;align-self:auto;display:flex;justify-content:center;align-items:center;background:inherit;touch-action:none;cursor:grab}.grab::after{content:"";width:40px;height:5px;border-radius:3px;background:var(--muted);opacity:.6}
 .sheet>*{max-width:100%;min-width:0}
 .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 @media (max-width:420px){.grid{grid-template-columns:minmax(0,1fr)}}
@@ -2071,12 +2072,15 @@ async function loadFollowed(){
 })();
 
 /* swipe down to close any pop-up sheet */
-(function(){const root=document.getElementById("sheet-root");if(!root)return;let y0=null,sh=null,dy=0,lock=false;
+(function(){const root=document.getElementById("sheet-root");if(!root)return;let y0=null,sh=null,dy=0,lock=false,g=false;
+  const addGrab=()=>root.querySelectorAll(".sheet").forEach(s=>{if(!(s.firstElementChild&&s.firstElementChild.classList.contains("grab"))){const d=document.createElement("div");d.className="grab";d.setAttribute("aria-hidden","true");s.prepend(d)}});
+  new MutationObserver(addGrab).observe(root,{childList:true,subtree:true});
   root.addEventListener("touchstart",e=>{sh=e.target.closest(".sheet");if(!sh||e.touches.length>1){sh=null;return}
-    if(e.target.closest("input,textarea,select,.gallery,.bkrow,.plchips,.pvhearts"))lock=true;else lock=false;
-    y0=sh.scrollTop<=0?e.touches[0].clientY:null;dy=0},{passive:true});
+    g=!!e.target.closest(".grab");
+    if(!g&&e.target.closest("input,textarea,select,.gallery,.bkrow,.plchips,.pvhearts"))lock=true;else lock=false;
+    y0=(g||sh.scrollTop<=0)?e.touches[0].clientY:null;dy=0},{passive:true});
   root.addEventListener("touchmove",e=>{if(!sh||y0===null||lock)return;dy=e.touches[0].clientY-y0;if(dy<=0){sh.style.transform="";return}
-    if(sh.scrollTop>0){y0=null;sh.style.transform="";return}
+    if(!g&&sh.scrollTop>0){y0=null;sh.style.transform="";return}
     sh.style.transition="none";sh.style.transform=`translateY(${dy}px)`;if(e.cancelable)e.preventDefault()},{passive:false});
   root.addEventListener("touchend",()=>{if(!sh)return;const s=sh;sh=null;if(dy>110){s.style.transition="transform .2s";s.style.transform="translateY(100%)";setTimeout(()=>closeSheet(),180)}else{s.style.transition="transform .2s";s.style.transform=""}y0=null;dy=0},{passive:true});
 })();
