@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793243207"><script>(function(){var B="1793243207";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793244234"><script>(function(){var B="1793244234";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -624,6 +624,9 @@ label.pvgl{display:inline-flex;align-items:center}
 .pvnext{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--fill);border-radius:16px;padding:12px 14px}
 .pvnext div{display:flex;flex-direction:column;min-width:0}.pvnext b{font-size:1.05rem}.pvnext span:last-child{color:var(--muted);font-size:.85rem}
 .pvsend{flex:none;border:0;background:#ff375f;color:#fff;font:700 .85rem -apple-system,system-ui,sans-serif;border-radius:999px;padding:10px 14px;cursor:pointer}
+.cfcard{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;border:0;border-radius:18px;padding:14px 16px;background:linear-gradient(90deg,#ff375f,#ff6b4a);color:#fff;cursor:pointer;box-shadow:0 8px 20px rgba(255,55,95,.25)}
+.cfcard b{display:block;font-size:1.05rem}.cfcard small{display:block;opacity:.92;font-size:.85rem;margin-top:2px}
+.cfgo{flex:none;background:#fff;color:#ff375f;font-weight:800;border-radius:999px;padding:8px 14px;font-size:.85rem}
 /* Steady app frame: the page itself never moves; only the content area scrolls up/down */
 html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
 body{position:fixed;inset:0;width:100%}
@@ -929,6 +932,7 @@ function renderHome0(){
   $("v-home").innerHTML=`
     <div class="ihead"><div><small>${esc(new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"}))}</small><h1>${esc(greeting())}, ${esc(ME)}</h1></div><span style="display:flex;gap:10px;align-items:center"><button class="round" data-go="cal" aria-label="Calendar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button><button class="ime" data-go="me" aria-label="My profile" style="border:0;cursor:pointer;padding:0;overflow:hidden">${S.profile&&S.profile.photoId?`<img src="${esc(imgSrc(S.profile.photoId))}" alt="" style="width:100%;height:100%;object-fit:cover">`:esc(ME[0])}</button></span></div>
 
+    ${S.loading||!S.db?"":ups.filter(({d})=>!d.confirmed&&parseLocal(d.when)-Date.now()<36*36e5&&parseLocal(d.when)>Date.now()-36e5).slice(0,2).map(({p,d})=>`<button class="cfcard" data-confirm="${esc(p.id)}:${esc(d.id)}"><span><b>Confirm with ${esc(String(p.name).split(" ")[0])}</b><small>${esc(placeName(d))} · ${esc(parseLocal(d.when).toLocaleDateString(undefined,{weekday:"short"}))} ${esc(parseLocal(d.when).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))}. Send her the details.</small></span><span class="cfgo">Send</span></button>`).join("")}
     ${S.loading||!S.db?hero:datesCard}
     <button class="cta" data-act="plan"><span><span class="t">Plan a date</span><span class="s">3 taps: who, vibe, area</span></span>${ICON.arrow}</button>
     ${rate}
@@ -1283,7 +1287,10 @@ async function saveDate(spotId,btn){
 function confirmMsg(p,d){const w=parseLocal(d.when),sp=spotOf(d),first=String(p.name||"").split(" ")[0];
   const day=w.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}),tm=w.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
   const place=placeName(d),addr=sp&&sp.address?sp.address:"",map=sp?mapUrl(sp):"";
-  return `Hey ${first}! Confirming ${day} at ${tm} at ${place}${addr?" ("+addr+")":""}.${map?"\n"+map:""}\nCan't wait to see you`}
+  const link=sp?(sp.website||sp.bookingUrl||(sp.instagram?igUrl(sp.instagram):"")):"";
+  const en=new Date(w.getTime()+(d.len||120)*6e4),z=x=>x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate())+"T"+pad(x.getHours())+pad(x.getMinutes())+"00";
+  const gcal="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent("Date with "+ME+" at "+place)+"&dates="+z(w)+"/"+z(en)+"&ctz=America/New_York&location="+encodeURIComponent([place,addr].filter(Boolean).join(", "));
+  return `Hey ${first}! Confirming ${day} at ${tm} at ${place}${addr?" ("+addr+")":""}.${link?"\nThe place: "+link:""}${map?"\nMap: "+map:""}\nAdd it to your calendar: ${gcal}\nCan't wait to see you`}
 function openConfirm(p,d){const msg=confirmMsg(p,d);let dg=String(p.contact||"").replace(/\D/g,"");if(dg.length===10)dg="1"+dg;const ig=p.instagram?igHandle(p.instagram):"";const enc=encodeURIComponent(msg);
   $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet"><h2>Send ${esc(String(p.name).split(" ")[0])} the details</h2>
     <textarea id="cf-msg" class="cfmsg" rows="5">${esc(msg)}</textarea>
@@ -1292,7 +1299,9 @@ function openConfirm(p,d){const msg=confirmMsg(p,d);let dg=String(p.contact||"")
     ${dg?"":`<span class="muted" style="font-size:.85rem">Add her number in her profile to text her straight from here.</span>`}
     <button class="btn" id="cf-close">Done</button></div></div>`;
   const upd=()=>{const m=encodeURIComponent($("cf-msg").value);const s=$("cf-sms"),wa=$("cf-wa");if(s)s.href=`sms:+${dg}&body=${m}`;if(wa)wa.href=`https://wa.me/${dg}?text=${m}`};$("cf-msg").oninput=upd;
-  $("cf-copy").onclick=async()=>{try{await navigator.clipboard.writeText($("cf-msg").value);toast("Copied")}catch(e){$("cf-msg").select();toast("Select and copy the text")}};
+  const mark=()=>{if(d.confirmed||!p.id)return;const cur=S.people.find(x=>x.id===p.id);if(!cur)return;const dates=(cur.dates||[]).map(x=>x.id===d.id?{...x,confirmed:true}:x);d.confirmed=true;pvSave(p.id,{dates}).then(()=>{if(S.view==="home")render()})};
+  ["cf-sms","cf-wa"].forEach(id=>{const a=$(id);if(a)a.addEventListener("click",mark)});
+  $("cf-copy").onclick=async()=>{mark();try{await navigator.clipboard.writeText($("cf-msg").value);toast("Copied")}catch(e){$("cf-msg").select();toast("Select and copy the text")}};
   $("cf-close").onclick=closeSheet;$("bg").onclick=e=>{if(e.target.id==="bg")closeSheet()}}
 
 /* ---------- people ---------- */
@@ -1726,7 +1735,12 @@ async function addToCalendar(p,d){
   const iso=x=>`${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}T${pad(x.getHours())}:${pad(x.getMinutes())}:00`;
   const sp=spotOf(d);const location=sp?(sp.address?sp.name+", "+sp.address:[sp.name,sp.area,sp.borough,"NY"].filter(Boolean).join(", ")):(d.address||d.spotName);
   const description=[d.notes,sp?mapUrl(sp):""].filter(Boolean).join("\n");
-  try{await S.mcp.callTool("Google Calendar","create_event",{summary:`Date with ${p.name}`,startTime:iso(st),endTime:iso(en),location,description,useDefaultReminders:true});toast("Saved and added to Google Calendar");return true}
+  const phone=!!window.KU_API;
+  try{await S.mcp.callTool("Google Calendar","create_event",phone?{summary:`Date with ${p.name}`,startTime:iso(st),endTime:iso(en),location,description,emailReminders:[1440,120],popupReminders:[60]}:{summary:`Date with ${p.name}`,startTime:iso(st),endTime:iso(en),location,description,useDefaultReminders:true});
+    if(phone){const first=String(p.name||"").split(" ")[0];let r=new Date(st);r.setHours(11,0,0,0);if(st-r<3*36e5)r=new Date(st.getTime()-3*36e5);if(r<new Date())r=new Date(Date.now()+5*6e4);
+      let dg=String(p.contact||"").replace(/\D/g,"");if(dg.length===10)dg="1"+dg;const msg=confirmMsg(p,d);
+      S.mcp.callTool("Google Calendar","create_event",{summary:`Text ${first} to confirm tonight`,startTime:iso(r),endTime:iso(new Date(r.getTime()+15*6e4)),location:"",description:`Confirm your date with ${p.name}.\n\n${dg?"Tap to text her: sms:+"+dg+"&body="+encodeURIComponent(msg)+"\n\n":""}Message:\n${msg}\n\nOr open the app: ${location.origin+location.pathname}`,emailReminders:[0],popupReminders:[0]}).catch(()=>{})}
+    toast(phone?"Saved. Google will email you reminders.":"Saved and added to Google Calendar");return true}
   catch(e){const m={needs_reauth:"Reconnect Google Calendar in claude.ai Settings → Connectors",server_not_connected:"Add Google Calendar in claude.ai Settings → Connectors",approval_required:"Allow calendar access when asked, then tap “Add to calendar” on her card",not_in_manifest:"Calendar access is turned off for this page",blocked_by_policy:"Your account blocks calendar access here",tool_error:"Google Calendar couldn't create the event",server_unavailable:"Calendar didn't answer. Check it before trying again"};
     toast("Date saved. "+(m[e&&e.code]||"Couldn't add it to your calendar. Check it before trying again"));return false}
 }
@@ -1771,6 +1785,7 @@ document.addEventListener("click",e=>{
   const mt=e.target.closest("[data-mtab]");if(mt){const k=mt.dataset.mtab;S.mapCat=(S.mapCat===k&&k!=="all")?"all":k;$("mapcard").innerHTML="";drawPins(true);return}
   if(e.target.closest('[data-act="closemap"]')){closeMap();return}
   if(e.target.closest('[data-act="openmap"]')){openMap(e.target.closest('[data-act="openmap"]').dataset.kind);return}
+  const cfc=e.target.closest("[data-confirm]");if(cfc){const [pid,did]=cfc.dataset.confirm.split(":");const pp=S.people.find(x=>x.id===pid);const dd=pp&&(pp.dates||[]).find(x=>x.id===did);if(pp&&dd)openConfirm(pp,dd);return}
   const g=e.target.closest("[data-go]");if(g){closeMap();go(g.dataset.go);return}
   const a=e.target.closest("[data-act]");if(!a)return;
   const [act,...rest]=a.dataset.act.split(":");const arg=rest.join(":");
