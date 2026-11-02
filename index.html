@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793245998"><script>(function(){var B="1793245998";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793663253"><script>(function(){var B="1793663253";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -493,6 +493,25 @@ input[type=date]::-webkit-date-and-time-value{text-align:left}
 .cald{border:0;background:none;color:var(--fg);height:46px;border-radius:12px;font-size:1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-weight:500}
 .cald.tdy{color:var(--accent);font-weight:800}.cald.sel{background:var(--accent);color:#fff}.caldots{display:flex;gap:3px;height:5px}.caldots i{width:5px;height:5px;border-radius:50%}
 .cald.sel .caldots i{background:#fff!important}
+.hplus{width:44px;height:44px;border-radius:50%;border:0;background:#ff375f;color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.wkstrip{display:flex;justify-content:space-between;gap:4px}
+.wkd{flex:1;border:0;background:none;color:var(--muted);border-radius:16px;padding:8px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-weight:600}
+.wkd small{font-size:.7rem;letter-spacing:.02em}.wkd b{font-size:1.15rem;color:var(--fg)}.wkd i{width:6px;height:6px;border-radius:50%;background:#ff375f}
+.wkd.on{background:#ff375f;color:#fff}.wkd.on b{color:#fff}.wkd.on i{background:#fff}
+.hsec{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.arow{border:0;background:var(--surface);color:var(--fg);border-radius:20px;padding:14px;display:flex;gap:12px;align-items:center;text-align:left;cursor:pointer;width:100%}
+.arow .atm{width:62px;flex:none;text-align:center;display:flex;flex-direction:column;gap:2px}.arow .atm b{font-size:1.1rem}.arow .atm small{font-size:.62rem;color:var(--muted);font-weight:700;letter-spacing:.03em}
+.arow .abar{width:3px;align-self:stretch;border-radius:2px;flex:none}
+.atx{display:flex;flex-direction:column;min-width:0;gap:2px;flex:1}.atx b{font-size:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.atx>span{font-size:.86rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atag{align-self:flex-start;margin-top:4px;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:8px}.atag.ok{background:rgba(48,209,88,.16);color:#30d158}.atag.wait{background:rgba(255,159,10,.16);color:#ff9f0a}
+.arow.past{padding:10px 14px;border-radius:16px}.arow.past .atx b{font-size:.92rem}
+.arow.empty{justify-content:center;text-align:center}.arow.empty .atx{align-items:center}
+.frow{border:0;background:var(--surface);color:var(--fg);border-radius:16px;padding:12px 14px;display:flex;gap:12px;align-items:center;text-align:left;cursor:pointer;width:100%}
+.fic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800;flex:none}.fgo{color:#ff375f;font-weight:600;font-size:.92rem;flex:none}
+.calav{width:16px;height:16px;border-radius:50%;font-size:9px;font-weight:800;font-style:normal;display:grid;place-items:center;overflow:hidden}.calav img{width:100%;height:100%;object-fit:cover}
+.caldots{height:16px!important;align-items:center}
+.caladd{margin-top:6px;width:100%}
+
 .callegend{display:flex;gap:14px;font-size:.78rem;color:var(--muted)}.callegend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
 .callist{display:flex;flex-direction:column;gap:8px}
 .calrow{display:flex;align-items:center;gap:12px;border:0;background:var(--surface);border-radius:16px;padding:10px;text-align:left;color:var(--fg);cursor:pointer}
@@ -762,7 +781,7 @@ function render(){
 /* ---------- calendar ---------- */
 function calItems(){const out=[];
   for(const p of S.people){if(!vis(p))continue;
-    for(const d of (p.dates||[])){if(!d.when)continue;out.push({day:d.when.slice(0,10),time:d.when.slice(11,16),kind:"date",title:`${p.name} · ${placeName(d)}`,sub:(spotOf(d)||{}).area||d.address||"",img:p.photoId?imgSrc(p.photoId):"",round:1,act:`data-act="date:${esc(p.id)}:${esc(d.id)}"`})}
+    for(const d of (p.dates||[])){if(!d.when)continue;out.push({day:d.when.slice(0,10),time:d.when.slice(11,16),kind:"date",av:avStyle(p.name),ini:initials(p.name).slice(0,1),title:`${p.name} · ${placeName(d)}`,sub:(spotOf(d)||{}).area||d.address||"",img:p.photoId?imgSrc(p.photoId):"",round:1,act:`data-act="date:${esc(p.id)}:${esc(d.id)}"`})}
     if(p.birthday&&p.status!=="Done"){const [y,m,dd]=p.birthday.split("-");const t=new Date();for(const yr of [t.getFullYear(),t.getFullYear()+1])out.push({day:`${yr}-${m}-${dd}`,time:"",kind:"bday",title:`${p.name}'s birthday`,sub:"Send a gift?",img:p.photoId?imgSrc(p.photoId):"",round:1,act:`data-act="person:${esc(p.id)}"`})}}
   for(const x of S.discover){if(x.list!=="events"||!x.date)continue;const pid=(x.photos&&x.photos[0])||x.photoId;
     out.push({day:x.date,time:"",kind:"event",title:x.name,sub:[x.time,x.venue||x.area].filter(Boolean).join(" · "),img:pid?imgSrc(pid):(x.photoUrl||""),act:`data-idea="${esc(x.id)}"`})}
@@ -776,17 +795,18 @@ function renderCal(){
   const items=calItems();const by={};items.forEach(i=>(by[i.day]=by[i.day]||[]).push(i));
   let cells="";for(let i=0;i<first.getDay();i++)cells+=`<span></span>`;
   for(let d=1;d<=days;d++){const k=`${Y}-${pad(M)}-${pad(d)}`;const its=by[k]||[];const kinds=[...new Set(its.map(i=>i.kind))];
-    cells+=`<button class="cald${k===S.calSel?" sel":""}${k===todayStr()?" tdy":""}" data-cald="${k}">${d}<span class="caldots">${kinds.map(x=>`<i style="background:${CALC[x]}"></i>`).join("")}</span></button>`}
+    const dp=its.filter(i=>i.kind==="date");cells+=`<button class="cald${k===S.calSel?" sel":""}${k===todayStr()?" tdy":""}" data-cald="${k}">${d}<span class="caldots">${dp.slice(0,2).map(i=>`<em class="calav" style="${i.av}">${i.img?`<img src="${esc(i.img)}" alt="">`:esc(i.ini)}</em>`).join("")}${kinds.filter(x=>x!=="date").map(x=>`<i style="background:${CALC[x]}"></i>`).join("")}</span></button>`}
   const list=S.calMode==="list";const lim90=(()=>{const d=new Date();d.setDate(d.getDate()+120);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())})();const upcoming=items.filter(i=>i.day>=todayStr()&&i.day<=lim90).slice(0,60);
   const selD=parseLocal(S.calSel+"T12:00");
-  $("v-cal").innerHTML=`<div class="top"><button class="round" data-go="home" aria-label="Back">${ICON.back||"‹"}</button><h1 style="flex:1;margin-left:10px">Calendar</h1></div>
+  $("v-cal").innerHTML=`<div class="top"><button class="round" data-go="home" aria-label="Back">${ICON.back||"‹"}</button><h1 style="flex:1;margin-left:10px">Calendar</h1><button class="hplus" data-act="plan::${esc(S.calSel>=todayStr()?S.calSel:"")}" aria-label="Add a date"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
     <div class="seg"><button aria-pressed="${!list}" data-calmode="month">Month</button><button aria-pressed="${list}" data-calmode="list">List</button></div>
     ${list?(upcoming.length?groupDays(upcoming):`<div class="empty"><strong>Nothing coming up</strong>Plan a date or save an event.</div>`):`
     <div class="calhead"><button class="round" data-calnav="-1" aria-label="Previous month">‹</button><h2>${first.toLocaleDateString(undefined,{month:"long",year:"numeric"})}</h2><button class="round" data-calnav="1" aria-label="Next month">›</button></div>
     <div class="calgrid">${["S","M","T","W","T","F","S"].map(x=>`<span class="calw">${x}</span>`).join("")}${cells}</div>
     <div class="callegend"><span><i style="background:${CALC.date}"></i>Dates</span><span><i style="background:${CALC.event}"></i>Events</span><span><i style="background:${CALC.bday}"></i>Birthdays</span></div>
     <span class="bklab">${esc(selD.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}))}</span>
-    ${(by[S.calSel]||[]).length?`<div class="callist">${by[S.calSel].map(calRow).join("")}</div>`:`<div class="empty" style="padding:18px">Nothing planned. <button class="link" data-go="plan">Plan a date</button></div>`}`}`;
+    ${(by[S.calSel]||[]).length?`<div class="callist">${by[S.calSel].map(calRow).join("")}</div>`:`<div class="empty" style="padding:14px">Nothing planned this day.</div>`}
+    ${S.calSel>=todayStr()?`<button class="btn pri caladd" data-act="plan::${esc(S.calSel)}">+ Add a date on ${esc(selD.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}))}</button>`:""}`}`;
 }
 function groupDays(arr){let h="",cur="";for(const it of arr){if(it.day!==cur){cur=it.day;h+=`<span class="bklab">${esc(relDay(it.day+"T12:00")||parseLocal(it.day+"T12:00").toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"}))}</span>`}h+=calRow(it)}return `<div class="callist">${h}</div>`}
 
@@ -885,6 +905,26 @@ function homeRows(){
     <div class="hscroll">${sp.map(x=>`<button class="hspot" data-act="spot:${esc(x.id)}">${ueCard(x).replace(/^<button[^>]*>/,"").replace(/<\/button>$/,"").replace(/<span class="uesub" style="color:var\(--fg\)">[^<]*<\/span>/,"").replace(/<span class="ueheart[^>]*>[^<]*<\/span>/,"")}</button>`).join("")}</div></div>`:"";
   return pr+sr;
 }
+
+function hueOf(n){return hashHue(n||"")}
+function weekStrip(ups){const t0=new Date();t0.setHours(0,0,0,0);const has=new Set(ups.map(({d})=>String(d.when).slice(0,10)));
+  let h="";for(let i=0;i<7;i++){const d=new Date(t0);d.setDate(d.getDate()+i);const k=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+    h+=`<button class="wkd${i===0?" on":""}" data-calday="${k}"><small>${d.toLocaleDateString(undefined,{weekday:"short"}).toUpperCase()}</small><b>${d.getDate()}</b><i${has.has(k)?"":' style="visibility:hidden"'}></i></button>`}
+  return `<div class="wkstrip">${h}</div>`}
+function agenda(ups,pastAll){
+  const row=({p,d})=>{const w=parseLocal(d.when);const s=spotOf(d);const hrs=(w-Date.now())/36e5;
+    const tag=d.confirmed?`<span class="atag ok">Confirmed</span>`:(hrs<48?`<span class="atag wait">Text her to confirm</span>`:(!d.spotId&&!d.spotName?`<span class="atag wait">Pick a place</span>`:""));
+    return `<button class="arow" data-act="date:${esc(p.id)}:${esc(d.id)}"><span class="atm"><b>${esc(w.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}).replace(/\s?[AP]M$/i,""))}</b><small>${esc(w.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}).toUpperCase())}</small></span><span class="abar" style="background:hsl(${hueOf(p.name)} 75% 62%)"></span>${avatar(p,avStyle(p.name)+";width:46px;height:46px;font-size:1.05rem")}<span class="atx"><b>${esc(p.name)}</b><span>${esc(placeName(d))}${s&&s.area?" · "+esc(s.area):""}</span>${tag}</span></button>`};
+  const list=ups.slice(0,6);
+  return `<span class="hsec">Coming up</span>${list.length?list.map(row).join(""):`<button class="arow empty" data-act="plan"><span class="atx"><b>No dates planned</b><span>Tap + to add one, or open the calendar.</span></span></button>`}
+    ${ups.length>6?`<button class="link" data-go="cal" style="align-self:flex-start">See all ${ups.length} in the calendar</button>`:""}
+    ${pastAll.length?`<span class="hsec">Recent</span>${pastAll.map(({p,d})=>`<button class="arow past" data-act="date:${esc(p.id)}:${esc(d.id)}">${avatar(p,avStyle(p.name)+";width:34px;height:34px;font-size:.85rem")}<span class="atx"><b>${esc(p.name)} · ${esc(placeName(d))}</b><span>${esc(fmtDay(d.when))}</span></span></button>`).join("")}`:""}`}
+function dontForget(ups){const out=[];const today=new Date(new Date().setHours(0,0,0,0));
+  S.people.filter(p=>p.birthday&&p.status!=="Done").forEach(p=>{const n=nextBday(p.birthday);if(!n)return;const days=Math.round((n-today)/864e5);if(days<=60)out.push(`<button class="frow" data-act="person:${esc(p.id)}"><span class="fic" style="background:rgba(255,55,95,.16);color:#ff375f">B</span><span class="atx"><b>${esc(p.name)}'s birthday</b><span>${esc(n.toLocaleDateString(undefined,{month:"long",day:"numeric"}))} · ${days===0?"today":days===1?"tomorrow":"in "+days+" days"}</span></span><span class="fgo">Gift idea</span></button>`)});
+  const withDate=new Set(ups.map(({p})=>p.id));
+  S.people.filter(p=>p.status!=="Done"&&!withDate.has(p.id)).slice(0,4).forEach(p=>{const last=(p.dates||[]).map(d=>parseLocal(d.when)).filter(d=>d<Date.now()).sort((a,b)=>b-a)[0];
+    out.push(`<button class="frow" data-act="plan:${esc(p.id)}"><span class="fic" style="background:rgba(255,159,10,.16);color:#ff9f0a">${esc(initials(p.name).slice(0,1))}</span><span class="atx"><b>${esc(p.name)} · no date yet</b><span>${last?"Last date "+esc(last.toLocaleDateString(undefined,{month:"short",day:"numeric"})):esc(p.whereMet?"Met on "+p.whereMet:p.status||"Talking")}</span></span><span class="fgo">Plan</span></button>`)});
+  return out.length?`<span class="hsec">Don't forget</span>${out.join("")}`:""}
 function renderHome(){const ALL=S.people;S.people=ALL.filter(vis);try{renderHome0()}finally{S.people=ALL}}
 function renderHome0(){
   const ups=allUpcoming();const n=ups[0];
@@ -936,13 +976,13 @@ function renderHome0(){
   const withPh=open.filter(s=>s.photoId);const feat=withPh.length?withPh[new Date().getDate()%withPh.length]:null;
   const evs=upcomingEvents().slice(0,6);
   $("v-home").innerHTML=`
-    <div class="ihead"><div><small>${esc(new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"}))}</small><h1>${esc(greeting())}, ${esc(ME)}</h1></div><span style="display:flex;gap:10px;align-items:center"><button class="round" data-go="cal" aria-label="Calendar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button><button class="ime" data-go="me" aria-label="My profile" style="border:0;cursor:pointer;padding:0;overflow:hidden">${S.profile&&S.profile.photoId?`<img src="${esc(imgSrc(S.profile.photoId))}" alt="" style="width:100%;height:100%;object-fit:cover">`:esc(ME[0])}</button></span></div>
+    <div class="ihead"><div><small>${esc(new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"}))}</small><h1>Your dates</h1></div><span style="display:flex;gap:10px;align-items:center"><button class="round" data-go="cal" aria-label="Open calendar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button><button class="hplus" data-act="plan" aria-label="Add a date"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button class="ime" data-go="me" aria-label="My profile" style="border:0;cursor:pointer;padding:0;overflow:hidden">${S.profile&&S.profile.photoId?`<img src="${esc(imgSrc(S.profile.photoId))}" alt="" style="width:100%;height:100%;object-fit:cover">`:esc(ME[0])}</button></span></div>
 
     ${S.loading||!S.db?"":ups.filter(({d})=>!d.confirmed&&parseLocal(d.when)-Date.now()<36*36e5&&parseLocal(d.when)>Date.now()-36e5).slice(0,2).map(({p,d})=>`<button class="cfcard" data-confirm="${esc(p.id)}:${esc(d.id)}"><span><b>Confirm with ${esc(String(p.name).split(" ")[0])}</b><small>${esc(placeName(d))} · ${esc(parseLocal(d.when).toLocaleDateString(undefined,{weekday:"short"}))} ${esc(parseLocal(d.when).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))}. Send her the details.</small></span><span class="cfgo">Send</span></button>`).join("")}
-    ${S.loading||!S.db?hero:datesCard}
-    <button class="cta" data-act="plan"><span><span class="t">Plan a date</span><span class="s">3 taps: who, vibe, area</span></span>${ICON.arrow}</button>
+    ${weekStrip(ups)}
+    ${S.loading||!S.db?hero:agenda(ups,pastAll)}
     ${rate}
-    ${bdaySoon().map(({p,n,days})=>`<button class="rate-card" data-act="person:${esc(p.id)}" style="text-align:left;cursor:pointer;flex-direction:row;align-items:center;gap:12px"><span class="dchip on"><small>${n.toLocaleDateString(undefined,{month:"short"}).toUpperCase()}</small><b>${n.getDate()}</b></span><span style="display:flex;flex-direction:column"><b>${esc(p.name)}'s birthday ${days===0?"is today":days===1?"is tomorrow":"in "+days+" days"}</b><span class="muted" style="font-size:.88rem">Plan something or send a gift</span></span></button>`).join("")}
+    ${S.loading||!S.db?"":dontForget(ups)}
     ${homeRows()}
     ${S.sample?askBlock():""}
 `;
@@ -1812,6 +1852,7 @@ document.addEventListener("click",e=>{
   const bt=e.target.closest("[data-btab]");if(bt){S.bookTab=bt.dataset.btab;renderBook();return}
   const rl=e.target.closest("[data-rmline]");if(rl&&S.db&&S.notes){const [k,i]=rl.dataset.rmline.split(":");const arr=[...(S.notes[k]||[])];arr.splice(+i,1);S.db.doc("me/notes").set({...S.notes,[k]:arr,updatedAt:Date.now()}).then(()=>toast("Removed"),()=>toast("Couldn't save. Try again."));return}
   const cat=e.target.closest("[data-cat]");if(cat){S.pf={"Drinks":"Bars","Dinner":"Dinner","Music & fun":"Music & fun","Active / sporty":"Active"}[cat.dataset.cat]||"All";S.ps="All";S.q="";const qi=$("q");if(qi)qi.value="";go("spots");return}
+  const hd=e.target.closest("[data-calday]");if(hd){S.calSel=hd.dataset.calday;S.calM=hd.dataset.calday.slice(0,7);S.calMode="month";go("cal");return}
   const cd=e.target.closest("[data-cald]");if(cd){S.calSel=cd.dataset.cald;renderCal();return}
   const cm=e.target.closest("[data-calmode]");if(cm){S.calMode=cm.dataset.calmode;renderCal();return}
   const cn=e.target.closest("[data-calnav]");if(cn){const [y,m]=S.calM.split("-").map(Number);const d=new Date(y,m-1+(+cn.dataset.calnav),1);S.calM=d.getFullYear()+"-"+pad(d.getMonth()+1);renderCal();return}
@@ -1823,7 +1864,7 @@ document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");if(g){closeMap();go(g.dataset.go);return}
   const a=e.target.closest("[data-act]");if(!a)return;
   const [act,...rest]=a.dataset.act.split(":");const arg=rest.join(":");
-  if(act==="plan"){S.plan={who:"",newName:"",vibe:"",area:"",chosen:""};go("plan")}
+  if(act==="plan"){const [w,dy]=(arg||"").split(":");S.plan={who:w||"",newName:"",vibe:"",area:"",chosen:"",whenDay:dy||"",wd:dy||"",wt:""};go("plan")}
   else if(act==="spot")openSpot(S.spots.find(s=>s.id===arg));
   else if(act==="person")openPerson(S.people.find(p=>p.id===arg));
   else if(act==="newspot")openSpot(null);
