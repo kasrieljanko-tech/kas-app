@@ -6,8 +6,8 @@
 <link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-180.png"><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
-<script src="config.js?v=1793675607"></script><script src="shim.js?v=1793675607"></script>
-<meta name="ku-build" content="1793675607"><script>(function(){var B="1793675607";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<script src="config.js?v=1793686231"></script><script src="shim.js?v=1793686231"></script>
+<meta name="ku-build" content="1793686231"><script>(function(){var B="1793686231";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -2163,6 +2163,9 @@ const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,De
 function shDate(s){const m=/([A-Z][a-z]{2}) (\d+)/.exec(s||"");if(!m)return "";const t=new Date();let y=t.getFullYear();const d=new Date(y,MON[m[1]],+m[2]);if(d<new Date(t.getFullYear(),t.getMonth(),t.getDate()-1))y++;return y+"-"+pad(MON[m[1]]+1)+"-"+pad(+m[2])}
 function shTime(s){const m=/•\s*(.+)$/.exec(s||"");return m?m[1].trim():""}
 async function liveSearch(q,kind){
+  if(PHONE){const ql=String(q||"").toLowerCase();const t0=todayStr();
+    const items=S.discover.filter(x=>x.list==="events"&&x.date&&x.date>=t0&&(!ql||((x.name||"")+" "+(x.venue||"")+" "+(x.kind||"")+" "+(x.why||"")).toLowerCase().includes(ql))).map(x=>({...x,source:x.source==="fever"?"fever":x.source}));
+    return items.length?{items:items.sort((a,b)=>a.date.localeCompare(b.date))}:{err:q?"Nothing saved matches that yet. Ask Claude to find it and it'll show up here.":"No upcoming events saved yet."}}
   if(!S.mcp)return {err:"Live search works inside the Claude app."};
   const out=[];const today=todayStr();
   const jobs=[];
@@ -2176,6 +2179,8 @@ async function liveSearch(q,kind){
   return {items:out.filter(x=>x.date).sort((a,b)=>a.date.localeCompare(b.date))};
 }
 async function liveMovies(q){
+  if(PHONE){const d=S.db&&S.db.get?S.db.get("me","movies"):null;if(!d||!(d.movies||[]).length)return {err:"No movies loaded yet. Ask Claude to refresh movies."};
+    const ql=String(q||"").toLowerCase();return {movies:d.movies.filter(m=>!ql||m.title.toLowerCase().includes(ql)),asOf:d.fetchedAt}}
   if(!S.mcp)return {err:"Movie times work inside the Claude app."};
   const t=new Date();const st=todayStr()+"T"+pad(Math.max(t.getHours(),12))+":00:00";
   try{const r=await S.mcp.callTool("Fever Event Discovery","search_movie_showtimes",{city_code:"NYC",query:q||"",start_datetime:st,max_movies:8,max_cinemas_per_movie:3,max_showtimes_per_cinema:4},{cache:{maxAge:1800}});
@@ -2192,7 +2197,8 @@ function liveCard(x){
 function movieBlock(m){
   return `<div class="mvcard">${m.cover_image_url?`<img src="${esc(m.cover_image_url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:""}<div style="display:flex;flex-direction:column;gap:6px;min-width:0;flex:1">
     <b>${esc(m.title)}</b><a class="mvtrl" href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.title+" official trailer")}" target="_blank" rel="noopener">▶ Watch trailer</a><span class="muted" style="font-size:.82rem">${esc([m.advisory_rating,m.runtime_minutes?m.runtime_minutes+" min":"",(m.genres||[]).slice(0,2).join(", ")].filter(Boolean).join(" · "))}</span>
-    ${(m.cinemas||[]).slice(0,3).map(c=>`<div style="font-size:.85rem"><span style="font-weight:600">${esc(c.name)}</span><div class="mvtimes">${(c.showtimes||[]).map(t=>`<a href="${esc(t.booking_url)}" target="_blank" rel="noopener">${esc(new Date(t.start_local).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))}</a>`).join("")}</div></div>`).join("")}
+    ${m.movie_url?`<span class="muted" style="font-size:.82rem">${esc((m.cinemas||[]).map(c=>typeof c==="string"?c:c.name).slice(0,2).join(" · "))}</span><a class="btn pri" href="${esc(m.movie_url)}" target="_blank" rel="noopener" style="align-self:flex-start;border-radius:999px;min-height:36px;padding:6px 16px;margin-top:4px">Showtimes &amp; tickets</a>`:""}
+    ${(m.cinemas||[]).filter(c=>typeof c!=="string"&&c.showtimes).slice(0,3).map(c=>`<div style="font-size:.85rem"><span style="font-weight:600">${esc(c.name)}</span><div class="mvtimes">${(c.showtimes||[]).map(t=>`<a href="${esc(t.booking_url)}" target="_blank" rel="noopener">${esc(new Date(t.start_local).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))}</a>`).join("")}</div></div>`).join("")}
   </div></div>`;
 }
 async function runLive(kind){

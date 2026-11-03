@@ -88,7 +88,7 @@ window.kuKeypad=function(o){
         try{await call({action:"del",col:c,id})}catch(e){cache[c][id]=prev;save();notify();throw e}},
       onSnapshot:(cb,err)=>{const f=()=>{const d=cache[c][id];cb({exists:!!d,data:()=>d})};subs.push(f);if(hadCache)f();ready.catch(e=>err&&err(e))}};
   }
-  const db={
+  const db={get:(c,id)=>(cache[c]||{})[id]||null,
     collection:c=>{if(!cache[c])cache[c]={};return {doc:id=>docRef(c,id||rid()),
       onSnapshot:(cb,err)=>{const f=()=>cb({docs:Object.entries(cache[c]).map(([id,d])=>({id,data:()=>d}))});subs.push(f);if(hadCache)f();ready.catch(e=>err&&err(e))}}},
     doc:path=>{const [c,id]=path.split("/");if(!cache[c])cache[c]={};return docRef(c,id)}
