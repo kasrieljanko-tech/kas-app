@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793671574"><script>(function(){var B="1793671574";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793673087"><script>(function(){var B="1793673087";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -511,6 +511,11 @@ input[type=date]::-webkit-date-and-time-value{text-align:left}
 .calav{width:16px;height:16px;border-radius:50%;font-size:9px;font-weight:800;font-style:normal;display:grid;place-items:center;overflow:hidden}.calav img{width:100%;height:100%;object-fit:cover}
 .caldots{height:16px!important;align-items:center}
 .caladd{margin-top:6px;width:100%}
+.addshot{display:flex;flex-direction:column;gap:4px;background:#ff375f;color:#fff;border-radius:18px;padding:18px;cursor:pointer}.addshot b{font-size:1.1rem}.addshot span{font-size:.88rem;opacity:.9}
+.aksteps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:.95rem}.aksteps a{color:var(--accent)}
+.asthumbs{display:flex;gap:8px;overflow-x:auto}.asthumbs img{height:140px;border-radius:12px;flex:none}
+.pvgal{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}.pvgal img{width:88px;height:116px;object-fit:cover;border-radius:14px;flex:none;cursor:pointer;opacity:.85}.pvgal img.on{outline:3px solid #ff375f;opacity:1}
+
 
 .callegend{display:flex;gap:14px;font-size:.78rem;color:var(--muted)}.callegend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
 .callist{display:flex;flex-direction:column;gap:8px}
@@ -1632,6 +1637,56 @@ function openSpot(spot){
 
 async function pvSave(id,patch){const cur=S.people.find(x=>x.id===id);if(!cur||!S.db)return false;const {id:_,...body}={...cur,...patch,updatedAt:Date.now()};
   try{await S.db.collection("people").doc(id).set(body);const i=S.people.findIndex(x=>x.id===id);if(i>=0)S.people[i]={...S.people[i],...patch};return true}catch(e){toast("Couldn't save. Try again.");return false}}
+
+/* ---------- add from screenshots ---------- */
+const blob64=b=>new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result).split(",")[1]);fr.onerror=rej;fr.readAsDataURL(b)});
+async function cropBlob(b,box){try{const im=await createImageBitmap(b);let [y0,x0,y1,x1]=box.map(Number);const W=im.width,H=im.height;
+  let x=Math.max(0,x0/1000*W),y=Math.max(0,y0/1000*H),w=Math.min(W,x1/1000*W)-x,h=Math.min(H,y1/1000*H)-y;if(w<80||h<80)return null;
+  const c=document.createElement("canvas");c.width=Math.round(w);c.height=Math.round(h);c.getContext("2d").drawImage(im,x,y,w,h,0,0,c.width,c.height);
+  return await new Promise(r=>c.toBlob(r,"image/jpeg",.88))}catch(e){return null}}
+function openAddChoice(){
+  if(!S.ai)return editPerson(null);
+  $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet"><h2>Add someone</h2>
+    <label class="addshot" for="as-files"><b>From her screenshots</b><span>Pick her Hinge, Instagram or contact screenshots. I'll fill in her profile and crop her photos.</span></label>
+    <input id="as-files" type="file" accept="image/*" multiple hidden>
+    <button class="btn" id="as-type">Type it in myself</button>
+    <button class="link" id="as-key" style="align-self:center">AI key settings</button></div></div>`;
+  $("as-files").onchange=e=>{const f=[...e.target.files];if(f.length)addFromShots(f)};
+  $("as-type").onclick=()=>editPerson(null);$("as-key").onclick=()=>keySheet();
+  $("bg").onclick=e=>{if(e.target.id==="bg")closeSheet()}}
+function keySheet(after){
+  $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet"><h2>Connect the AI (one time)</h2>
+    <span class="muted" style="font-size:.92rem">This lets the app read screenshots. It's free.</span>
+    <ol class="aksteps"><li>Open <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a> and sign in with your Google account.</li><li>Tap <b>Create API key</b>, then copy it.</li><li>Paste it here and tap Save.</li></ol>
+    <input id="ak-in" type="password" autocomplete="off" placeholder="Paste your key" style="width:100%">
+    <button class="btn pri" id="ak-save">Save</button><button class="btn" id="ak-x">Cancel</button></div></div>`;
+  $("ak-x").onclick=closeSheet;
+  $("ak-save").onclick=async()=>{const v=$("ak-in").value.trim();if(v.length<20){toast("That doesn't look like a key");return}
+    $("ak-save").disabled=true;$("ak-save").textContent="Saving…";try{await S.ai.setKey(v);toast("AI connected");if(after)after();else closeSheet()}catch(e){$("ak-save").disabled=false;$("ak-save").textContent="Save";toast("Couldn't save. Try again")}}}
+async function addFromShots(files){
+  files=files.slice(0,6);const urls=files.map(f=>URL.createObjectURL(f));
+  $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet"><h2>Reading her profile…</h2><div class="asthumbs">${urls.map(u=>`<img src="${u}" alt="">`).join("")}</div><span class="muted" id="as-st">This takes a few seconds.</span></div></div>`;
+  const st=m=>{const e=$("as-st");if(e)e.textContent=m};
+  try{
+    const blobs=await Promise.all(files.map(f=>shrink(f)));
+    const imgs=await Promise.all(blobs.map(async b=>({type:"image/jpeg",data:await blob64(b)})));
+    let r;try{r=await S.ai.read(imgs)}catch(e){if(e.code==="nokey")return keySheet(()=>addFromShots(files));throw e}
+    const pr=r.profile||{};st("Cropping her photos…");
+    const ids=[];for(const ph of (pr.photos||[]).slice(0,5)){const b=blobs[ph.img];if(!b||!Array.isArray(ph.box))continue;const c=await cropBlob(b,ph.box);if(!c)continue;try{ids.push((await S.assets.upload(c)).id)}catch(e){}}
+    st("Saving…");
+    const extra=[pr.job?"Job: "+pr.job:"",pr.school?"School: "+pr.school:"",pr.height?"Height: "+pr.height:""].filter(Boolean).join(" · ");
+    const prompts=(pr.prompts||[]).filter(x=>x&&x.a).map(x=>`${x.q?x.q+": ":""}${x.a}`).join("\n");
+    const body={name:String(pr.name||"").trim()||"New",status:"Talking",dates:[],updatedAt:Date.now()};
+    if(pr.age&&+pr.age>17&&+pr.age<80)body.age=+pr.age;
+    for(const k of ["from","city","whereMet","instagram","contact"])if(pr[k])body[k]=String(pr[k]).replace(/^@/,"");
+    if(Array.isArray(pr.likes)&&pr.likes.length)body.likes=pr.likes.slice(0,8).join(", ");
+    const notes=[pr.summary,extra,prompts].filter(Boolean).join("\n");if(notes)body.notes=notes;
+    if(ids.length){body.photoId=ids[0];body.photos=ids}
+    const ref=S.db.collection("people").doc();await ref.set(body);
+    toast(`Added ${body.name}. Check her details.`);setTimeout(()=>openPerson({id:ref.id,...body}),250);
+  }catch(e){$("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet"><h2>Couldn't read it</h2><span class="muted">${esc(String(e.message||e).slice(0,200))}</span><button class="btn pri" id="as-retry">Try again</button><button class="btn" id="as-man">Type it in myself</button></div></div>`;
+    $("as-retry").onclick=()=>addFromShots(files);$("as-man").onclick=()=>editPerson(null)}
+}
 function openPerson(person,keepScroll){
   if(!person)return editPerson(null);
   const p=person,first=String(p.name||"").split(" ")[0],age=pAge(p);
@@ -1657,6 +1712,7 @@ function openPerson(person,keepScroll){
     </div>
     <div class="pvbody">
       <div class="pvstat"><span class="pvsel"><select id="pv-status" aria-label="Status">${PSTAT.map(o=>`<option ${o===(p.status||"Talking")?"selected":""}>${o}</option>`).join("")}</select></span>${up?`<span>Next: ${esc(fmtW(up))} · ${esc(placeName(up))}</span>`:`<span>No date yet</span>`}</div>
+      ${(p.photos||[]).length>1?`<div class="pvgal">${p.photos.map(id=>`<img src="${esc(imgSrc(id))}" alt="" data-pvmain="${esc(p.id)}|${esc(id)}" class="${id===p.photoId?"on":""}">`).join("")}</div>`:""}
       ${acts.length?`<div class="pvacts" style="grid-template-columns:repeat(${acts.length},1fr)">${acts.join("")}</div>`:`<button class="pvaddc" data-edit="1">+ Add her number or Instagram</button>`}
       ${up?`<div class="pvnext"><div><span class="pvh">Next date</span><b>${esc(placeName(up))}</b><span>${esc(fmtW(up))}</span></div><span style="display:flex;flex-direction:column;gap:6px;flex:none"><button class="pvsend" id="pv-send">Send her the details</button>${PHONE?`<a class="pvcal" href="${icsDateUrl(p,up)}" target="_blank" rel="noopener">Add to calendar</a>`:""}</span></div>`:""}
       <button class="pvcta" id="pv-plan"><span>Plan a date with ${esc(first)}${p.keepsKosher||p.shomerShabbat?`<small>${[p.keepsKosher?"Kosher spots only":"",p.shomerShabbat?"Sat after Shabbat":""].filter(Boolean).join(" · ")}</small>`:""}</span><span aria-hidden="true">›</span></button>
@@ -1852,6 +1908,7 @@ document.addEventListener("click",e=>{
   const bt=e.target.closest("[data-btab]");if(bt){S.bookTab=bt.dataset.btab;renderBook();return}
   const rl=e.target.closest("[data-rmline]");if(rl&&S.db&&S.notes){const [k,i]=rl.dataset.rmline.split(":");const arr=[...(S.notes[k]||[])];arr.splice(+i,1);S.db.doc("me/notes").set({...S.notes,[k]:arr,updatedAt:Date.now()}).then(()=>toast("Removed"),()=>toast("Couldn't save. Try again."));return}
   const cat=e.target.closest("[data-cat]");if(cat){S.pf={"Drinks":"Bars","Dinner":"Dinner","Music & fun":"Music & fun","Active / sporty":"Active"}[cat.dataset.cat]||"All";S.ps="All";S.q="";const qi=$("q");if(qi)qi.value="";go("spots");return}
+  const pm=e.target.closest("[data-pvmain]");if(pm){const [pid,ph]=pm.dataset.pvmain.split("|");pvSave(pid,{photoId:ph}).then(()=>openPerson(S.people.find(x=>x.id===pid),true));return}
   const hd=e.target.closest("[data-calday]");if(hd){S.calSel=hd.dataset.calday;S.calM=hd.dataset.calday.slice(0,7);S.calMode="month";go("cal");return}
   const cd=e.target.closest("[data-cald]");if(cd){S.calSel=cd.dataset.cald;renderCal();return}
   const cm=e.target.closest("[data-calmode]");if(cm){S.calMode=cm.dataset.calmode;renderCal();return}
@@ -1881,7 +1938,7 @@ document.addEventListener("click",e=>{
   else if(act==="dsave")saveDiscover(arg);
   else if(act==="dsc"){go("discover")}
   else if(act==="askclear"){S.ask={q:"",a:"",busy:false,err:""};renderHome();const i=$("askq");if(i)i.focus()}
-  else if(act==="newperson")openPerson(null);
+  else if(act==="newperson")openAddChoice();
   else if(act==="who"){S.plan.who=S.plan.who===arg?"":arg;S.plan.chosen="";renderPlan();if(arg==="__new"&&$("pl-name"))$("pl-name").focus()}
   else if(act==="when"){S.plan.whenDay=S.plan.whenDay===arg?"":arg;S.plan.wd=S.plan.whenDay;S.plan.wt="";renderPlan()}
   else if(act==="vibe"){S.plan.vibe=arg;S.plan.chosen="";renderPlan()}
@@ -1904,6 +1961,7 @@ render();
   try{S.assets=C?await C.use("assets"):null}catch(e){S.assets=null}
   try{S.mcp=C?await C.use("mcp"):null}catch(e){S.mcp=null}
   try{S.sample=C?await C.use("sample"):null}catch(e){S.sample=null}
+  try{S.ai=C?await C.use("ai"):null}catch(e){S.ai=null}
   if(!db){S.loading=false;render();return}
   let got=0;const done=()=>{if(++got>=2)S.loading=false};
   const rerender=()=>{if(S.view!=="plan"||!S.plan.chosen)render()};

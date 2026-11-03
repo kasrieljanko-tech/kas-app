@@ -98,7 +98,8 @@ window.kuKeypad=function(o){
     delete:async(id)=>{if(String(id).startsWith("d/"))await call({action:"unupload",id:String(id).slice(2)})}
   };
   const mcp={callTool:async(server,tool,args)=>{try{return await call({action:"cal",args})}catch(e){e.code=e.code==="pin"?"needs_reauth":"tool_error";throw e}}};
-  window.claude={use:async name=>{await gate;return name==="db"?db:name==="assets"?assets:name==="mcp"?mcp:null}};
+  const ai={status:async()=>{try{return !!(await call({action:"aistatus"})).hasKey}catch(e){return false}},setKey:k=>call({action:"setaikey",key:k}),read:imgs=>call({action:"readshots",images:imgs})};
+  window.claude={use:async name=>{await gate;return name==="db"?db:name==="assets"?assets:name==="mcp"?mcp:name==="ai"?ai:null}};
   // PIN gate
   let openGate;const gate=new Promise(r=>openGate=r);
   function askPin(msg){
