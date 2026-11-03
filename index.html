@@ -23,8 +23,8 @@
 .ku-shot-note{font-size:.8rem;color:var(--muted);line-height:1.45;padding:0 5px}
 @media(max-width:350px){.ku-cats{gap:8px}.ku-cat{padding:12px}}
 </style>
-<script src="config.js?v=1793688052853"></script><script src="shim.js?v=1793688052853"></script>
-<meta name="ku-build" content="1793688052853"><script>(function(){var B="1793688052853";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<script src="config.js?v=1793692000000"></script><script src="shim.js?v=1793692000000"></script>
+<meta name="ku-build" content="1793692000000"><script>(function(){var B="1793692000000";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -743,6 +743,65 @@ html.mapon .sbar{display:none}
 #scr{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;overscroll-behavior-x:none;padding-top:env(safe-area-inset-top,0px)}
 .swipe-back{position:fixed;left:-34px;top:50%;width:44px;height:44px;border-radius:50%;background:rgba(120,120,128,.4);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font-size:32px;line-height:40px;text-align:center;opacity:0;z-index:9999;pointer-events:none;transform:translate(0,-50%)}
 
+
+/* Kas Upgrade 2.0 — unified native iPhone design */
+:root{--ku-shadow:0 4px 18px rgba(28,28,50,.045);--ku-lilac:#8872b0}
+body{letter-spacing:-.008em}
+.wrap{gap:16px;padding-top:20px}
+.view{gap:15px}
+h1{font-size:clamp(1.8rem,8vw,2.2rem);letter-spacing:-.045em;line-height:1.09}
+h2{font-weight:740;letter-spacing:-.025em}
+.ku-overline{display:block;color:var(--muted);font-size:.66rem;font-weight:750;letter-spacing:.115em;text-transform:uppercase;margin-bottom:7px}
+.ku-pagehead{align-items:center;margin:2px 0 5px}
+.ku-pagehead h1{margin:0}
+.ku-pagehead .topbtns{display:flex;gap:7px;align-items:center}
+.ku-pagehead .round{width:39px;height:39px}
+.ku-welcome{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:8px 1px 5px}
+.ku-welcome h1{margin:5px 0 6px;font-size:clamp(1.9rem,8.6vw,2.4rem);line-height:1.08;letter-spacing:-.055em}
+.ku-today{font-size:.78rem;color:var(--muted);font-weight:550}
+.ku-tagline{margin:0;color:var(--muted);font-size:.92rem;line-height:1.4}
+.ku-avatar{flex:none;width:42px;height:42px;border:2px solid var(--surface)!important;box-shadow:0 2px 12px rgba(0,0,0,.09)}
+.ku-feature{width:100%;min-height:190px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;text-align:left;padding:21px;border:1px solid #dcd6eb;border-radius:24px;background:linear-gradient(125deg,#ece5f7 0%,#dde8f7 65%,#dcebe9 100%);color:#292939;box-shadow:var(--ku-shadow);cursor:pointer}
+.ku-feature-k{font-size:.66rem;letter-spacing:.13em;font-weight:780;color:#746487}
+.ku-feature-title{font-size:1.65rem;letter-spacing:-.06em;line-height:1.06;font-family:var(--display);font-weight:780;max-width:255px}
+.ku-feature-bottom{width:100%;font-size:.79rem;font-weight:600;display:flex;align-items:center;justify-content:space-between;color:#585369}
+.ku-feature-arrow{display:grid;place-items:center;height:37px;width:37px;border-radius:50%;background:rgba(255,255,255,.78);color:#3d3b55;font-size:1.3rem}
+.ku-sectionrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px}
+.ku-sectionrow h2{font-size:1.17rem}
+.ku-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ku-shortcuts button{min-height:111px;background:var(--surface);border:1px solid var(--line);border-radius:19px;padding:15px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:9px;text-align:left;color:var(--fg);box-shadow:var(--ku-shadow);cursor:pointer}
+.ku-shorticon{font-size:1.5rem;line-height:1;color:#8278ab}
+.ku-shortcuts b{display:block;font-size:.93rem;line-height:1.18}
+.ku-shortcuts small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px}
+.ku-cats{gap:10px}
+.ku-cat{border-radius:19px;min-height:110px;box-shadow:var(--ku-shadow);transition:transform .15s ease,border-color .15s ease}
+.ku-cat:active,.ku-shortcuts button:active{transform:scale(.985)}
+.ku-emoji{line-height:1.1}
+.ku-cat b{font-weight:700}
+.item,.pcard,.rate-card,.history,.calbox,.mecard,.pick,.lines,.calpanel{border-radius:19px;box-shadow:var(--ku-shadow)}
+.item{padding:13px 14px}
+.item .nm{font-weight:710;letter-spacing:-.02em}
+.item .ds{font-size:.84rem}
+.sechead{margin-top:5px}
+.search{border-radius:13px;background:var(--fill);border:1px solid transparent;min-height:45px}
+.chip,.cattab,.uepill{font-weight:640}
+.btn,.mini{border-radius:13px}
+.sheet{border-radius:26px 26px 0 0}
+.field input,.field select,.field textarea{border-radius:12px}
+.nav{box-shadow:none;border-top:1px solid var(--line);background:color-mix(in srgb,var(--surface) 89%,transparent);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.nav button{font-size:.67rem;min-height:54px}
+.nav button[aria-current="page"]{color:var(--accent)}
+/* Avoid horizontal clipping from wide groups of controls on smaller iPhones */
+.topbtns{max-width:100%;flex-wrap:nowrap;gap:6px}
+@media(max-width:365px){.ku-pagehead .round{width:35px;height:35px}.ku-shortcuts button{min-height:104px;padding:13px}.ku-feature{min-height:178px}.ku-feature-title{font-size:1.48rem}}
+@media(prefers-color-scheme:dark){
+:root:not([data-theme="light"]) .ku-feature{background:linear-gradient(130deg,#3e364e,#29394a 68%,#273b38);border-color:#4d455b;color:#fff}
+:root:not([data-theme="light"]) .ku-feature-k{color:#c7b5e4}
+:root:not([data-theme="light"]) .ku-feature-bottom{color:#c5bfd0}
+}
+:root[data-theme="dark"] .ku-feature{background:linear-gradient(130deg,#3e364e,#29394a 68%,#273b38);border-color:#4d455b;color:#fff}
+:root[data-theme="dark"] .ku-feature-k{color:#c7b5e4}
+:root[data-theme="dark"] .ku-feature-bottom{color:#c5bfd0}
 </style>
 
 <div class="sbar"></div>
@@ -751,7 +810,7 @@ html.mapon .sbar{display:none}
   <section class="view" id="v-plan" hidden></section>
   <section class="view" id="v-me" hidden></section>
   <section class="view" id="v-spots" hidden>
-    <div class="top"><h1>Places</h1><div class="topbtns"><button class="round" data-act="openmap" data-kind="spots" aria-label="Map"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/></svg></button><button class="round acc" data-act="newspot" aria-label="Add a spot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div></div>
+    <div class="top ku-pagehead"><div><span class="ku-overline">YOUR PERSONAL COLLECTION</span><h1>Places</h1></div><div class="topbtns"><button class="round" data-act="openmap" data-kind="spots" aria-label="Map"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/></svg></button><button class="round acc" data-act="newspot" aria-label="Add a spot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div></div>
     <input class="search" id="q" type="search" placeholder="Search a name, area or note" aria-label="Search spots">
     <div class="uepills" id="pf-pills"></div>
     <div class="scroller" id="pf-row"></div>
@@ -1057,12 +1116,32 @@ function renderHome0(){
   const withPh=open.filter(s=>s.photoId);const feat=withPh.length?withPh[new Date().getDate()%withPh.length]:null;
   const evs=upcomingEvents().slice(0,6);
   $("v-home").innerHTML=`
-    <div class="ihead"><div><small>${esc(new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"}))}</small><h1>Your dates</h1></div><span style="display:flex;gap:10px;align-items:center"><button class="round" data-go="cal" aria-label="Open calendar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button><button class="hplus" data-act="plan" aria-label="Add a date"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button class="ime" data-go="me" aria-label="My profile" style="border:0;cursor:pointer;padding:0;overflow:hidden">${S.profile&&S.profile.photoId?`<img src="${esc(imgSrc(S.profile.photoId))}" alt="" style="width:100%;height:100%;object-fit:cover">`:esc(ME[0])}</button></span></div>
+    <div class="ku-welcome">
+      <div><span class="ku-overline">THE KAS UPGRADE</span><span class="ku-today">${esc(new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"}))}</span>
+      <h1>${new Date().getHours()<12?"Good morning":new Date().getHours()<17?"Good afternoon":"Good evening"}, Kas.</h1>
+      <p class="ku-tagline">Your people, places and next experiences.</p></div>
+      <button class="ime ku-avatar" data-go="me" aria-label="My profile" style="border:0;cursor:pointer;padding:0;overflow:hidden">${S.profile&&S.profile.photoId?`<img src="${esc(imgSrc(S.profile.photoId))}" alt="" style="width:100%;height:100%;object-fit:cover">`:esc(ME[0])}</button>
+    </div>
+    <button class="ku-feature" data-go="discover">
+      <span class="ku-feature-k">DISCOVER SOMETHING NEW</span>
+      <span class="ku-feature-title">Make your next night a good one.</span>
+      <span class="ku-feature-bottom"><span>Events, dates & experiences</span><span class="ku-feature-arrow">↗</span></span>
+    </button>
+    <div class="ku-sectionrow"><h2>Quick access</h2><button class="link" data-go="cal">Calendar ›</button></div>
+    <div class="ku-shortcuts">
+      <button data-go="discover"><span class="ku-shorticon">✧</span><span><b>Discover</b><small>Explore what’s happening</small></span></button>
+      <button data-go="people"><span class="ku-shorticon">♡</span><span><b>People</b><small>Your connections</small></span></button>
+      <button data-act="plan"><span class="ku-shorticon">▦</span><span><b>Plan a date</b><small>Make something happen</small></span></button>
+      <button data-go="spots"><span class="ku-shorticon">⌑</span><span><b>Saved places</b><small>Your collection</small></span></button>
+    </div>
+    <div class="ku-sectionrow"><h2>Your plans</h2><button class="link" data-go="cal">View all ›</button></div>
 
     ${S.loading||!S.db?"":ups.filter(({d})=>!d.confirmed&&parseLocal(d.when)-Date.now()<36*36e5&&parseLocal(d.when)>Date.now()-36e5).slice(0,2).map(({p,d})=>`<button class="cfcard" data-confirm="${esc(p.id)}:${esc(d.id)}"><span><b>Confirm with ${esc(String(p.name).split(" ")[0])}</b><small>${esc(placeName(d))} · ${esc(parseLocal(d.when).toLocaleDateString(undefined,{weekday:"short"}))} ${esc(parseLocal(d.when).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))}. Send her the details.</small></span><span class="cfgo">Send</span></button>`).join("")}
-    <div class="ku-sechead">Explore by category</div><div class="ku-cats"><button class="ku-cat" data-ku-tab="events"><span class="ku-emoji">🎟️</span><span><b>Events</b><small>Concerts, live shows</small></span></button><button class="ku-cat" data-ku-tab="movies"><span class="ku-emoji">🎬</span><span><b>Movies</b><small>What's playing</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🏎️</span><span><b>Cars & racing</b><small>Speed and action</small></span></button><button class="ku-cat" data-ku-tab="different"><span class="ku-emoji">♡</span><span><b>Date ideas</b><small>Make it memorable</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🎳</span><span><b>Games & activities</b><small>Something interactive</small></span></button><button class="ku-cat" data-ku-tab="rooftop"><span class="ku-emoji">🌃</span><span><b>Bars & rooftops</b><small>Great atmosphere</small></span></button><button class="ku-cat" data-ku-tab="kosher"><span class="ku-emoji">🍽️</span><span><b>Dinner & kosher</b><small>Places worth trying</small></span></button><button class="ku-cat" data-ku-tab="music"><span class="ku-emoji">🎶</span><span><b>Music & nightlife</b><small>Go out tonight</small></span></button></div>
+
     ${weekStrip(ups)}
     ${S.loading||!S.db?hero:agenda(ups,pastAll)}
+    <div class="ku-sectionrow"><h2>Explore by category</h2><button class="link" data-go="discover">See all ›</button></div>
+    <div class="ku-cats"><button class="ku-cat" data-ku-tab="events"><span class="ku-emoji">🎟️</span><span><b>Events</b><small>Concerts, live shows</small></span></button><button class="ku-cat" data-ku-tab="movies"><span class="ku-emoji">🎬</span><span><b>Movies</b><small>What's playing</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🏎️</span><span><b>Cars & racing</b><small>Speed and action</small></span></button><button class="ku-cat" data-ku-tab="different"><span class="ku-emoji">♡</span><span><b>Date ideas</b><small>Make it memorable</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🎳</span><span><b>Games & activities</b><small>Something interactive</small></span></button><button class="ku-cat" data-ku-tab="rooftop"><span class="ku-emoji">🌃</span><span><b>Bars & rooftops</b><small>Great atmosphere</small></span></button><button class="ku-cat" data-ku-tab="kosher"><span class="ku-emoji">🍽️</span><span><b>Dinner & kosher</b><small>Places worth trying</small></span></button><button class="ku-cat" data-ku-tab="music"><span class="ku-emoji">🎶</span><span><b>Music & nightlife</b><small>Go out tonight</small></span></button></div>
     ${rate}
     ${S.loading||!S.db?"":dontForget(ups)}
     ${homeRows()}
@@ -1092,7 +1171,7 @@ function renderBook(){
     body=`<span class="muted" style="font-size:.9rem">Tap one to order. Each girl's card also suggests a gift that fits her.</span>`+moments.map(m=>`<div class="view" style="gap:8px"><h2>${esc(m)}</h2><div class="lines">${gs.filter(g=>(g.moment||"Ideas")===m).map(g=>`<a class="lcopy" href="${esc(g.url)}" target="_blank" rel="noopener" style="text-decoration:none;border-bottom:1px solid var(--line2)"><span class="ltext"><b>${esc(g.label)}</b><br><span class="muted" style="font-size:.88rem">${esc(g.note||"")}</span></span><span class="lic">${ICON.chev}</span></a>`).join("")}</div></div>`).join("")}
   else{const links=(n.links||[]).filter(l=>safeUrl(l.url));
     body=`<span class="muted" style="font-size:.9rem">Send her something after a good date.</span>`+(links.length?links.map(l=>`<a class="item" href="${esc(l.url)}" target="_blank" rel="noopener" style="text-decoration:none;color:var(--fg)"><span class="mid"><span class="nm">${esc(l.label)}</span><span class="ds">${esc(new URL(l.url).hostname.replace(/^www\./,""))}</span></span>${ICON.chev}</a>`).join(""):`<div class="empty"><strong>No gift ideas yet</strong>Send Claude a link to save it here.</div>`)}
-  $("v-book").innerHTML=`<div class="top"><h1>My lines</h1></div>${seg}${body}`;
+  $("v-book").innerHTML=`<div class="top ku-pagehead"><div><span class="ku-overline">YOUR NOTES & IDEAS</span><h1>My lines</h1></div></div>${seg}${body}`;
   const f=$("addline");if(f)f.onsubmit=async e=>{e.preventDefault();const v=$("newline").value.trim();if(!v||!S.db)return;const arr=[...(n[t]||[]),v];
     try{await S.db.doc("me/notes").set({...n,[t]:arr,updatedAt:Date.now()});toast("Added")}catch(err){toast("Couldn't save. Try again.")}};
 }
@@ -1227,7 +1306,7 @@ function renderDiscover(){
     const all=mixed.map(([x,k])=>discCard(x,!!k));
     body=pre+(S.iTab==="all"?discoverRows()+`<span class="bklab" style="margin-top:4px">All picks</span>`:"")+`<div class="uelist">${all.slice(0,lim).join("")}</div>${all.length>lim?`<button class="btn recmorebtn" data-act="dmore">Show more (${all.length-lim} left)</button>`:""}`}
   const tabs=[["all","For you"],...ITABS];const em={all:"🔥",...IEMO};
-  if(!$("dq")){$("v-discover").innerHTML=`<div class="top"><h1>Discover</h1><button class="round" data-act="openmap" data-kind="discover" aria-label="Map">${SVG_MAP}</button></div>
+  if(!$("dq")){$("v-discover").innerHTML=`<div class="top ku-pagehead"><div><span class="ku-overline">EXPLORE YOUR WORLD</span><h1>Discover</h1></div><button class="round" data-act="openmap" data-kind="discover" aria-label="Map">${SVG_MAP}</button></div>
     <div class="ku-sechead">Explore by category</div><div class="ku-cats"><button class="ku-cat" data-ku-tab="events"><span class="ku-emoji">🎟️</span><span><b>Events</b><small>Concerts, live shows</small></span></button><button class="ku-cat" data-ku-tab="movies"><span class="ku-emoji">🎬</span><span><b>Movies</b><small>What's playing</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🏎️</span><span><b>Cars & racing</b><small>Speed and action</small></span></button><button class="ku-cat" data-ku-tab="different"><span class="ku-emoji">♡</span><span><b>Date ideas</b><small>Make it memorable</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🎳</span><span><b>Games & activities</b><small>Something interactive</small></span></button><button class="ku-cat" data-ku-tab="rooftop"><span class="ku-emoji">🌃</span><span><b>Bars & rooftops</b><small>Great atmosphere</small></span></button><button class="ku-cat" data-ku-tab="kosher"><span class="ku-emoji">🍽️</span><span><b>Dinner & kosher</b><small>Places worth trying</small></span></button><button class="ku-cat" data-ku-tab="music"><span class="ku-emoji">🎶</span><span><b>Music & nightlife</b><small>Go out tonight</small></span></button></div><input class="search" id="dq" type="search" placeholder="Search places, concerts, comedians, movies" aria-label="Search ideas" value="${esc(S.dq||"")}" autocomplete="off"><div id="disc-body" style="display:flex;flex-direction:column;gap:14px"></div>`;
     $("dq").oninput=e=>{S.dq=e.target.value;S.dLim=20;LIVE.items=null;LIVE.movies=null;LIVE.err="";renderDiscover()};
     $("dq").onkeydown=e=>{if(e.key==="Enter"&&S.dq.trim()){e.preventDefault();runLive("events");e.target.blur()}}}
@@ -1516,7 +1595,7 @@ function renderPeople(){
   const list=[...S.people].filter(p=>(S.pf2.kinds.includes("Sneaky link"))||vis(p)).filter(pfPass).sort((a,b)=>(a.status==="Done")-(b.status==="Done")||order(a)-order(b));
   const past=allPast().slice(0,8);
   $("v-people").innerHTML=`
-    <div class="top"><h1>Your people</h1><div class="topbtns"><button class="round" data-act="psearch" aria-label="Search people">${SVG_SEARCH}</button><button class="round" data-act="pfilter" aria-label="Filters">${SVG_FILTER}${pfCount()?`<i class="fbadge">${pfCount()}</i>`:""}</button><button class="round" data-ku-shot="1" aria-label="Add person from screenshot" title="Add from screenshot">▣</button><button class="round acc" data-act="newperson" aria-label="Add a person">${ICON.plus}</button></div></div>
+    <div class="top ku-pagehead"><div><span class="ku-overline">YOUR CONNECTIONS</span><h1>People</h1></div><div class="topbtns"><button class="round" data-act="psearch" aria-label="Search people">${SVG_SEARCH}</button><button class="round" data-act="pfilter" aria-label="Filters">${SVG_FILTER}${pfCount()?`<i class="fbadge">${pfCount()}</i>`:""}</button><button class="round" data-ku-shot="1" aria-label="Add person from screenshot" title="Add from screenshot">▣</button><button class="round acc" data-act="newperson" aria-label="Add a person">${ICON.plus}</button></div></div>
     <div class="pqw${S.pqOpen||S.pq?" open":""}" id="pqw"><input class="search" id="pq" type="search" placeholder="Search name or number" aria-label="Search people" value="${esc(S.pq||"")}"></div>
     <div class="view" id="plist" style="gap:10px"></div>
     ${S.people.some(p=>p.kind==="Sneaky link")?`<button class="link" data-act="togglesneaky" style="align-self:center">${showSneaky()?"Hide sneaky links everywhere":`${hiddenN} sneaky link${hiddenN===1?"":"s"} hidden · Show`}</button>`:""}
