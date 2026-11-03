@@ -6,8 +6,8 @@
 <link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-180.png"><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
-<script src="config.js?v=1793674719"></script><script src="shim.js?v=1793674719"></script>
-<meta name="ku-build" content="1793674719"><script>(function(){var B="1793674719";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<script src="config.js?v=1793675607"></script><script src="shim.js?v=1793675607"></script>
+<meta name="ku-build" content="1793675607"><script>(function(){var B="1793675607";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -397,7 +397,7 @@ h2{font-size:1.25rem;font-weight:600;letter-spacing:-.01em}
 .nav button{font-size:.66rem;font-weight:500}
 .nav button[aria-current="page"]{color:var(--accent);font-weight:600}
 .sheet{border-radius:14px 14px 0 0}
-.sheet::before{content:"";align-self:center;width:36px;height:5px;border-radius:3px;background:var(--line);margin:-8px 0 2px}
+.sheet::before{content:none}
 .drop,.ideas,.empty,.nudge{border:0;background:var(--surface);border-radius:12px}
 .nudge{color:var(--accent)}
 .seg{background:var(--fill);border-radius:9px}
@@ -531,6 +531,22 @@ input[type=date]::-webkit-date-and-time-value{text-align:left}
 .ioinput{border:0;background:none;color:#fff;font:inherit;font-size:16px;min-height:46px;padding:0 14px;width:100%;outline:none}
 .iofoot{color:#8e8e93;font-size:.8rem;padding:0 14px;margin-top:-8px}
 .iosheet .asp{cursor:default}.iosheet .asp i{width:20px;height:20px}.iosheet .asp.on i{border-color:#0a84ff;border-top-color:transparent}.iosheet .asth i{background:linear-gradient(180deg,transparent,rgba(10,132,255,.45),transparent)}
+/* iOS 26 liquid glass for the add flow */
+.sheet.iosheet{background:rgba(28,28,32,.8)!important;-webkit-backdrop-filter:blur(40px) saturate(180%);backdrop-filter:blur(40px) saturate(180%);border-radius:38px 38px 0 0;border:1px solid rgba(255,255,255,.12);border-bottom:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 -20px 60px rgba(0,0,0,.45)}
+.iosheet .iocard,.iosheet .iogroup{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);border-radius:26px}
+.iosheet .iobar b{font-size:1.06rem;font-weight:650;letter-spacing:-.01em}
+.glb{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.12);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);color:#fff;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 14px rgba(0,0,0,.25)}
+.glb.pri{background:linear-gradient(180deg,#3a9bff,#0a84ff);border-color:rgba(255,255,255,.25)}
+.glspin{width:16px;height:16px;border-radius:50%;border:2.4px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .7s linear infinite}
+.iosheet .ioheroc{padding:30px 20px 18px;background:radial-gradient(120% 80% at 50% 0%,rgba(10,132,255,.28),rgba(10,132,255,0) 65%),rgba(255,255,255,.06)}
+.iosheet .iohero{width:84px;height:84px;border-radius:24px;background:linear-gradient(160deg,#7fd3ff 0%,#3a9bff 45%,#5e5ce6 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -8px 18px rgba(0,0,0,.18),0 12px 30px rgba(10,132,255,.4)}
+.iosheet .ioheroc b{font-size:1.3rem;font-weight:700;letter-spacing:-.02em}
+.iosheet .iofill{border-radius:999px;min-height:54px;background:linear-gradient(180deg,#3a9bff,#0a84ff);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 24px rgba(10,132,255,.35);font-size:1.05rem}
+.iosheet .iorow{min-height:54px;padding:0 16px}.iosheet .iorow+.iorow::before{left:58px;background:rgba(255,255,255,.1)}
+.iosheet .ioic{width:30px;height:30px;border-radius:9px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.iosheet .ioinput{min-height:54px;padding:0 18px}
+.iosheet .asth{border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.iosheet>.grab{background:transparent!important}.iosheet>.grab::after{background:rgba(255,255,255,.35)}
 .ahtop{display:flex;justify-content:space-between;align-items:center}.ahkey{width:36px;height:36px;border-radius:50%;border:0;background:var(--fill);color:var(--muted);display:grid;place-items:center;cursor:pointer}
 .addhero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:26px 18px 20px;border-radius:26px;background:radial-gradient(120% 90% at 50% 0%,rgba(255,55,95,.22),rgba(255,55,95,0) 60%),var(--fill);border:1px solid rgba(255,255,255,.06)}
 .fan{position:relative;width:200px;height:150px;margin-bottom:8px}
@@ -1690,7 +1706,7 @@ async function cropBlob(b,box){try{const im=await createImageBitmap(b);let [y0,x
 function openAddChoice(){
   if(!S.ai)return editPerson(null);
   $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet iosheet">
-    <div class="iobar"><button class="iobtn" id="as-x">Cancel</button><b>New Person</b><span style="width:60px"></span></div>
+    <div class="iobar"><button class="glb" id="as-x" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><b>New Person</b><span style="width:44px"></span></div>
     <div class="iocard ioheroc"><span class="iohero"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="15" height="15" rx="3"/><path d="M2.5 7v11a3.5 3.5 0 0 0 3.5 3.5h11"/><circle cx="11.5" cy="7.5" r="1.6"/><path d="M21.5 13l-4-4-8 8"/></svg></span><b>Add from Screenshots</b><span>Choose screenshots of her Hinge, Instagram or contact card. Her details and photos are filled in automatically.</span>
       <label class="iofill" for="as-files">Choose Screenshots</label></div>
     <input id="as-files" type="file" accept="image/*" multiple hidden>
@@ -1701,7 +1717,7 @@ function openAddChoice(){
   $("bg").onclick=e=>{if(e.target.id==="bg")closeSheet()}}
 function keySheet(after){
   $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet iosheet">
-    <div class="iobar"><button class="iobtn" id="ak-x">Cancel</button><b>AI Key</b><button class="iobtn bold" id="ak-save">Save</button></div>
+    <div class="iobar"><button class="glb" id="ak-x" aria-label="Cancel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><b>AI Key</b><button class="glb pri" id="ak-save" aria-label="Save"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button></div>
     <span class="iofoot" style="margin-top:4px">One-time setup, free. It lets the app read screenshots.</span>
     <div class="iogroup"><a class="iorow" href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener"><span class="ionum">1</span><span>Open Google AI Studio</span><span class="iochev"><svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l6 6-6 6"/></svg></span></a>
       <div class="iorow"><span class="ionum">2</span><span>Tap “Create API key” and copy it</span></div>
@@ -1710,10 +1726,10 @@ function keySheet(after){
     <span class="iofoot">Your key stays in your private Google script.</span></div></div>`;
   $("ak-x").onclick=()=>after?closeSheet():openAddChoice();
   $("ak-save").onclick=async()=>{const v=$("ak-in").value.trim();if(v.length<20){toast("That doesn't look like a key");return}
-    $("ak-save").disabled=true;$("ak-save").textContent="Saving…";try{await S.ai.setKey(v);toast("AI connected");if(after)after();else openAddChoice()}catch(e){$("ak-save").disabled=false;$("ak-save").textContent="Save";toast("Couldn't save. Try again")}}}
+    $("ak-save").disabled=true;$("ak-save").innerHTML='<span class="glspin"></span>';try{await S.ai.setKey(v);toast("AI connected");if(after)after();else openAddChoice()}catch(e){$("ak-save").disabled=false;$("ak-save").innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;toast("Couldn't save. Try again")}}}
 async function addFromShots(files){
   files=files.slice(0,6);const urls=files.map(f=>URL.createObjectURL(f));
-  $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet iosheet"><div class="iobar"><span style="width:60px"></span><b>Reading Profile</b><span style="width:60px"></span></div>
+  $("sheet-root").innerHTML=`<div class="sheet-bg" id="bg"><div class="sheet iosheet"><div class="iobar"><span style="width:44px"></span><b>Reading Profile</b><span style="width:44px"></span></div>
     <div class="asthumbs" style="justify-content:center">${urls.map(u=>`<span class="asth"><img src="${u}" alt=""><i></i></span>`).join("")}</div>
     <div class="iogroup"><div class="iorow asp on" id="sp1"><i></i><span>Reading screenshots</span></div><div class="iorow asp" id="sp2"><i></i><span>Cropping her photos</span></div><div class="iorow asp" id="sp3"><i></i><span>Saving her profile</span></div></div></div></div>`;
   const st=m=>{const n=/Crop/.test(m)?2:/Sav/.test(m)?3:1;for(let i=1;i<=3;i++){const e=$("sp"+i);if(e){e.classList.toggle("on",i===n);e.classList.toggle("done",i<n)}}};
