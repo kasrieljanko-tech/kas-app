@@ -3,33 +3,40 @@ window.kuKeypad=function(o){
   const g=k=>{try{return localStorage.getItem(k)||""}catch(e){return ""}};
   const h=new Date().getHours(),hi=h<5?"Good night":h<12?"Good morning":h<18?"Good afternoon":"Good evening";
   if(!document.getElementById("ku-kp-css")){const st=document.createElement("style");st.id="ku-kp-css";st.textContent=`
-  .kp{position:fixed;inset:0;z-index:${o.z||100};display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 2vh) 24px calc(env(safe-area-inset-bottom,0px) + 6vh);font-family:-apple-system,system-ui,sans-serif;color:#fff;background:radial-gradient(70% 38% at 50% 30%,rgba(40,70,130,.45) 0%,rgba(0,0,0,0) 100%),#000;-webkit-user-select:none;user-select:none}
-  .kp-logo{display:flex;align-items:center;gap:9px}.kp-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-height:0;width:100%}.kp-logo img{width:30px;height:30px;border-radius:8px}.kp-logo span{font:600 .95rem -apple-system,system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.92)}.kp-logo b{color:#ff375f;font-weight:800}
-  .kp-me{width:76px;height:76px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.5)}
-  .kp-ic{width:76px;height:76px;border-radius:18px;box-shadow:0 10px 30px rgba(10,132,255,.35)}
-  .kp h2{margin:12px 0 4px;font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
-  .kp .kp-s{color:rgba(255,255,255,.65);font-size:.95rem;min-height:1.3em}
-  .kp-dots{display:flex;gap:18px;margin:22px 0 0}
-  .kp-dots i{width:14px;height:14px;border-radius:50%;border:1.6px solid #fff;transition:background .12s}
-  .kp-dots i.on{background:#fff}
+  .kp{position:fixed;inset:0;z-index:${o.z||100};display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:8px;overflow-y:auto;overflow-x:hidden;padding:calc(env(safe-area-inset-top,0px) + 18px) 22px calc(env(safe-area-inset-bottom,0px) + 22px);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;color:#f6f6fa;background:radial-gradient(ellipse at 52% 32%,#222a39 0%,#131923 35%,#0b1018 77%,#090d14 100%);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  .kp-logo{display:flex;align-items:center;gap:10px;flex:none;width:100%;max-width:370px}
+  .kp-logo img{width:30px;height:30px;border-radius:10px;object-fit:cover}
+  .kp-logo span{font-size:.73rem;font-weight:740;letter-spacing:.17em;text-transform:uppercase;color:rgba(255,255,255,.76)}
+  .kp-logo b{color:#b5a3ee;font-weight:760}
+  .kp-top{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:175px;width:100%;max-width:390px;gap:0}
+  .kp-me{width:76px;height:76px;border-radius:25px;object-fit:cover;border:2px solid rgba(255,255,255,.18);box-shadow:0 8px 28px rgba(0,0,0,.24)}
+  .kp-ic{width:76px;height:76px;border-radius:25px;box-shadow:0 8px 28px rgba(0,0,0,.22)}
+  .kp-welcome{font-size:.67rem;font-weight:780;letter-spacing:.15em;color:#aea9c6;text-transform:uppercase;margin-top:24px}
+  .kp h2{margin:9px 0 9px;font-size:clamp(1.65rem,6.6vw,2rem);font-weight:760;letter-spacing:-.045em;line-height:1.12;text-align:center}
+  .kp .kp-s{color:#aeb5c4;font-size:.9rem;min-height:1.3em;text-align:center}
+  .kp-dots{display:flex;align-items:center;justify-content:center;gap:18px;margin:24px 0 2px}
+  .kp-dots i{width:11px;height:11px;border-radius:50%;border:1.7px solid #d5d8e3;transition:background .12s,transform .12s}
+  .kp-dots i.on{background:#c8bcf7;border-color:#c8bcf7;transform:scale(1.06)}
   .kp-dots.shake{animation:kpsh .4s}
-  @keyframes kpsh{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
-  .kp-pad{margin-top:2vh;display:grid;grid-template-columns:repeat(3,78px);gap:2.2vh 28px}
-  .kp-k{width:78px;height:78px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font:400 2rem -apple-system,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .1s}
-  .kp-k:active{background:rgba(255,255,255,.4)}
-  .kp-k small{font-size:.55rem;letter-spacing:.2em;font-weight:600;margin-top:2px;opacity:.8}
-  .kp-k.t{background:none;font-size:1rem;font-weight:500}
-  .kp-k.t:active{background:rgba(255,255,255,.12)}
-  .kp-k[data-f]{background:rgba(10,132,255,.35)}
+  @keyframes kpsh{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .kp-pad{flex:none;display:grid;grid-template-columns:repeat(3,clamp(62px,18vw,75px));gap:clamp(7px,1.9vh,16px) clamp(20px,7vw,32px);justify-content:center;align-items:center;margin:0 auto;max-width:365px;padding:0 0 7px}
+  .kp-k{width:clamp(62px,18vw,75px);height:clamp(62px,18vw,75px);border-radius:23px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.055);color:#fafaff;font:450 1.75rem -apple-system,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;cursor:pointer;transition:background .1s,transform .12s}
+  .kp-k:active{background:rgba(198,189,236,.21);transform:scale(.95)}
+  .kp-k small{font-size:.46rem;letter-spacing:.17em;font-weight:600;margin-top:5px;opacity:.56}
+  .kp-k.t{border:0;background:none;color:#c4cbd6;font-size:.88rem;font-weight:580}
+  .kp-k.t:active{background:rgba(255,255,255,.10)}
+  .kp-k[data-f]{background:rgba(182,164,237,.16);border:1px solid rgba(182,164,237,.25);color:#e8deff}
+  .kp-footer{flex:none;color:#757e8e;text-align:center;font-size:.68rem;letter-spacing:.02em;padding-top:7px}
+  @media(max-height:740px){.kp{padding-top:calc(env(safe-area-inset-top,0px) + 10px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}.kp-top{min-height:135px}.kp-welcome{margin-top:12px}.kp-dots{margin-top:12px}.kp-pad{gap:6px 22px}.kp-k{width:62px;height:62px;border-radius:19px}.kp-footer{display:none}}
   @media (prefers-reduced-motion:reduce){.kp-dots.shake{animation:none}}`;document.head.appendChild(st)}
   const d=document.createElement("div");d.id=o.id;d.className="kp";
   const me=g("ku.meimg");const L=["","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"];
   d.innerHTML=`<div class="kp-logo"><img src="icon-180.png" alt=""><span>The Kas <b>Upgrade</b></span></div><div class="kp-top">${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png" alt="">`}
-    <h2>${hi}, Kas</h2><div class="kp-s" id="${o.id}-s">${o.sub||"Enter your code"}</div>
+    <span class="kp-welcome">Your private space</span><h2>${hi}, Kas.</h2><div class="kp-s" id="${o.id}-s">${o.sub||"Enter your code"}</div>
     <div class="kp-dots" id="${o.id}-d">${"<i></i>".repeat(o.len||4)}</div></div>
     <div class="kp-pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="kp-k" data-n="${n}">${n}<small>${L[n-1]||"&nbsp;"}</small></button>`).join("")}
       ${o.faceId?`<button class="kp-k t" data-f="1" aria-label="Face ID"><svg width="30" height="30" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8"/><path d="M22 24v4M42 24v4M32 26v10h-3M24 44c4 4 12 4 16 0"/></svg></button>`:`<span></span>`}
-      <button class="kp-k" data-n="0">0<small>&nbsp;</small></button><button class="kp-k t" data-x="1">Delete</button></div>`;
+      <button class="kp-k" data-n="0">0<small>&nbsp;</small></button><button class="kp-k t" data-x="1">Delete</button></div><div class="kp-footer">Private · Just for you</div>`;
   document.body.appendChild(d);
   let code="",busy=false;const dots=d.querySelector(".kp-dots"),msg=d.querySelector(".kp-s");
   const paint=()=>dots.querySelectorAll("i").forEach((i,k)=>i.classList.toggle("on",k<code.length));
