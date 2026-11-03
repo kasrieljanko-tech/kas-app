@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#000000">
 <style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}[hidden]{display:none!important}[class*="netlify-badge"],#netlify-badge,netlify-badge,#nl-badge-frame,iframe[id^="nl-badge"]{display:none!important;pointer-events:none!important}</style>
 <script src="config.js"></script><script src="shim.js"></script>
-<meta name="ku-build" content="1793663253"><script>(function(){var B="1793663253";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<meta name="ku-build" content="1793671574"><script>(function(){var B="1793671574";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -503,7 +503,7 @@ input[type=date]::-webkit-date-and-time-value{text-align:left}
 .arow .atm{width:62px;flex:none;text-align:center;display:flex;flex-direction:column;gap:2px}.arow .atm b{font-size:1.1rem}.arow .atm small{font-size:.62rem;color:var(--muted);font-weight:700;letter-spacing:.03em}
 .arow .abar{width:3px;align-self:stretch;border-radius:2px;flex:none}
 .atx{display:flex;flex-direction:column;min-width:0;gap:2px;flex:1}.atx b{font-size:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.atx>span{font-size:.86rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.atag{align-self:flex-start;margin-top:4px;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:8px}.atag.ok{background:rgba(48,209,88,.16);color:#30d158}.atag.wait{background:rgba(255,159,10,.16);color:#ff9f0a}
+.atag{align-self:flex-start;margin-top:4px;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:8px}.atag.tap{cursor:pointer;padding:6px 10px}.atag.ok{background:rgba(48,209,88,.16);color:#30d158}.atag.wait{background:rgba(255,159,10,.16);color:#ff9f0a}
 .arow.past{padding:10px 14px;border-radius:16px}.arow.past .atx b{font-size:.92rem}
 .arow.empty{justify-content:center;text-align:center}.arow.empty .atx{align-items:center}
 .frow{border:0;background:var(--surface);color:var(--fg);border-radius:16px;padding:12px 14px;display:flex;gap:12px;align-items:center;text-align:left;cursor:pointer;width:100%}
@@ -913,7 +913,7 @@ function weekStrip(ups){const t0=new Date();t0.setHours(0,0,0,0);const has=new S
   return `<div class="wkstrip">${h}</div>`}
 function agenda(ups,pastAll){
   const row=({p,d})=>{const w=parseLocal(d.when);const s=spotOf(d);const hrs=(w-Date.now())/36e5;
-    const tag=d.confirmed?`<span class="atag ok">Confirmed</span>`:(hrs<48?`<span class="atag wait">Text her to confirm</span>`:(!d.spotId&&!d.spotName?`<span class="atag wait">Pick a place</span>`:""));
+    const tag=d.confirmed?`<span class="atag ok">Confirmed</span>`:(hrs<48?`<span class="atag wait tap" role="button" data-textnow="${esc(p.id)}:${esc(d.id)}">Text her to confirm ›</span>`:(!d.spotId&&!d.spotName?`<span class="atag wait">Pick a place</span>`:""));
     return `<button class="arow" data-act="date:${esc(p.id)}:${esc(d.id)}"><span class="atm"><b>${esc(w.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}).replace(/\s?[AP]M$/i,""))}</b><small>${esc(w.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}).toUpperCase())}</small></span><span class="abar" style="background:hsl(${hueOf(p.name)} 75% 62%)"></span>${avatar(p,avStyle(p.name)+";width:46px;height:46px;font-size:1.05rem")}<span class="atx"><b>${esc(p.name)}</b><span>${esc(placeName(d))}${s&&s.area?" · "+esc(s.area):""}</span>${tag}</span></button>`};
   const list=ups.slice(0,6);
   return `<span class="hsec">Coming up</span>${list.length?list.map(row).join(""):`<button class="arow empty" data-act="plan"><span class="atx"><b>No dates planned</b><span>Tap + to add one, or open the calendar.</span></span></button>`}
@@ -1860,6 +1860,10 @@ document.addEventListener("click",e=>{
   if(e.target.closest('[data-act="closemap"]')){closeMap();return}
   if(e.target.closest('[data-act="openmap"]')){openMap(e.target.closest('[data-act="openmap"]').dataset.kind);return}
   const pf=e.target.closest("[data-pf]");if(pf){const [k,...v]=pf.dataset.pf.split(":");const val=v.join(":");if(k==="kos")S.plan.kos=val==="1";else S.plan[k]=val;S.plan.lim=30;S.plan.chosen="";renderPlan();return}
+  const tn=e.target.closest("[data-textnow]");if(tn){const [pid,did]=tn.dataset.textnow.split(":");const pp=S.people.find(x=>x.id===pid);const dd=pp&&(pp.dates||[]).find(x=>x.id===did);if(!pp||!dd)return;let dg=String(pp.contact||"").replace(/\D/g,"");if(dg.length===10)dg="1"+dg;
+    if(dg.length<11){openConfirm(pp,dd);return}
+    location.href=`sms:+${dg}&body=${encodeURIComponent(confirmMsg(pp,dd))}`;
+    if(!dd.confirmed){const dates=(pp.dates||[]).map(x=>x.id===dd.id?{...x,confirmed:true}:x);pvSave(pp.id,{dates}).then(()=>{if(S.view==="home")render()})}return}
   const cfc=e.target.closest("[data-confirm]");if(cfc){const [pid,did]=cfc.dataset.confirm.split(":");const pp=S.people.find(x=>x.id===pid);const dd=pp&&(pp.dates||[]).find(x=>x.id===did);if(pp&&dd)openConfirm(pp,dd);return}
   const g=e.target.closest("[data-go]");if(g){closeMap();go(g.dataset.go);return}
   const a=e.target.closest("[data-act]");if(!a)return;
