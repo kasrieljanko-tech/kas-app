@@ -23,8 +23,8 @@
 .ku-shot-note{font-size:.8rem;color:var(--muted);line-height:1.45;padding:0 5px}
 @media(max-width:350px){.ku-cats{gap:8px}.ku-cat{padding:12px}}
 </style>
-<script src="config.js?v=1793692000000"></script><script src="shim.js?v=1793692000000"></script>
-<meta name="ku-build" content="1793692000000"><script>(function(){var B="1793692000000";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<script src="config.js?v=1793698000000"></script><script src="shim.js?v=1793698000000"></script>
+<meta name="ku-build" content="1793698000000"><script>(function(){var B="1793698000000";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -802,6 +802,91 @@ h2{font-weight:740;letter-spacing:-.025em}
 :root[data-theme="dark"] .ku-feature{background:linear-gradient(130deg,#3e364e,#29394a 68%,#273b38);border-color:#4d455b;color:#fff}
 :root[data-theme="dark"] .ku-feature-k{color:#c7b5e4}
 :root[data-theme="dark"] .ku-feature-bottom{color:#c5bfd0}
+
+/* 2.1 — one unified visual system (home, discover, people, places, planning, notes, settings and sheets) */
+:root{--ku-radius:20px;--ku-round:13px;--ku-hairline:color-mix(in srgb,var(--line) 82%,transparent);--ku-elev:0 3px 13px rgba(20,23,35,.045)}
+body{background:var(--bg);font-size:15px}
+.wrap{max-width:560px;padding-top:20px;gap:15px}
+.view{gap:15px}
+.ku-pagehint{font-size:.83rem;color:var(--muted);font-weight:480;margin:6px 0 0;line-height:1.38;letter-spacing:0}
+.ku-pagehead{min-height:65px;align-items:flex-start;margin:0 0 4px}
+.ku-pagehead .topbtns{padding-top:5px}
+.ku-pagehead h1{font-size:2.05rem}
+.ku-overline{font-size:.65rem;letter-spacing:.14em}
+.ku-sectionrow{margin-top:9px}
+.ku-welcome{align-items:flex-start}
+.ku-feature{box-shadow:none}
+.ku-shortcuts button,.ku-cat{box-shadow:none;border-color:var(--ku-hairline)}
+.ku-shortcuts button:hover,.ku-cat:hover{border-color:color-mix(in srgb,var(--accent) 32%,var(--line))}
+.round,.hplus{box-shadow:none!important}
+.ku-cats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ku-cat{min-height:115px;padding:15px;background:var(--surface)}
+.ku-cat b{font-size:.95rem}
+.ku-cat small{font-size:.76rem;line-height:1.3}
+#v-home .ku-cats{margin-bottom:4px}
+#v-discover .ku-cats{margin-bottom:6px}
+#v-discover .ku-sechead{margin-top:4px}
+#v-discover .uecats{display:flex;overflow:auto;scrollbar-width:none;gap:10px;padding:3px 0 5px}
+#v-discover .uecat{border:1px solid var(--line);border-radius:15px;background:var(--surface);padding:8px 12px;min-width:85px;font-size:.75rem}
+#v-discover .uecat .uei{height:30px;width:100%;border-radius:9px;font-size:20px;margin-bottom:4px}
+#v-discover .uecat[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+#v-discover .uecat[aria-pressed="true"] .uei{background:none}
+.uecard{border-radius:20px;overflow:hidden;background:var(--surface);border:1px solid var(--line);box-shadow:none}
+.uecard .ueimg{border-radius:16px}
+.uecard .uenm{font-weight:730;letter-spacing:-.025em}
+.uecard .uesub{font-size:.8rem;color:var(--muted)}
+.item,.pcard,.rate-card,.history,.calbox,.mecard,.pick,.lines,.calpanel{border-radius:19px;box-shadow:none;border-color:var(--ku-hairline)}
+.item{background:var(--surface);border:1px solid var(--line);min-height:58px}
+.pcard .pn{font-weight:750;letter-spacing:-.035em}
+.pcard .facts{gap:10px}
+.pvcard,.pvdate,.frow,.arow{border-radius:16px}
+.hscroll{gap:12px}
+.hspot,.hav{border-radius:16px}
+.hsec{font-size:.72rem;letter-spacing:.075em;text-transform:uppercase;font-weight:740;color:var(--muted)}
+#v-people .pqw,#v-people #plist{margin-top:5px}
+#v-people #plist .item{padding:12px 14px}
+#v-spots .uepills{display:flex;gap:7px;overflow:auto}
+#v-spots .uepill{border-radius:12px;padding:9px 12px}
+#v-spots .cattabs{gap:18px}
+#v-spots .cattab{padding:11px 2px;font-size:.86rem}
+#v-plan .plq{padding-top:4px}
+#v-plan .plavs{gap:11px}
+#v-plan .plav{border-radius:16px}
+#v-plan .plav[aria-pressed="true"]{color:var(--accent)}
+#v-cal .seg,#v-book .seg{border-radius:13px;background:var(--fill);padding:4px;gap:3px}
+#v-cal .seg button,#v-book .seg button{border-radius:10px;padding:10px 6px;font-size:.82rem}
+#v-cal .seg button[aria-pressed="true"],#v-book .seg button[aria-selected="true"]{background:var(--surface);box-shadow:0 1px 4px #00000012}
+#v-cal .cald{border-radius:11px}
+#v-me .mehead{padding-top:8px}
+#v-me .mestats{border-radius:20px;overflow:hidden}
+#v-me .mecard,#v-me .melist{border:1px solid var(--line);border-radius:20px;overflow:hidden}
+#v-book .lines{background:var(--surface)}
+#v-book .lrow{border-color:var(--line)}
+#v-book .lcopy{padding:15px 13px}
+.search{width:100%;font-size:.94rem;padding:12px 14px;background:var(--fill);border:1px solid transparent;border-radius:13px;color:var(--fg)}
+.search:focus{outline:2px solid color-mix(in srgb,var(--accent) 34%,transparent);background:var(--surface)}
+.btn,.mini,.pill,.cbtn{border-radius:12px}
+.btn.pri{background:var(--accent);color:#fff}
+.btn:active,.round:active,.hplus:active{transform:scale(.98)}
+.sheet-bg{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.sheet{background:var(--bg);border-radius:27px 27px 0 0;box-shadow:0 -14px 50px #00000025}
+.iosheet{background:var(--bg)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-radius:27px 27px 0 0!important;border:0!important;box-shadow:0 -14px 50px #00000025!important;color:var(--fg)!important}
+.iosheet .iocard,.iosheet .iogroup{background:var(--surface)!important;border:1px solid var(--line)!important;border-radius:18px!important;color:var(--fg)!important}
+.iosheet .iorow,.iosheet .iofill,.iosheet .iobar,.iosheet .iofoot,.iosheet .iohero{color:var(--fg)!important}
+.iosheet .iofill{background:var(--accent)!important;color:#fff!important;border-radius:13px!important}
+.iosheet .iorow{border-color:var(--line)!important}
+.iosheet .ioinput{color:var(--fg)!important;background:var(--surface)!important}
+.iosheet .iobar{background:var(--bg)!important}
+.field label{font-weight:650;letter-spacing:-.01em}
+.field input,.field select,.field textarea{background:var(--surface);border:1px solid var(--line);border-radius:13px;min-height:42px;color:var(--fg)}
+.field textarea{min-height:80px}
+.nav{border-top:1px solid var(--line);background:color-mix(in srgb,var(--surface) 92%,transparent);box-shadow:none!important}
+.nav .in{grid-template-columns:repeat(5,minmax(0,1fr))}
+.nav button{font-size:.65rem;font-weight:590;color:var(--muted);background:none!important;padding:6px 0;min-height:51px;gap:4px}
+.nav button[aria-current="page"]{font-weight:750;color:var(--accent)}
+.nav button svg{width:23px;height:23px}
+@media(max-width:370px){.ku-pagehead h1{font-size:1.8rem}.ku-pagehead .round{width:33px;height:33px}.ku-cats{gap:8px}.ku-cat{padding:12px}.nav button{font-size:.61rem}}
+@media(prefers-reduced-motion:reduce){.ku-cat,.ku-shortcuts button,.btn{transition:none!important}}
 </style>
 
 <div class="sbar"></div>
@@ -810,7 +895,7 @@ h2{font-weight:740;letter-spacing:-.025em}
   <section class="view" id="v-plan" hidden></section>
   <section class="view" id="v-me" hidden></section>
   <section class="view" id="v-spots" hidden>
-    <div class="top ku-pagehead"><div><span class="ku-overline">YOUR PERSONAL COLLECTION</span><h1>Places</h1></div><div class="topbtns"><button class="round" data-act="openmap" data-kind="spots" aria-label="Map"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/></svg></button><button class="round acc" data-act="newspot" aria-label="Add a spot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div></div>
+    <div class="top ku-pagehead"><div><span class="ku-overline">YOUR PERSONAL COLLECTION</span><h1>Places</h1><p class="ku-pagehint">The spots worth remembering.</p></div><div class="topbtns"><button class="round" data-act="openmap" data-kind="spots" aria-label="Map"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/></svg></button><button class="round acc" data-act="newspot" aria-label="Add a spot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div></div>
     <input class="search" id="q" type="search" placeholder="Search a name, area or note" aria-label="Search spots">
     <div class="uepills" id="pf-pills"></div>
     <div class="scroller" id="pf-row"></div>
@@ -828,7 +913,7 @@ h2{font-weight:740;letter-spacing:-.025em}
     <button data-go="discover" id="n-discover"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Discover</button>
     <button data-go="spots" id="n-spots"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Places</button>
     <button data-go="people" id="n-people"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>People</button>
-    <button data-go="book" id="n-book"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 8h6M9 12h6"/></svg>My lines</button>
+    <button data-go="book" id="n-book"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 8h6M9 12h6"/></svg>Notes</button>
   </div>
 </nav>
 <div id="sheet-root"></div>
@@ -938,7 +1023,7 @@ function renderCal(){
     const dp=its.filter(i=>i.kind==="date");cells+=`<button class="cald${k===S.calSel?" sel":""}${k===todayStr()?" tdy":""}" data-cald="${k}">${d}<span class="caldots">${dp.slice(0,2).map(i=>`<em class="calav" style="${i.av}">${i.img?`<img src="${esc(i.img)}" alt="">`:esc(i.ini)}</em>`).join("")}${kinds.filter(x=>x!=="date").map(x=>`<i style="background:${CALC[x]}"></i>`).join("")}</span></button>`}
   const list=S.calMode==="list";const lim90=(()=>{const d=new Date();d.setDate(d.getDate()+120);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())})();const upcoming=items.filter(i=>i.day>=todayStr()&&i.day<=lim90).slice(0,60);
   const selD=parseLocal(S.calSel+"T12:00");
-  $("v-cal").innerHTML=`<div class="top"><button class="round" data-go="home" aria-label="Back">${ICON.back||"‹"}</button><h1 style="flex:1;margin-left:10px">Calendar</h1><button class="hplus" data-act="plan::${esc(S.calSel>=todayStr()?S.calSel:"")}" aria-label="Add a date"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
+  $("v-cal").innerHTML=`<div class="top"><button class="round" data-go="home" aria-label="Back">${ICON.back||"‹"}</button><div style="flex:1;margin-left:10px"><span class="ku-overline">YOUR SCHEDULE</span><h1>Calendar</h1></div><button class="hplus" data-act="plan::${esc(S.calSel>=todayStr()?S.calSel:"")}" aria-label="Add a date"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
     <div class="seg"><button aria-pressed="${!list}" data-calmode="month">Month</button><button aria-pressed="${list}" data-calmode="list">List</button></div>
     ${list?(upcoming.length?groupDays(upcoming):`<div class="empty"><strong>Nothing coming up</strong>Plan a date or save an event.</div>`):`
     <div class="calhead"><button class="round" data-calnav="-1" aria-label="Previous month">‹</button><h2>${first.toLocaleDateString(undefined,{month:"long",year:"numeric"})}</h2><button class="round" data-calnav="1" aria-label="Next month">›</button></div>
@@ -1171,7 +1256,7 @@ function renderBook(){
     body=`<span class="muted" style="font-size:.9rem">Tap one to order. Each girl's card also suggests a gift that fits her.</span>`+moments.map(m=>`<div class="view" style="gap:8px"><h2>${esc(m)}</h2><div class="lines">${gs.filter(g=>(g.moment||"Ideas")===m).map(g=>`<a class="lcopy" href="${esc(g.url)}" target="_blank" rel="noopener" style="text-decoration:none;border-bottom:1px solid var(--line2)"><span class="ltext"><b>${esc(g.label)}</b><br><span class="muted" style="font-size:.88rem">${esc(g.note||"")}</span></span><span class="lic">${ICON.chev}</span></a>`).join("")}</div></div>`).join("")}
   else{const links=(n.links||[]).filter(l=>safeUrl(l.url));
     body=`<span class="muted" style="font-size:.9rem">Send her something after a good date.</span>`+(links.length?links.map(l=>`<a class="item" href="${esc(l.url)}" target="_blank" rel="noopener" style="text-decoration:none;color:var(--fg)"><span class="mid"><span class="nm">${esc(l.label)}</span><span class="ds">${esc(new URL(l.url).hostname.replace(/^www\./,""))}</span></span>${ICON.chev}</a>`).join(""):`<div class="empty"><strong>No gift ideas yet</strong>Send Claude a link to save it here.</div>`)}
-  $("v-book").innerHTML=`<div class="top ku-pagehead"><div><span class="ku-overline">YOUR NOTES & IDEAS</span><h1>My lines</h1></div></div>${seg}${body}`;
+  $("v-book").innerHTML=`<div class="top ku-pagehead"><div><span class="ku-overline">YOUR NOTES & IDEAS</span><h1>Notes</h1></div></div>${seg}${body}`;
   const f=$("addline");if(f)f.onsubmit=async e=>{e.preventDefault();const v=$("newline").value.trim();if(!v||!S.db)return;const arr=[...(n[t]||[]),v];
     try{await S.db.doc("me/notes").set({...n,[t]:arr,updatedAt:Date.now()});toast("Added")}catch(err){toast("Couldn't save. Try again.")}};
 }
@@ -1306,8 +1391,8 @@ function renderDiscover(){
     const all=mixed.map(([x,k])=>discCard(x,!!k));
     body=pre+(S.iTab==="all"?discoverRows()+`<span class="bklab" style="margin-top:4px">All picks</span>`:"")+`<div class="uelist">${all.slice(0,lim).join("")}</div>${all.length>lim?`<button class="btn recmorebtn" data-act="dmore">Show more (${all.length-lim} left)</button>`:""}`}
   const tabs=[["all","For you"],...ITABS];const em={all:"🔥",...IEMO};
-  if(!$("dq")){$("v-discover").innerHTML=`<div class="top ku-pagehead"><div><span class="ku-overline">EXPLORE YOUR WORLD</span><h1>Discover</h1></div><button class="round" data-act="openmap" data-kind="discover" aria-label="Map">${SVG_MAP}</button></div>
-    <div class="ku-sechead">Explore by category</div><div class="ku-cats"><button class="ku-cat" data-ku-tab="events"><span class="ku-emoji">🎟️</span><span><b>Events</b><small>Concerts, live shows</small></span></button><button class="ku-cat" data-ku-tab="movies"><span class="ku-emoji">🎬</span><span><b>Movies</b><small>What's playing</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🏎️</span><span><b>Cars & racing</b><small>Speed and action</small></span></button><button class="ku-cat" data-ku-tab="different"><span class="ku-emoji">♡</span><span><b>Date ideas</b><small>Make it memorable</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🎳</span><span><b>Games & activities</b><small>Something interactive</small></span></button><button class="ku-cat" data-ku-tab="rooftop"><span class="ku-emoji">🌃</span><span><b>Bars & rooftops</b><small>Great atmosphere</small></span></button><button class="ku-cat" data-ku-tab="kosher"><span class="ku-emoji">🍽️</span><span><b>Dinner & kosher</b><small>Places worth trying</small></span></button><button class="ku-cat" data-ku-tab="music"><span class="ku-emoji">🎶</span><span><b>Music & nightlife</b><small>Go out tonight</small></span></button></div><input class="search" id="dq" type="search" placeholder="Search places, concerts, comedians, movies" aria-label="Search ideas" value="${esc(S.dq||"")}" autocomplete="off"><div id="disc-body" style="display:flex;flex-direction:column;gap:14px"></div>`;
+  if(!$("dq")){$("v-discover").innerHTML=`<div class="top ku-pagehead"><div><span class="ku-overline">EXPLORE YOUR WORLD</span><h1>Discover</h1><p class="ku-pagehint">Find your kind of night.</p></div><button class="round" data-act="openmap" data-kind="discover" aria-label="Map">${SVG_MAP}</button></div>
+    <div class="ku-sechead">Choose your vibe</div><div class="ku-cats"><button class="ku-cat" data-ku-tab="events"><span class="ku-emoji">🎟️</span><span><b>Events</b><small>Concerts, live shows</small></span></button><button class="ku-cat" data-ku-tab="movies"><span class="ku-emoji">🎬</span><span><b>Movies</b><small>What's playing</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🏎️</span><span><b>Cars & racing</b><small>Speed and action</small></span></button><button class="ku-cat" data-ku-tab="different"><span class="ku-emoji">♡</span><span><b>Date ideas</b><small>Make it memorable</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🎳</span><span><b>Games & activities</b><small>Something interactive</small></span></button><button class="ku-cat" data-ku-tab="rooftop"><span class="ku-emoji">🌃</span><span><b>Bars & rooftops</b><small>Great atmosphere</small></span></button><button class="ku-cat" data-ku-tab="kosher"><span class="ku-emoji">🍽️</span><span><b>Dinner & kosher</b><small>Places worth trying</small></span></button><button class="ku-cat" data-ku-tab="music"><span class="ku-emoji">🎶</span><span><b>Music & nightlife</b><small>Go out tonight</small></span></button></div><input class="search" id="dq" type="search" placeholder="Search places, concerts, comedians, movies" aria-label="Search ideas" value="${esc(S.dq||"")}" autocomplete="off"><div id="disc-body" style="display:flex;flex-direction:column;gap:14px"></div>`;
     $("dq").oninput=e=>{S.dq=e.target.value;S.dLim=20;LIVE.items=null;LIVE.movies=null;LIVE.err="";renderDiscover()};
     $("dq").onkeydown=e=>{if(e.key==="Enter"&&S.dq.trim()){e.preventDefault();runLive("events");e.target.blur()}}}
   $("disc-body").innerHTML=`${q?`<span class="muted" style="font-size:.9rem">${count} result${count===1?"":"s"}</span>`:`<div class="uecats">${tabs.filter(([k])=>has(k)).map(([k,l])=>`<button class="uecat" aria-pressed="${S.iTab===k}" data-itab="${k}"><span class="uei">${em[k]}</span><span>${l}</span></button>`).join("")}</div>`}
@@ -1462,7 +1547,7 @@ function renderPlan(){
     shown.map(s=>P.chosen===s.id?big(wrap(s)):row(wrap(s))).join("")+
     (list.length>shown.length?`<button class="btn recmorebtn" data-act="plmore">Show more (${list.length-shown.length} more)</button>`:"");
   $("v-plan").innerHTML=`
-    <div class="top" style="justify-content:flex-start"><button class="round" data-go="home" aria-label="Back">${ICON.back}</button><h1 style="font-size:1.7rem">Plan a date</h1></div>
+    <div class="top" style="justify-content:flex-start"><button class="round" data-go="home" aria-label="Back">${ICON.back}</button><div><span class="ku-overline">MAKE A MEMORY</span><h1>Plan a date</h1></div></div>
     <div class="plq"><span class="plk">With</span><div class="plavs">
       ${people.map(p=>`<button class="plav" aria-pressed="${P.who===p.id}" data-act="who:${esc(p.id)}">${avatar(p,avStyle(p.name))}<span>${esc(String(p.name).split(" ")[0])}</span></button>`).join("")}
       <button class="plav" aria-pressed="${P.who==="__new"}" data-act="who:__new"><span class="av plnew">+</span><span>New</span></button></div>
@@ -1595,7 +1680,7 @@ function renderPeople(){
   const list=[...S.people].filter(p=>(S.pf2.kinds.includes("Sneaky link"))||vis(p)).filter(pfPass).sort((a,b)=>(a.status==="Done")-(b.status==="Done")||order(a)-order(b));
   const past=allPast().slice(0,8);
   $("v-people").innerHTML=`
-    <div class="top ku-pagehead"><div><span class="ku-overline">YOUR CONNECTIONS</span><h1>People</h1></div><div class="topbtns"><button class="round" data-act="psearch" aria-label="Search people">${SVG_SEARCH}</button><button class="round" data-act="pfilter" aria-label="Filters">${SVG_FILTER}${pfCount()?`<i class="fbadge">${pfCount()}</i>`:""}</button><button class="round" data-ku-shot="1" aria-label="Add person from screenshot" title="Add from screenshot">▣</button><button class="round acc" data-act="newperson" aria-label="Add a person">${ICON.plus}</button></div></div>
+    <div class="top ku-pagehead"><div><span class="ku-overline">YOUR CONNECTIONS</span><h1>People</h1><p class="ku-pagehint">Stay close to the people who matter.</p></div><div class="topbtns"><button class="round" data-act="psearch" aria-label="Search people">${SVG_SEARCH}</button><button class="round" data-act="pfilter" aria-label="Filters">${SVG_FILTER}${pfCount()?`<i class="fbadge">${pfCount()}</i>`:""}</button><button class="round" data-ku-shot="1" aria-label="Add person from screenshot" title="Add from screenshot">▣</button><button class="round acc" data-act="newperson" aria-label="Add a person">${ICON.plus}</button></div></div>
     <div class="pqw${S.pqOpen||S.pq?" open":""}" id="pqw"><input class="search" id="pq" type="search" placeholder="Search name or number" aria-label="Search people" value="${esc(S.pq||"")}"></div>
     <div class="view" id="plist" style="gap:10px"></div>
     ${S.people.some(p=>p.kind==="Sneaky link")?`<button class="link" data-act="togglesneaky" style="align-self:center">${showSneaky()?"Hide sneaky links everywhere":`${hiddenN} sneaky link${hiddenN===1?"":"s"} hidden · Show`}</button>`:""}
@@ -2263,7 +2348,7 @@ function renderMe(){
   $("v-me").innerHTML=`
     <div class="top" style="justify-content:flex-start"><button class="round" data-go="home" aria-label="Back">${ICON.back}</button></div>
     <div class="mehead"><label class="meav" for="me-photo">${P.photoId?`<img src="${esc(imgSrc(P.photoId))}" alt="">`:`<span>${esc(ME[0])}</span>`}<i>✎</i></label><input type="file" id="me-photo" accept="image/*" hidden>
-      <div><h1>Kasriel</h1><span class="muted">${esc(P.home||"Brooklyn · Queens")}</span></div></div>
+      <div><span class="ku-overline">YOUR SPACE</span><h1>Kasriel</h1><span class="muted">${esc(P.home||"Brooklyn · Queens")}</span></div></div>
     <div class="mestats"><div><b>${month}</b><span>Dates this month</span></div><div><b>${been.length}</b><span>Places tried</span></div><div><b>${avg?avg.toFixed(1):"–"}</b><span>Avg date</span></div></div>
     <div class="mestats"><div><b>${money(spentM)}</b><span>Spent this month</span></div><div><b>${money(spentAll)}</b><span>Spent total</span></div><div><b>${paid.length?money(spentAll/paid.length):"–"}</b><span>Per date</span></div></div>
     <div class="mecard">
