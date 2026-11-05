@@ -23,8 +23,8 @@
 .ku-shot-note{font-size:.8rem;color:var(--muted);line-height:1.45;padding:0 5px}
 @media(max-width:350px){.ku-cats{gap:8px}.ku-cat{padding:12px}}
 </style>
-<script src="config.js?v=1793698000000"></script><script src="shim.js?v=1793698000000"></script>
-<meta name="ku-build" content="1793698000000"><script>(function(){var B="1793698000000";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
+<script src="config.js?v=1793705000000"></script><script src="shim.js?v=1793705000000"></script>
+<meta name="ku-build" content="1793705000000"><script>(function(){var B="1793705000000";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();</script></head><body>
 <title>The Kas Upgrade</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -887,6 +887,39 @@ body{background:var(--bg);font-size:15px}
 .nav button svg{width:23px;height:23px}
 @media(max-width:370px){.ku-pagehead h1{font-size:1.8rem}.ku-pagehead .round{width:33px;height:33px}.ku-cats{gap:8px}.ku-cat{padding:12px}.nav button{font-size:.61rem}}
 @media(prefers-reduced-motion:reduce){.ku-cat,.ku-shortcuts button,.btn{transition:none!important}}
+
+/* Kas Upgrade 3.0 — dark, photo-forward rebuild */
+:root,:root[data-theme="light"],:root[data-theme="dark"]{--bg:#090c12;--surface:#151920;--fg:#f7f7fa;--muted:#9399a6;--soft:#d8dae0;--line:#242a34;--line2:#1c222b;--fill:#1b2029;--accent:#9b6cf4;--accent-fg:#fff;--accent-soft:#2b1d47;--ink:#f7f7fa;--ink-fg:#0b0d12;--ink-sub:#8e94a1;--been:#58d683;--been-soft:#153622;--warn:#ffb04d;--warn-soft:#3b2a13;--red:#ff5d6c;color-scheme:dark}
+html,body{background:#090c12!important;color:#f7f7fa!important}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif}
+.wrap{max-width:560px;padding:20px 16px 112px;gap:16px}
+.view{gap:16px}
+h1{font-size:2rem;letter-spacing:-.055em;font-weight:780}h2{font-size:1.1rem}
+.k3-eyebrow{display:block;font-size:.62rem;letter-spacing:.14em;font-weight:760;color:#9a91b3;margin-bottom:6px}
+.k3-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 2px}.k3-top h1{margin:0;font-size:1.72rem}.k3-bell{width:38px;height:38px;border:1px solid #282e39;border-radius:50%;background:#151920;color:#fff;font-size:1.1rem}
+.k3-feature{position:relative;width:100%;height:190px;border:1px solid #292f39;border-radius:22px;overflow:hidden;padding:0;background:linear-gradient(135deg,#2e2343,#121c2a);color:#fff;text-align:left}
+.k3-feature-img,.k3-feature-img img,.k3-feature-shade{position:absolute;inset:0;width:100%;height:100%}.k3-feature-img img{object-fit:cover}.k3-glow{position:absolute;inset:0;background:radial-gradient(circle at 65% 35%,#794cc6 0,#25334c 35%,#10151e 75%)}.k3-feature-shade{background:linear-gradient(90deg,rgba(5,7,10,.8),rgba(5,7,10,.12) 70%),linear-gradient(0deg,rgba(5,7,10,.7),transparent 60%)}
+.k3-feature-copy{position:absolute;left:18px;bottom:17px;display:flex;flex-direction:column;max-width:75%;z-index:2}.k3-feature-copy small{font-size:.62rem;font-weight:800;letter-spacing:.1em;color:#c7b7f0}.k3-feature-copy b{font-size:1.35rem;letter-spacing:-.04em;margin:4px 0}.k3-feature-copy em{font-size:.78rem;color:#d0d3db;font-style:normal}.k3-go{position:absolute;right:16px;bottom:16px;z-index:2;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#a87af6;font-size:1.1rem}
+.k3-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.k3-actions button{min-height:78px;border:1px solid #282e38;border-radius:17px;background:linear-gradient(145deg,#1c212a,#151920);color:#fff;display:flex;align-items:center;gap:12px;padding:14px;text-align:left}.k3-actions span{font-size:1.45rem;color:#ad82f4}.k3-actions b{font-size:.86rem}
+.k3-section{display:flex;align-items:center;justify-content:space-between;margin-top:6px}.k3-section h2{margin:0}.k3-section button{border:0;background:none;color:#a985f0;font-size:.78rem;font-weight:650}
+.k3-strip{display:grid;grid-auto-flow:column;grid-auto-columns:42%;overflow:auto;gap:10px;scrollbar-width:none}.k3-strip button{height:105px;border:1px solid #282e38;border-radius:18px;background:#151920;color:#fff;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:13px;text-align:left}.k3-strip span{font-size:1.55rem;margin-bottom:auto}.k3-strip b{font-size:.84rem}
+.ku-pagehead{min-height:auto;margin:2px 0 5px}.ku-pagehead h1{font-size:2.05rem}.ku-pagehint{color:#8e95a2}.ku-overline{color:#9b8db8}
+.ku-cats{gap:10px}.ku-cat{background:#151920;border-color:#282e38;border-radius:18px;min-height:122px}.ku-cat .ku-emoji{font-size:1.65rem}.ku-cat small{color:#8f96a3}
+.search{background:#181d25;border-color:#252b35;color:#fff}
+.item,.pcard,.rate-card,.history,.calbox,.mecard,.pick,.lines,.calpanel,.dates-card,.hero,.calm{background:#151920!important;border-color:#282e38!important;box-shadow:none!important}
+.pcard,.item{border-radius:18px}.pcard .pn,.item .nm{color:#fff}
+.uecard{background:#151920;border-color:#282e38;border-radius:18px}.uecard .uesub{color:#8f96a3}
+.uepill,.cattab,.chip{background:#181d25!important;color:#b8bdc8!important;border-color:#282e38!important}.uepill[aria-pressed="true"],.cattab[aria-pressed="true"],.chip.on{background:#9568ed!important;color:#fff!important}
+.seg{background:#181d25!important;border-radius:14px!important}.seg button{color:#9aa1ad!important}.seg button[aria-selected="true"],.seg button[aria-pressed="true"]{background:#8e62e7!important;color:#fff!important}
+.btn{background:#191e26;border-color:#2a303a;color:#fff}.btn.pri{background:linear-gradient(135deg,#a574f4,#7f55db);border:0}
+.round,.hplus{background:#151920!important;border-color:#2a303a!important;color:#fff!important}
+.sheet,.iosheet{background:#0e1218!important;color:#fff!important}.sheet-bg{background:rgba(0,0,0,.68)!important}.field input,.field select,.field textarea,.iosheet .ioinput{background:#181d25!important;border-color:#2a303a!important;color:#fff!important}
+.nav{background:rgba(10,13,18,.94)!important;border-top:1px solid #222832!important;backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav .in{grid-template-columns:repeat(5,1fr)!important;max-width:560px}.nav button{color:#777f8d!important;background:none!important;font-size:.63rem!important}.nav button[aria-current="page"]{color:#ad82f4!important}.nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
+#v-cal .cald{background:#131820;color:#fff}#v-cal .cald.sel{background:#8256d9;color:#fff}
+#v-me .mecard,#v-me .melist{background:#151920!important;border-color:#282e38!important}
+.cfcard{background:#1a1721!important;border-color:#3c2c55!important}.cfgo{color:#b98bf7!important}
+@media(max-width:365px){.wrap{padding-left:13px;padding-right:13px}.k3-feature{height:175px}.k3-actions button{padding:12px}.k3-strip{grid-auto-columns:47%}}
 </style>
 
 <div class="sbar"></div>
@@ -907,15 +940,13 @@ body{background:var(--bg);font-size:15px}
   <section class="view" id="v-cal" hidden></section>
 </div></div>
 
-<nav class="nav" aria-label="Main">
-  <div class="in">
-    <button data-go="home" id="n-home"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
-    <button data-go="discover" id="n-discover"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Discover</button>
-    <button data-go="spots" id="n-spots"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Places</button>
-    <button data-go="people" id="n-people"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>People</button>
-    <button data-go="book" id="n-book"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 8h6M9 12h6"/></svg>Notes</button>
-  </div>
-</nav>
+<nav class="nav" aria-label="Main"><div class="in">
+<button data-go="home" id="n-home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+<button data-go="discover" id="n-discover"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Discover</button>
+<button data-go="people" id="n-people"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>People</button>
+<button data-go="cal" id="n-cal"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18"/></svg>Plans</button>
+<button data-go="me" id="n-me"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>Me</button>
+</div></nav>
 <div id="sheet-root"></div>
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -998,7 +1029,7 @@ function beenWith(spot){const names=new Set();allPast().forEach(({p,d})=>{if(d.s
 function go(v){S.view=v;try{history.replaceState(null,"","#"+v)}catch(e){}render();const _s=document.getElementById("scr");if(_s)_s.scrollTop=0}
 function render(){
   ["home","plan","spots","people","discover","book","me","cal"].forEach(v=>$("v-"+v).hidden=S.view!==v);
-  ["home","discover","spots","people","book"].forEach(v=>{const b=$("n-"+v);if(S.view===v||(v==="home"&&(S.view==="plan"||S.view==="me"||S.view==="cal")))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  ["home","discover","people","cal","me"].forEach(v=>{const b=$("n-"+v);if(!b)return;const active=S.view===v||(v==="cal"&&S.view==="plan");if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
   placeLens();
   if(S.view==="home")renderHome();else if(S.view==="cal")renderCal();else if(S.view==="me")renderMe();else if(S.view==="plan")renderPlan();else if(S.view==="spots")renderSpots();else if(S.view==="discover")renderDiscover();else if(S.view==="book")renderBook();else renderPeople();
 }
@@ -1023,7 +1054,7 @@ function renderCal(){
     const dp=its.filter(i=>i.kind==="date");cells+=`<button class="cald${k===S.calSel?" sel":""}${k===todayStr()?" tdy":""}" data-cald="${k}">${d}<span class="caldots">${dp.slice(0,2).map(i=>`<em class="calav" style="${i.av}">${i.img?`<img src="${esc(i.img)}" alt="">`:esc(i.ini)}</em>`).join("")}${kinds.filter(x=>x!=="date").map(x=>`<i style="background:${CALC[x]}"></i>`).join("")}</span></button>`}
   const list=S.calMode==="list";const lim90=(()=>{const d=new Date();d.setDate(d.getDate()+120);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())})();const upcoming=items.filter(i=>i.day>=todayStr()&&i.day<=lim90).slice(0,60);
   const selD=parseLocal(S.calSel+"T12:00");
-  $("v-cal").innerHTML=`<div class="top"><button class="round" data-go="home" aria-label="Back">${ICON.back||"‹"}</button><div style="flex:1;margin-left:10px"><span class="ku-overline">YOUR SCHEDULE</span><h1>Calendar</h1></div><button class="hplus" data-act="plan::${esc(S.calSel>=todayStr()?S.calSel:"")}" aria-label="Add a date"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
+  $("v-cal").innerHTML=`<div class="top"><button class="round" data-go="home" aria-label="Back">${ICON.back||"‹"}</button><div style="flex:1;margin-left:10px"><span class="k3-eyebrow">YOUR SCHEDULE</span><h1>Plans</h1></div><button class="hplus" data-act="plan::${esc(S.calSel>=todayStr()?S.calSel:"")}" aria-label="Add a date"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>
     <div class="seg"><button aria-pressed="${!list}" data-calmode="month">Month</button><button aria-pressed="${list}" data-calmode="list">List</button></div>
     ${list?(upcoming.length?groupDays(upcoming):`<div class="empty"><strong>Nothing coming up</strong>Plan a date or save an event.</div>`):`
     <div class="calhead"><button class="round" data-calnav="-1" aria-label="Previous month">‹</button><h2>${first.toLocaleDateString(undefined,{month:"long",year:"numeric"})}</h2><button class="round" data-calnav="1" aria-label="Next month">›</button></div>
@@ -1201,36 +1232,25 @@ function renderHome0(){
   const withPh=open.filter(s=>s.photoId);const feat=withPh.length?withPh[new Date().getDate()%withPh.length]:null;
   const evs=upcomingEvents().slice(0,6);
   $("v-home").innerHTML=`
-    <div class="ku-welcome">
-      <div><span class="ku-overline">THE KAS UPGRADE</span><span class="ku-today">${esc(new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"}))}</span>
-      <h1>${new Date().getHours()<12?"Good morning":new Date().getHours()<17?"Good afternoon":"Good evening"}, Kas.</h1>
-      <p class="ku-tagline">Your people, places and next experiences.</p></div>
-      <button class="ime ku-avatar" data-go="me" aria-label="My profile" style="border:0;cursor:pointer;padding:0;overflow:hidden">${S.profile&&S.profile.photoId?`<img src="${esc(imgSrc(S.profile.photoId))}" alt="" style="width:100%;height:100%;object-fit:cover">`:esc(ME[0])}</button>
-    </div>
-    <button class="ku-feature" data-go="discover">
-      <span class="ku-feature-k">DISCOVER SOMETHING NEW</span>
-      <span class="ku-feature-title">Make your next night a good one.</span>
-      <span class="ku-feature-bottom"><span>Events, dates & experiences</span><span class="ku-feature-arrow">↗</span></span>
+    <div class="k3-top"><div><span class="k3-eyebrow">KAS UPGRADE 3.0</span><h1>${new Date().getHours()<12?"Good morning":new Date().getHours()<17?"Good afternoon":"Good evening"}, Kas 👋</h1></div><button class="k3-bell" data-go="cal" aria-label="Plans">⌁</button></div>
+    <button class="k3-feature" data-go="discover">
+      <span class="k3-feature-img">${feat&&feat.photoId?`<img src="${esc(imgSrc(feat.photoId))}" alt="">`:"<span class=\"k3-glow\"></span>"}</span>
+      <span class="k3-feature-shade"></span><span class="k3-feature-copy"><small>TONIGHT</small><b>${feat?esc(feat.name):"Find something worth doing"}</b><em>${feat&&feat.area?esc(feat.area):"Let’s make it happen"}</em></span><span class="k3-go">→</span>
     </button>
-    <div class="ku-sectionrow"><h2>Quick access</h2><button class="link" data-go="cal">Calendar ›</button></div>
-    <div class="ku-shortcuts">
-      <button data-go="discover"><span class="ku-shorticon">✧</span><span><b>Discover</b><small>Explore what’s happening</small></span></button>
-      <button data-go="people"><span class="ku-shorticon">♡</span><span><b>People</b><small>Your connections</small></span></button>
-      <button data-act="plan"><span class="ku-shorticon">▦</span><span><b>Plan a date</b><small>Make something happen</small></span></button>
-      <button data-go="spots"><span class="ku-shorticon">⌑</span><span><b>Saved places</b><small>Your collection</small></span></button>
+    <div class="k3-actions">
+      <button data-act="plan"><span>♡</span><b>Plan a Date</b></button>
+      <button data-act="newperson"><span>♙+</span><b>Add Person</b></button>
+      <button data-go="cal"><span>▦</span><b>My Plans</b></button>
+      <button data-go="spots"><span>⌑</span><b>Saved Places</b></button>
     </div>
-    <div class="ku-sectionrow"><h2>Your plans</h2><button class="link" data-go="cal">View all ›</button></div>
-
-    ${S.loading||!S.db?"":ups.filter(({d})=>!d.confirmed&&parseLocal(d.when)-Date.now()<36*36e5&&parseLocal(d.when)>Date.now()-36e5).slice(0,2).map(({p,d})=>`<button class="cfcard" data-confirm="${esc(p.id)}:${esc(d.id)}"><span><b>Confirm with ${esc(String(p.name).split(" ")[0])}</b><small>${esc(placeName(d))} · ${esc(parseLocal(d.when).toLocaleDateString(undefined,{weekday:"short"}))} ${esc(parseLocal(d.when).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))}. Send her the details.</small></span><span class="cfgo">Send</span></button>`).join("")}
-
-    ${weekStrip(ups)}
+    ${S.loading||!S.db?"":ups.filter(({d})=>!d.confirmed&&parseLocal(d.when)-Date.now()<36*36e5&&parseLocal(d.when)>Date.now()-36e5).slice(0,2).map(({p,d})=>`<button class="cfcard" data-confirm="${esc(p.id)}:${esc(d.id)}"><span><b>Confirm with ${esc(String(p.name).split(" ")[0])}</b><small>${esc(placeName(d))} · ${esc(parseLocal(d.when).toLocaleDateString(undefined,{weekday:"short"}))} ${esc(parseLocal(d.when).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))}</small></span><span class="cfgo">Send</span></button>`).join("")}
+    <div class="k3-section"><h2>Your plans</h2><button data-go="cal">See all</button></div>
     ${S.loading||!S.db?hero:agenda(ups,pastAll)}
-    <div class="ku-sectionrow"><h2>Explore by category</h2><button class="link" data-go="discover">See all ›</button></div>
-    <div class="ku-cats"><button class="ku-cat" data-ku-tab="events"><span class="ku-emoji">🎟️</span><span><b>Events</b><small>Concerts, live shows</small></span></button><button class="ku-cat" data-ku-tab="movies"><span class="ku-emoji">🎬</span><span><b>Movies</b><small>What's playing</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🏎️</span><span><b>Cars & racing</b><small>Speed and action</small></span></button><button class="ku-cat" data-ku-tab="different"><span class="ku-emoji">♡</span><span><b>Date ideas</b><small>Make it memorable</small></span></button><button class="ku-cat" data-ku-tab="active"><span class="ku-emoji">🎳</span><span><b>Games & activities</b><small>Something interactive</small></span></button><button class="ku-cat" data-ku-tab="rooftop"><span class="ku-emoji">🌃</span><span><b>Bars & rooftops</b><small>Great atmosphere</small></span></button><button class="ku-cat" data-ku-tab="kosher"><span class="ku-emoji">🍽️</span><span><b>Dinner & kosher</b><small>Places worth trying</small></span></button><button class="ku-cat" data-ku-tab="music"><span class="ku-emoji">🎶</span><span><b>Music & nightlife</b><small>Go out tonight</small></span></button></div>
-    ${rate}
-    ${S.loading||!S.db?"":dontForget(ups)}
-    ${homeRows()}
-    ${S.sample?askBlock():""}
+    <div class="k3-section"><h2>For you this week</h2><button data-go="discover">Explore</button></div>
+    <div class="k3-strip">
+      <button data-ku-tab="active"><span>🏎️</span><b>Cars</b></button><button data-ku-tab="events"><span>🎟️</span><b>Events</b></button><button data-ku-tab="kosher"><span>🍽️</span><b>Food</b></button><button data-ku-tab="music"><span>🎶</span><b>Nightlife</b></button>
+    </div>
+    ${rate}${S.loading||!S.db?"":dontForget(ups)}${S.sample?askBlock():""}
 `;
   wireAsk();
 }
