@@ -1,33 +1,69 @@
-/* iPhone-style passcode screen, shared by the PIN gate and the Face ID lock */
+/* Unlock screen (UI only). Shared by the PIN gate and the Face ID lock.
+   Contract unchanged: o = {id, z, sub, len, onCode(code)->true|string, faceId(el,msgEl)} */
 window.kuKeypad=function(o){
   const g=k=>{try{return localStorage.getItem(k)||""}catch(e){return ""}};
-  const h=new Date().getHours(),hi=h<5?"Good night":h<12?"Good morning":h<18?"Good afternoon":"Good evening";
   if(!document.getElementById("ku-kp-css")){const st=document.createElement("style");st.id="ku-kp-css";st.textContent=`
-  .kp{position:fixed;inset:0;z-index:${o.z||100};display:flex;flex-direction:column;align-items:center;justify-content:space-between;overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 22px) 24px calc(env(safe-area-inset-bottom,0px) + 24px);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;color:#fff;background:linear-gradient(180deg,rgba(5,7,11,.42),rgba(5,7,11,.88)),radial-gradient(circle at 50% 37%,#27324a 0,#121927 36%,#080b10 74%);-webkit-user-select:none;user-select:none}
-  .kp-logo{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}.kp-logo img{width:34px;height:34px;border-radius:11px}.kp-logo span{font-size:.75rem;font-weight:720;letter-spacing:.15em;text-transform:uppercase;color:#d9dbe1}.kp-logo b{color:#a978f1}
-  .kp-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:230px}.kp-me{width:92px;height:92px;border-radius:31px;object-fit:cover;border:2px solid rgba(255,255,255,.16);box-shadow:0 14px 36px rgba(0,0,0,.28)}.kp-ic{width:86px;height:86px;border-radius:27px}.kp-welcome{font-size:.62rem;font-weight:760;letter-spacing:.15em;color:#a99ac3;text-transform:uppercase;margin-top:24px}.kp h2{margin:8px 0;font-size:1.85rem;letter-spacing:-.05em;font-weight:760}.kp .kp-s{color:#9ca3b1;font-size:.9rem;min-height:1.3em;text-align:center}
-  .kp-dots{display:flex;gap:16px;margin:22px 0 0}.kp-dots i{width:10px;height:10px;border-radius:50%;border:1.6px solid #b9bfca}.kp-dots i.on{background:#aa7bf2;border-color:#aa7bf2}.kp-dots.shake{animation:kpsh .4s}@keyframes kpsh{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-  .kp-pad{flex:none;display:grid;grid-template-columns:repeat(3,70px);gap:12px 27px;justify-content:center;align-items:center}.kp-k{width:70px;height:70px;border-radius:22px;border:1px solid #292f39;background:rgba(24,29,38,.86);color:#fff;font:450 1.7rem -apple-system,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;cursor:pointer;transition:.12s}.kp-k:active{transform:scale(.95);background:#2a2238}.kp-k small{font-size:.45rem;letter-spacing:.16em;font-weight:600;margin-top:5px;color:#9097a4}.kp-k.t{background:none;border:0;font-size:.82rem;color:#a8afba;font-weight:580}.kp-k[data-f]{background:#241b34;border-color:#4b356e;color:#caa9ff}.kp-footer{font-size:.65rem;color:#69717e;padding-top:12px}
-  @media(max-height:720px){.kp{padding-top:calc(env(safe-area-inset-top,0px) + 10px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}.kp-top{min-height:160px}.kp-me{width:70px;height:70px;border-radius:23px}.kp-welcome{margin-top:12px}.kp-dots{margin-top:12px}.kp-pad{grid-template-columns:repeat(3,61px);gap:6px 24px}.kp-k{width:61px;height:61px;border-radius:19px}.kp-footer{display:none}}
+  .kp{position:fixed;inset:0;z-index:${o.z||100};display:flex;flex-direction:column;align-items:center;overflow:auto;
+    padding:calc(env(safe-area-inset-top,0px) + 18px) 28px calc(env(safe-area-inset-bottom,0px) + 18px);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;color:#F7F7FA;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(90% 55% at 50% 0%,rgba(161,113,240,.16),transparent 70%),radial-gradient(80% 50% at 50% 100%,rgba(40,58,110,.28),transparent 70%),linear-gradient(180deg,#0B0F18 0%,#090C12 55%,#06080D 100%);
+    -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  .kp *{box-sizing:border-box}
+  .kp-brand{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;letter-spacing:.16em;text-transform:uppercase;color:#8D94A1}
+  .kp-brand img{width:22px;height:22px;border-radius:7px}
+  .kp-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;width:100%;min-height:250px}
+  .kp-me{width:88px;height:88px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 18px 40px rgba(0,0,0,.45)}
+  .kp-ic{width:80px;height:80px;border-radius:22px;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+  .kp h2{margin:22px 0 0;font-size:27px;font-weight:720;letter-spacing:-.03em}
+  .kp-sub{margin-top:6px;font-size:15px;color:#8D94A1}
+  .kp-msg{margin-top:14px;min-height:18px;font-size:13.5px;color:#BF91FF;text-align:center}
+  .kp-dots{display:flex;gap:14px;margin-top:18px;height:10px}
+  .kp-dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);transition:background .15s,border-color .15s}
+  .kp-dots i.on{background:#BF91FF;border-color:#BF91FF}
+  .kp-dots.shake{animation:kpShake .4s}
+  @keyframes kpShake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  .kp-bottom{width:100%;max-width:300px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .kp-fid{width:100%;height:54px;border:0;border-radius:16px;background:#A171F0;color:#fff;font:620 16px -apple-system,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:transform .15s}
+  .kp-fid:active{transform:scale(.98)}
+  .kp-fid svg{width:22px;height:22px;flex:none}
+  .kp-alt{border:0;background:none;color:#C9CDD5;font:550 15px -apple-system,system-ui,sans-serif;padding:8px 14px;cursor:pointer}
+  .kp-pad{display:grid;grid-template-columns:repeat(3,72px);gap:10px 14px;justify-content:center}
+  .kp-k{width:72px;height:54px;border-radius:15px;border:0;background:rgba(255,255,255,.07);color:#F7F7FA;font:450 24px -apple-system,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,transform .12s}
+  .kp-k:active{background:rgba(161,113,240,.32);transform:scale(.95)}
+  .kp-k.t{background:none;font-size:14px;font-weight:550;color:#8D94A1}
+  .kp-k.t:active{background:rgba(255,255,255,.06)}
+  .kp-k svg{width:24px;height:24px}
+  .kp-foot{margin-top:18px;font-size:12px;color:#5F6672;letter-spacing:.02em}
+  .kp[data-mode="fid"] .kp-pad,.kp[data-mode="fid"] .kp-dots{display:none}
+  .kp[data-mode="pin"] .kp-fid,.kp[data-mode="pin"] .kp-alt.to-pin{display:none}
+  .kp:not([data-has-fid]) .kp-alt{display:none}
+  @media(max-height:700px){.kp-me{width:70px;height:70px}.kp-ic{width:64px;height:64px;border-radius:18px}.kp h2{font-size:23px;margin-top:14px}.kp-mid{min-height:190px}.kp-pad{gap:8px 12px}.kp-k{height:48px}.kp-foot{margin-top:10px}}
   @media (prefers-reduced-motion:reduce){.kp-dots.shake{animation:none}}`;document.head.appendChild(st)}
   const d=document.createElement("div");d.id=o.id;d.className="kp";
-  const me=g("ku.meimg");const L=["","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"];
-  d.innerHTML=`<div class="kp-logo"><img src="icon-180.png" alt=""><span>The Kas <b>Upgrade</b></span></div><div class="kp-top">${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png" alt="">`}
-    <span class="kp-welcome">Your private space</span><h2>${hi}, Kas.</h2><div class="kp-s" id="${o.id}-s">${o.sub||"Enter your code"}</div>
-    <div class="kp-dots" id="${o.id}-d">${"<i></i>".repeat(o.len||4)}</div></div>
-    <div class="kp-pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="kp-k" data-n="${n}">${n}<small>${L[n-1]||"&nbsp;"}</small></button>`).join("")}
-      ${o.faceId?`<button class="kp-k t" data-f="1" aria-label="Face ID"><svg width="30" height="30" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8"/><path d="M22 24v4M42 24v4M32 26v10h-3M24 44c4 4 12 4 16 0"/></svg></button>`:`<span></span>`}
-      <button class="kp-k" data-n="0">0<small>&nbsp;</small></button><button class="kp-k t" data-x="1">Delete</button></div><div class="kp-footer">Private · Just for you</div>`;
+  const me=g("ku.meimg");const fidSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9.5v1.5M15 9.5v1.5M12 9.5V13h-1M9.5 16a3.5 3.5 0 0 0 5 0"/></svg>';
+  if(o.faceId){d.dataset.hasFid="1";d.dataset.mode="fid"}else d.dataset.mode="pin";
+  d.innerHTML=`<div class="kp-brand"><img src="icon-180.png" alt="">Kas Upgrade</div>
+    <div class="kp-mid">${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png" alt="">`}
+      <h2>Welcome back, Kas.</h2><div class="kp-sub">Your private space.</div>
+      <div class="kp-dots" id="${o.id}-d">${"<i></i>".repeat(o.len||4)}</div><div class="kp-msg" id="${o.id}-s">${o.faceId?"":(o.sub||"Enter your code")}</div></div>
+    <div class="kp-bottom">
+      <button class="kp-fid" data-f="1">${fidSvg}Unlock with Face ID</button>
+      <button class="kp-alt to-pin" data-mode="pin">Use PIN instead</button>
+      <div class="kp-pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="kp-k" data-n="${n}">${n}</button>`).join("")}
+        ${o.faceId?`<button class="kp-k t" data-f="1" aria-label="Face ID">${fidSvg}</button>`:`<span></span>`}<button class="kp-k" data-n="0">0</button><button class="kp-k t" data-x="1">Delete</button></div>
+      <div class="kp-foot">Private · Just for you</div></div>`;
   document.body.appendChild(d);
-  let code="",busy=false;const dots=d.querySelector(".kp-dots"),msg=d.querySelector(".kp-s");
+  let code="",busy=false;const dots=d.querySelector(".kp-dots"),msg=d.querySelector(".kp-msg");
   const paint=()=>dots.querySelectorAll("i").forEach((i,k)=>i.classList.toggle("on",k<code.length));
   const fail=t=>{dots.classList.remove("shake");void dots.offsetWidth;dots.classList.add("shake");try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}code="";paint();msg.textContent=t||"Wrong code, try again"};
   const press=async n=>{if(busy||code.length>=(o.len||4))return;code+=n;paint();
-    if(code.length===(o.len||4)){busy=true;msg.textContent="…";let r;try{r=await o.onCode(code)}catch(e){r=e&&e.message||false}busy=false;
+    if(code.length===(o.len||4)){busy=true;msg.textContent="";let r;try{r=await o.onCode(code)}catch(e){r=e&&e.message||false}busy=false;
       if(r===true){d.remove()}else fail(typeof r==="string"?r:null)}};
   d.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
-    if(b.dataset.n!==undefined)press(b.dataset.n);else if(b.dataset.x){code=code.slice(0,-1);paint()}else if(b.dataset.f&&o.faceId)o.faceId(d,msg)});
-  d.addEventListener("keydown",e=>{if(/^\d$/.test(e.key))press(e.key);else if(e.key==="Backspace"){code=code.slice(0,-1);paint()}});
+    if(b.dataset.n!==undefined)press(b.dataset.n);else if(b.dataset.x){code=code.slice(0,-1);paint()}
+    else if(b.dataset.mode){d.dataset.mode=b.dataset.mode;msg.textContent="Enter your code"}
+    else if(b.dataset.f&&o.faceId)o.faceId(d,msg)});
+  d.addEventListener("keydown",e=>{if(/^\d$/.test(e.key)){d.dataset.mode="pin";press(e.key)}else if(e.key==="Backspace"){code=code.slice(0,-1);paint()}});
   d.tabIndex=-1;try{d.focus()}catch(e){}
   return d;
 };
@@ -115,9 +151,6 @@ window.kuKeypad=function(o){
     await navigator.credentials.get({publicKey:{challenge:rnd(32),rpId:location.hostname,userVerification:"required",timeout:60000,
       allowCredentials:[{type:"public-key",id:u2b(g("ku.faceid")),transports:["internal"]}]}});
   }
-  const css="position:fixed;inset:0;z-index:100;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:-apple-system,system-ui,sans-serif";
-  const btn="font-size:1.05rem;font-weight:600;padding:13px 34px;border-radius:999px;border:0;background:#0a84ff;color:#fff";
-  const faceSvg='<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8"/><path d="M22 24v4M42 24v4M32 26v10h-3M24 44c4 4 12 4 16 0"/></svg>';
   function lock(auto){
     if(!ok||!g("ku.faceid")||!g("ku.pin")||document.getElementById("fid-lock"))return;
     const run=(d,msg)=>{msg.textContent="Look at your phone…";verify().then(()=>d.remove()).catch(()=>{msg.textContent="Tap Face ID to try again, or enter your code"})};
@@ -127,22 +160,21 @@ window.kuKeypad=function(o){
     if(!ok||g("ku.faceid")||!g("ku.pin")||+(g("ku.faceid.later")||0)>Date.now())return;
     PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(av=>{if(!av||document.getElementById("fid-offer"))return;
       const d=document.createElement("div");d.id="fid-offer";
-      d.style.cssText="position:fixed;left:12px;right:12px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:98;background:rgba(40,40,44,.96);color:#fff;border-radius:20px;padding:16px;display:flex;align-items:center;gap:12px;font-family:-apple-system,system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.4)";
-      d.innerHTML=`<div style="flex:1"><b>Unlock with Face ID?</b><div style="color:#aeaeb2;font-size:.85rem">Lock the app so only you can open it.</div></div>
-        <button id="fo-no" style="background:none;border:0;color:#aeaeb2;font-size:.95rem">Not now</button><button id="fo-yes" style="${btn};padding:10px 18px">Turn on</button>`;
+      d.innerHTML=`<div class="tx"><b>Unlock with Face ID?</b><span>Lock the app so only you can open it.</span></div><button id="fo-no" class="no">Not now</button><button id="fo-yes" class="yes">Turn on</button>`;
       document.body.appendChild(d);
       d.querySelector("#fo-no").onclick=()=>{p("ku.faceid.later",String(Date.now()+7*864e5));d.remove()};
-      d.querySelector("#fo-yes").onclick=()=>enroll().then(()=>{d.innerHTML='<b style="flex:1">Face ID is on ✓</b>';setTimeout(()=>d.remove(),1800)}).catch(()=>{d.remove()});
+      d.querySelector("#fo-yes").onclick=()=>enroll().then(()=>{d.innerHTML='<div class="tx"><b>Face ID is on</b></div>';setTimeout(()=>d.remove(),1800)}).catch(()=>{d.remove()});
     }).catch(()=>{});
   }
   window.kasFaceId={on:()=>enroll(),off:()=>p("ku.faceid",""),isOn:()=>!!g("ku.faceid")};
+  window.kasLock=()=>lock(true);
   const boot=()=>{lock(true);let n=0;const t=setInterval(()=>{if(g("ku.pin")){clearInterval(t);setTimeout(offer,1500)}else if(++n>300)clearInterval(t)},1000)};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
   let hid=0;document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")hid=Date.now();else if(hid&&Date.now()-hid>60000)lock(true)});
 })();
 /* Remove host-injected badges/overlays (e.g. "Powered by Netlify") that can sit on top of the app */
 (function(){
-  const mine=el=>/^(pin-gate|fid-lock|fid-offer|sheet-root|toast|scr|mapov)$/.test(el.id||"")||el.classList.contains("wrap")||el.classList.contains("nav")||el.classList.contains("swipe-back")||el.tagName==="SCRIPT"||el.tagName==="STYLE";
+  const mine=el=>/^(pin-gate|fid-lock|fid-offer|sheet-root|sheets|toast|scr|app|mapov)$/.test(el.id||"")||el.classList.contains("wrap")||el.classList.contains("nav")||el.classList.contains("tabbar")||el.classList.contains("edge-back")||el.classList.contains("swipe-back")||el.tagName==="SCRIPT"||el.tagName==="STYLE";
   const txt=el=>[(el.tagName||""),(el.id||""),String(el.className||""),(el.getAttribute&&el.getAttribute("src"))||"",(el.innerText||""),(el.shadowRoot&&el.shadowRoot.textContent)||""].join(" ");
   const sweep=()=>{for(const el of [...document.body.children,...document.documentElement.children]){if(el===document.body||el===document.head||mine(el))continue;
     if(/netlify|nl-badge/i.test(txt(el)))el.remove()}};
