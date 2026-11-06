@@ -110,6 +110,7 @@ function icsDateUrl(p,d){const st=parseLocal(d.when),en=new Date(st.getTime()+(d
   const txt=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Kas Upgrade//EN","METHOD:PUBLISH",
     ev(d.id,st,en,"Date with "+p.name,loc,sp?mapUrl(sp):"",["-P1D","-PT2H"]),
     ev(d.id+"c",r,new Date(r.getTime()+15*6e4),"Text "+fn+" to confirm","","Confirm your date with "+p.name+"."+(dg?"\nText her: sms:+"+dg:""),["PT0M"]),
+    (()=>{const f=new Date(st);f.setDate(f.getDate()+1);f.setHours(10,30,0,0);return ev(d.id+"f",f,new Date(f.getTime()+15*6e4),"Follow up with "+fn,"","Send "+fn+" a quick message after last night."+(dg?"\nText her: sms:+"+dg:""),["PT0M"])})(),
     "END:VCALENDAR"].join("\r\n");return icsLink(txt)}
 function icsBdayUrl(p){const n=nextBday(p.birthday);if(!n)return "";const f=x=>x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate());const e=new Date(n.getTime()+864e5);
   const txt=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Kas Upgrade//EN","BEGIN:VEVENT","UID:bday-"+(p.id||p.name)+"@kasupgrade","DTSTAMP:"+icsUtc(new Date()),"DTSTART;VALUE=DATE:"+f(n),"DTEND;VALUE=DATE:"+f(e),"RRULE:FREQ=YEARLY","SUMMARY:"+icsEsc(p.name+"'s birthday"),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:Birthday","TRIGGER:-PT15H","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");return icsLink(txt)}
@@ -330,6 +331,8 @@ function datePlanCard(p,d){const sp=spotOf(d);const img=p.photoId?imgSrc(p.photo
 function eventPlanCard(e){return `<button class="plancard press" data-a="idea" data-x="${esc(e.id)}">${ph(photoOf(e),e.name)}<span class="tx"><span class="when">${esc(relDayShort(e.date))}${e.time?" · "+esc(e.time):""}</span><b>${esc(e.name)}</b><span class="pl">${esc(e.venue||e.area||"")}</span><span class="state"><i style="background:var(--warn)"></i>Event</span></span></button>`}
 function nudges(){
   const out=[];
+  const fu=S.people.filter(vis).map(p=>({p,d:recentFollowUp(p)})).filter(x=>x.d).sort((a,b)=>parseLocal(b.d.when)-parseLocal(a.d.when))[0];
+  if(fu)out.push(`<div class="nudge"><div class="row">${av(fu.p,40)}<div class="tx"><b>Follow up with ${esc(first(fu.p.name))}</b><span>After ${esc(placeName(fu.d))} · ${esc(relDay(fu.d.when)==='Today'||relDay(fu.d.when)==='Tonight'?'tonight':fmtDay(fu.d.when))}</span></div></div><button class="cta sm" data-a="followup" data-x="${esc(fu.p.id)}:${esc(fu.d.id)}">${ic("msg","sm")} Write a follow-up</button></div>`);
   const toRate=allPast().find(({p,d})=>!d.rated&&vis(p));
   if(toRate)out.push(`<div class="nudge"><div class="row">${av(toRate.p,40)}<div class="tx"><b>How was ${esc(placeName(toRate.d))}?</b><span>With ${esc(first(toRate.p.name))} · ${esc(fmtDay(toRate.d.when))}</span></div><button class="textbtn" style="font-size:14px;color:var(--mut)" data-a="rate" data-x="${esc(toRate.p.id)}:${esc(toRate.d.id)}:0">Skip</button></div>
     <div class="hearts">${[1,2,3,4,5].map(n=>`<button data-a="rate" data-x="${esc(toRate.p.id)}:${esc(toRate.d.id)}:${n}" aria-label="${n}">♥</button>`).join("")}</div></div>`);
@@ -506,6 +509,7 @@ PUSH.person=function(v){
   let next;
   if(up){const sp=spotOf(up);next=`<div class="card"><h3>Next</h3><button class="next press" style="width:100%;text-align:left" data-a="date" data-x="${esc(p.id)}:${esc(up.id)}">${ph(photoOf(sp),placeName(up))}<span class="tx"><b>${esc(placeName(up))}</b><span>${esc(fmtWhen(up.when))}${sp&&sp.area?" · "+esc(sp.area):""}</span>${confState(up)}</span>${ic("chev","sm")}</button>
     <div class="btnrow" style="margin-top:14px"><button class="cta sm" data-a="confirm" data-x="${esc(p.id)}:${esc(up.id)}">${ic("send","sm")} Send details</button>${PHONE?`<a class="cta sm ghost" href="${esc(icsDateUrl(p,up))}" target="_blank" rel="noopener">${ic("cal","sm")} Calendar</a>`:""}</div></div>`}
+  else if(recentFollowUp(p)){const fd=recentFollowUp(p);next=`<div class="card"><h3>Next</h3><p class="note" style="margin-bottom:12px">Follow up after ${esc(placeName(fd))}.</p><div class="btnrow"><button class="cta sm" data-a="followup" data-x="${esc(p.id)}:${esc(fd.id)}">${ic("msg","sm")} Send follow-up</button><button class="cta sm ghost" data-a="plan" data-x="${esc(p.id)}">Plan next</button></div></div>`}
   else next=`<div class="card"><h3>Next</h3>${p.nextStep?`<p class="note" style="margin-bottom:12px">${esc(p.nextStep)}</p>`:""}<button class="cta sm" data-a="plan" data-x="${esc(p.id)}">Plan a date with ${esc(first(p.name))}</button></div>`;
   const likes=String(p.likes||"").split(/[,;]+/).map(x=>x.trim()).filter(Boolean);
   const bd=p.birthday?parseLocal(p.birthday+"T12:00").toLocaleDateString("en-US",{month:"long",day:"numeric"}):"";
@@ -877,6 +881,7 @@ function openDate(pid,did){
       <div class="flabel">Time</div><div class="daypick">${times.map(t=>`<button class="chip" style="width:auto;height:38px;padding:0 14px;flex-direction:row" aria-pressed="${st.wt===t}" data-stm="${t}">${fmtT(t)}</button>`).join("")}</div>
       <div class="seg" style="margin:0">${[[90,"1.5 h"],[120,"2 h"],[180,"3 h"]].map(([v,l])=>`<button aria-pressed="${st.wl===v}" data-sl="${v}">${l}</button>`).join("")}</div>
       <div class="flabel">What you spent</div><label class="spent">$<input id="dd-spent" inputmode="decimal" placeholder="0" value="${esc(st.spent)}" autocomplete="off"></label>
+      ${past?`<button class="cta sm" id="dd-fu">${ic("msg","sm")} ${d0.followedUp?"Send another follow-up":"Send follow-up"}</button>`:""}
       <div class="btnrow"><button class="cta sm ghost" id="dd-send">${ic("send","sm")} Send details</button>${PHONE?`<a class="cta sm ghost" href="${esc(icsDateUrl(person,{...d0,when:st.wd+"T"+st.wt,len:st.wl,spotId:st.spotId,spotName:st.spotName}))}" target="_blank" rel="noopener">${ic("cal","sm")} Calendar</a>`:""}</div>
       <button class="textbtn bad" id="dd-rm" style="align-self:center;padding:8px">Cancel this date</button>`);
     const R=api.el;
@@ -893,6 +898,7 @@ function openDate(pid,did){
     R.querySelectorAll("[data-oc]").forEach(b=>b.onclick=()=>{api.close();dateOutcome(pid,did,b.dataset.oc)});
     setTimeout(()=>R.querySelectorAll('.daypick [aria-pressed="true"]').forEach(b=>{const r=b.parentElement;r.scrollLeft=b.offsetLeft-r.clientWidth/2+b.clientWidth/2}),0);
     api.q("#dd-send").onclick=()=>openConfirm(pid,did);
+    const fu=api.q("#dd-fu");if(fu)fu.onclick=()=>openFollowUp(pid,did);
     api.q("#dd-rm").onclick=async()=>{const b=api.q("#dd-rm");if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Tap again to cancel the date";return}
       const cur=S.people.find(p=>p.id===pid);if(await patchPerson(pid,{dates:(cur.dates||[]).filter(x=>x.id!==did)})){api.close();toast("Date canceled")}};
   };
@@ -914,12 +920,36 @@ function openConfirm(pid,did){const p=S.people.find(x=>x.id===pid);if(!p)return;
   const msg=confirmMsg(p,d);const dg=digits(p),ig=igHandle(p.instagram);
   sheet({title:"Send "+first(p.name)+" the details",body:`<textarea class="msg" id="cf-msg" rows="6">${esc(msg)}</textarea>
     ${dg?"":`<p class="fhint" style="margin:0">Add her number to text her straight from here.</p>`}
-    ${PHONE?`<a class="cta ghost sm" href="${esc(icsDateUrl(p,d))}" target="_blank" rel="noopener">${ic("cal","sm")} Add to my Calendar</a><p class="fhint" style="margin-top:-8px">Reminders the day before, 2 hours before, and a “text her to confirm” alert that morning.</p>`:""}`,
+    ${PHONE?`<a class="cta ghost sm" href="${esc(icsDateUrl(p,d))}" target="_blank" rel="noopener">${ic("cal","sm")} Add to my Calendar</a><p class="fhint" style="margin-top:-8px">Reminders the day before, 2 hours before, a “text her to confirm” alert that morning, and a follow-up reminder the next morning.</p>`:""}`,
     foot:`${dg?`<a class="cta" id="cf-sms" href="sms:+${dg}&body=${encodeURIComponent(msg)}">${ic("msg","sm")} Text her</a>`:""}<div class="btnrow">${dg?`<a class="cta ghost sm" id="cf-wa" href="https://wa.me/${dg}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">WhatsApp</a>`:""}<button class="cta ghost sm" id="cf-copy">${ig?"Copy for DM":"Copy"}</button>${ig?`<a class="cta ghost sm" href="https://ig.me/m/${esc(ig)}" target="_blank" rel="noopener">Open DM</a>`:""}</div>`,
     wire:api=>{const ta=api.q("#cf-msg");ta.oninput=()=>{const m=encodeURIComponent(ta.value);const s=api.q("#cf-sms"),w=api.q("#cf-wa");if(s)s.href=`sms:+${dg}&body=${m}`;if(w)w.href=`https://wa.me/${dg}?text=${m}`};
       const mark=()=>{const cur=S.people.find(x=>x.id===pid);if(!cur)return;const dd=(cur.dates||[]).find(x=>x.id===did);if(!dd||dd.confirmed)return;patchPerson(pid,{dates:(cur.dates||[]).map(x=>x.id===did?{...x,confirmed:true}:x)})};
       ["#cf-sms","#cf-wa"].forEach(s=>{const a=api.q(s);if(a)a.addEventListener("click",mark)});
       api.q("#cf-copy").onclick=async()=>{mark();try{await navigator.clipboard.writeText(ta.value);toast("Copied")}catch(e){ta.select();toast("Select and copy the text")}}}})}
+
+/* ---------- follow-up after a date ---------- */
+const FSTYLES=[["sweet","Sweet"],["playful","Playful"],["next","Ask again"]];
+function followMsg(p,d,style){const fn=first(p.name),place=placeName(d),n=-dayDiff(d.when);
+  const when=n<=0?"tonight":n===1?"last night":"the other night";
+  const dow=new Date().getDay();const day=dow>=5||dow===6?"next week":"this weekend";
+  if(style==="playful")return `Still thinking about ${place}. You were way too easy to talk to, ${fn}. Round two soon?`;
+  if(style==="next")return `Had such a good time with you ${when}, ${fn}. Free ${day}? I've got a spot in mind.`;
+  return `Hey ${fn}, I had a really great time ${when} at ${place}. Hope you got home ok.`}
+function recentFollowUp(p){const d=pastDates(p)[0];if(!d||d.followedUp||p.status==="Done"||d.outcome==="done")return null;return -dayDiff(d.when)<=3?d:null}
+function openFollowUp(pid,did){const p=S.people.find(x=>x.id===pid);if(!p)return;const d=(p.dates||[]).find(x=>x.id===did);if(!d)return;
+  let style="sweet";const dg=digits(p),ig=igHandle(p.instagram);
+  sheet({title:"Follow up with "+first(p.name),body:`<div class="seg" style="margin:0">${FSTYLES.map(([k,l])=>`<button aria-pressed="${k===style}" data-fs="${k}">${l}</button>`).join("")}</div>
+    <textarea class="msg" id="fu-msg" rows="5">${esc(followMsg(p,d,style))}</textarea>
+    <p class="fhint" style="margin:0">After ${esc(placeName(d))} · ${esc(fmtDay(d.when))}. Edit it so it sounds like you.</p>
+    ${dg?"":`<p class="fhint" style="margin:0">Add her number to text her straight from here.</p>`}`,
+    foot:`${dg?`<a class="cta" id="fu-sms" href="sms:+${dg}&body=${encodeURIComponent(followMsg(p,d,style))}">${ic("msg","sm")} Text her</a>`:""}<div class="btnrow">${dg?`<a class="cta ghost sm" id="fu-wa" href="https://wa.me/${dg}?text=${encodeURIComponent(followMsg(p,d,style))}" target="_blank" rel="noopener">WhatsApp</a>`:""}<button class="cta ghost sm" id="fu-copy">${ig?"Copy for DM":"Copy"}</button>${ig?`<a class="cta ghost sm" href="https://ig.me/m/${esc(ig)}" target="_blank" rel="noopener">Open DM</a>`:""}</div>`,
+    wire:api=>{const ta=api.q("#fu-msg");
+      const links=()=>{const m=encodeURIComponent(ta.value);const a=api.q("#fu-sms"),w=api.q("#fu-wa");if(a)a.href=`sms:+${dg}&body=${m}`;if(w)w.href=`https://wa.me/${dg}?text=${m}`};
+      ta.oninput=links;
+      api.qa("[data-fs]").forEach(b=>b.onclick=()=>{style=b.dataset.fs;api.qa("[data-fs]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));ta.value=followMsg(p,d,style);links()});
+      const mark=()=>{const cur=S.people.find(x=>x.id===pid);if(!cur)return;const dd=(cur.dates||[]).find(x=>x.id===did);if(!dd||dd.followedUp)return;patchPerson(pid,{dates:(cur.dates||[]).map(x=>x.id===did?{...x,followedUp:true}:x)})};
+      ["#fu-sms","#fu-wa"].forEach(q=>{const a=api.q(q);if(a)a.addEventListener("click",()=>{mark();setTimeout(()=>api.close(),400)})});
+      api.q("#fu-copy").onclick=async()=>{mark();try{await navigator.clipboard.writeText(ta.value);toast("Copied")}catch(e){ta.select();toast("Select and copy the text")}}}})}
 
 /* ---------- place / idea detail + edit ---------- */
 function linksFor(s){const out=[`<a class="pillbtn" href="${esc(mapUrl(s))}" target="_blank" rel="noopener">${ic("map","xs")} Maps</a>`,`<a class="pillbtn" href="${esc(igUrl(s.instagram,s.name,s.area))}" target="_blank" rel="noopener">${ic("ig","xs")} Instagram</a>`];
@@ -1066,6 +1096,7 @@ const A={
   rate:(el)=>{const [p,d,n]=el.dataset.x.split(":");rateDate(p,d,+n)},
   outcome:(el)=>{const [p,d,o]=el.dataset.x.split(":");dateOutcome(p,d,o)},
   confirm:(el)=>{const [p,d]=el.dataset.x.split(":");openConfirm(p,d)},
+  followup:(el)=>{const [p,d]=el.dataset.x.split(":");openFollowUp(p,d)},
   editperson:(el)=>editPerson(S.people.find(p=>p.id===el.dataset.x)),
   pstatus:(el)=>statusSheet(el.dataset.x),pnotes:(el)=>notesSheet(el.dataset.x),addlike:(el)=>addLikeSheet(el.dataset.x),pmore:(el)=>moreSheet(el.dataset.x),
   pphoto:(el)=>{const [p,ph]=el.dataset.x.split("|");photoSheet(p,ph)},
