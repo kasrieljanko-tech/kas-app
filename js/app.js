@@ -829,9 +829,11 @@ async function readShots(files){
     step(2);const pr=r.profile||{};
     const crops=[];for(const p of (pr.photos||[]).slice(0,6)){const b=blobs[p.img];if(!b||!Array.isArray(p.box))continue;const c=await cropBlob(b,p.box);if(c)crops.push(c)}
     step(3);reviewProfile(pr,crops);
-  }catch(e){api.setBody(`<div class="empty" style="padding:20px 0"><b>Couldn't read it</b>${esc(String(e.message||e).slice(0,200))}</div>`);
-    api.el.insertAdjacentHTML("beforeend",`<div class="sf"><button class="cta" id="rs-retry">Try again</button><button class="cta ghost" id="rs-man">Type it in myself</button></div>`);
-    api.q("#rs-retry").onclick=()=>readShots(files);api.q("#rs-man").onclick=()=>editPerson(null)}
+  }catch(e){const m=String(e.message||e);const badKey=/api.?key|permission|unauthori|403/i.test(m);
+    api.setBody(`<div class="empty" style="padding:20px 0"><b>${badKey?"Your AI key stopped working":"Couldn't read it"}</b>${badKey?"Paste a new free key from Google AI Studio and it'll read the screenshot again.":esc(m.slice(0,200))}</div>`);
+    api.el.insertAdjacentHTML("beforeend",`<div class="sf">${badKey?`<button class="cta" id="rs-key">Update AI key</button>`:`<button class="cta" id="rs-retry">Try again</button>`}<button class="cta ghost" id="rs-man">Type it in myself</button></div>`);
+    const k=api.q("#rs-key");if(k)k.onclick=()=>aiKeySheet(()=>readShots(files));
+    const r=api.q("#rs-retry");if(r)r.onclick=()=>readShots(files);api.q("#rs-man").onclick=()=>editPerson(null)}
 }
 function reviewProfile(pr,crops){
   const extra=[pr.height?"Height: "+pr.height:""].filter(Boolean).join(" · ");
