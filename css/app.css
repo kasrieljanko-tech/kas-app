@@ -570,3 +570,16 @@ input[type=range]{accent-color:var(--acc)}
   .actions4{gap:8px}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Hinge-style single age slider */
+.agebox{background:var(--card,#16181d);border-radius:16px;padding:16px 18px 20px}
+.agev{display:flex;gap:8px;align-items:baseline;font-size:17px;margin-bottom:14px}.agev b{font-weight:600}.agev span{color:var(--mut,#8a8f98)}
+.dual{position:relative;height:28px}
+.dual .dtrack,.dual .dfill{position:absolute;top:12px;height:4px;border-radius:2px}
+.dual .dtrack{left:12px;right:12px;background:rgba(255,255,255,.14)}
+.dual .dfill{background:var(--acc,#9b6cf0)}
+.dual input[type=range]{position:absolute;left:-2px;right:-2px;top:0;width:calc(100% + 4px);height:28px;margin:0;background:none;-webkit-appearance:none;appearance:none;pointer-events:none;z-index:3}
+.dual input[type=range]::-webkit-slider-runnable-track{background:none;height:28px}
+.dual input[type=range]::-moz-range-track{background:none}
+.dual input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:28px;height:28px;border-radius:50%;background:#fff;border:none;box-shadow:0 2px 8px rgba(0,0,0,.35);cursor:pointer}
+.dual input[type=range]::-moz-range-thumb{pointer-events:auto;width:28px;height:28px;border-radius:50%;background:#fff;border:none;box-shadow:0 2px 8px rgba(0,0,0,.35);cursor:pointer}

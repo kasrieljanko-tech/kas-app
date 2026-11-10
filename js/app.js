@@ -785,13 +785,20 @@ function motivation(name){const n=S.notes||{};const lines=n.mindset&&n.mindset.l
 function filterSheet(){const Fl=JSON.parse(JSON.stringify(S.pf));
   const draw=api=>{const n=S.people.filter(p=>p.status!=="Done"&&vis(p)).filter(p=>{const o=S.pf;S.pf=Fl;const r=pfPass(p);S.pf=o;return r}).length;
     api.setBody(`<div class="flabel">Location</div><div class="chips wrap-ok" style="padding:0">${["Anywhere",...REGIONS].map(r=>`<button class="chip" aria-pressed="${Fl.region===r}" data-fr="${r}">${r}</button>`).join("")}</div>
-      <div class="flabel">Age · ${Fl.ageMin} – ${Fl.ageMax>=60?"60+":Fl.ageMax}</div>
-      <div class="fgroup"><div class="f"><label>From</label><input type="range" min="18" max="60" value="${Fl.ageMin}" id="fa1" style="flex:1"></div><div class="f"><label>To</label><input type="range" min="18" max="60" value="${Fl.ageMax}" id="fa2" style="flex:1"></div></div>
+      <div class="flabel">Age</div>
+      <div class="agebox"><div class="agev"><b id="fa-lo">${Fl.ageMin}</b><span>–</span><b id="fa-hi">${Fl.ageMax>=60?"60+":Fl.ageMax}</b></div>
+        <div class="dual"><div class="dtrack"></div><div class="dfill" id="fa-fill"></div><input type="range" min="18" max="60" step="1" value="${Fl.ageMin}" id="fa1" aria-label="Minimum age"><input type="range" min="18" max="60" step="1" value="${Fl.ageMax}" id="fa2" aria-label="Maximum age"></div></div>
       <div class="fhint">People without an age always show.</div>
       <div class="flabel">Type</div><div class="chips wrap-ok" style="padding:0">${KINDS.map(k=>`<button class="chip" aria-pressed="${Fl.kinds.includes(k)}" data-fk="${k}">${k}</button>`).join("")}</div>
       <div class="flabel">Status</div><div class="chips wrap-ok" style="padding:0">${PSTAT.map(k=>`<button class="chip" aria-pressed="${Fl.statuses.includes(k)}" data-fs="${k}">${k}</button>`).join("")}</div>`);
     api.setFoot(`<button class="cta" id="fl-apply">Show ${n} ${n===1?"person":"people"}</button>`);
-    api.q("#fa1").onchange=e=>{Fl.ageMin=Math.min(+e.target.value,Fl.ageMax);draw(api)};api.q("#fa2").onchange=e=>{Fl.ageMax=Math.max(+e.target.value,Fl.ageMin);draw(api)};
+    const a1=api.q("#fa1"),a2=api.q("#fa2"),cnt=()=>S.people.filter(p=>p.status!=="Done"&&vis(p)).filter(p=>{const o=S.pf;S.pf=Fl;const r=pfPass(p);S.pf=o;return r}).length;
+    const age=()=>{let lo=+a1.value,hi=+a2.value;if(lo>hi-1){if(document.activeElement===a1||a1.dataset.on){lo=hi-1;a1.value=lo}else{hi=lo+1;a2.value=hi}}
+      Fl.ageMin=lo;Fl.ageMax=hi;api.q("#fa-lo").textContent=lo;api.q("#fa-hi").textContent=hi>=60?"60+":hi;
+      const f=api.q("#fa-fill");f.style.left=`calc(12px + (100% - 24px) * ${(lo-18)/42})`;f.style.right=`calc(12px + (100% - 24px) * ${(60-hi)/42})`;
+      a1.style.zIndex=lo>=58?5:3;const n=cnt(),b=api.q("#fl-apply");if(b)b.textContent=`Show ${n} ${n===1?"person":"people"}`};
+    a1.addEventListener("pointerdown",()=>{a1.dataset.on=1});a2.addEventListener("pointerdown",()=>{delete a1.dataset.on});
+    a1.oninput=age;a2.oninput=age;age();
     api.qa("[data-fr]").forEach(b=>b.onclick=()=>{Fl.region=b.dataset.fr;draw(api)});
     api.qa("[data-fk]").forEach(b=>b.onclick=()=>{const k=b.dataset.fk;Fl.kinds=Fl.kinds.includes(k)?Fl.kinds.filter(x=>x!==k):[...Fl.kinds,k];draw(api)});
     api.qa("[data-fs]").forEach(b=>b.onclick=()=>{const k=b.dataset.fs;Fl.statuses=Fl.statuses.includes(k)?Fl.statuses.filter(x=>x!==k):[...Fl.statuses,k];draw(api)});
