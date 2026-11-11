@@ -41,7 +41,7 @@ const money=n=>"$"+Math.round(n).toLocaleString();
 const strip=o=>{const {id,...r}=JSON.parse(JSON.stringify(o));return r};
 const lget=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lset=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-function imgSrc(id){id=String(id||"");if(!id)return "";return /^https?:\/\//.test(id)?id:id.startsWith("d/")?"https://drive.google.com/thumbnail?id="+id.slice(2)+"&sz=w1600":"img/"+id+".jpg"}
+function imgSrc(id){id=String(id||"");if(!id)return "";if(/^data:image\//.test(id))return id;return /^https?:\/\//.test(id)?id:id.startsWith("d/")?"https://drive.google.com/thumbnail?id="+id.slice(2)+"&sz=w1600":"img/"+id+".jpg"}
 function hashHue(s){let h=0;for(const c of String(s||""))h=(h*31+c.charCodeAt(0))%360;return h}
 function initials(n){return String(n||"?").replace(/^(the|bar)\s+/i,"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase()}
 function grad(n){const h=hashHue(n);return `background:linear-gradient(150deg,hsl(${h} 26% 30%),hsl(${(h+40)%360} 30% 14%))`}
