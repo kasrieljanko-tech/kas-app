@@ -194,8 +194,8 @@ const ic=(n,cls)=>`<svg class="ic ${cls||""}" viewBox="0 0 24 24" aria-hidden="t
 /* photo block: real photo, else a calm gradient with initials */
 function ph(src,name,cls,extra,style){
   return `<span class="ph ${cls||""}" style="${src?"":grad(name)};${style||""}">${src?`<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:`<span class="ini">${esc(initials(name))}</span>`}${extra||""}</span>`}
-function av(p,size){const s=p.photoId?imgSrc(p.photoId):"";const st=`width:${size}px;height:${size}px;font-size:${Math.round(size*.38)}px;${s?"":grad(p.name)}`;
-  return `<span class="av" style="${st}">${s?`<img src="${esc(s)}" alt="" onerror="this.remove()">`:esc(initials(p.name))}</span>`}
+function av(p,size){const s=p.photoId?imgSrc(p.photoId):"";const st=`width:${size}px;height:${size}px;font-size:${Math.round(size*.38)}px;${grad(p.name)};position:relative`;
+  return `<span class="av" style="${st}">${esc(initials(p.name))}${s?`<img src="${esc(s)}" alt="" style="position:absolute;inset:0" onerror="this.remove()">`:""}</span>`}
 
 /* ---------------- toast ---------------- */
 let tt;function toast(m){let t=$("toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";t.setAttribute("role","status");document.body.appendChild(t)}
@@ -294,8 +294,9 @@ SCREENS.home=function(){
   const nx=ups[0];let head=`${greet}, Kas`;
   if(nx){const n=dayDiff(nx.d.when),nm=esc(first(nx.p.name));head=n<=0?`${relDay(nx.d.when)} with ${nm}`:n===1?`Tomorrow: ${nm}`:n<=7?`${n} days till ${nm}`:head}
   const dayl=new Date().toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"});
-  const top=`<div class="home-top"><div><div class="wordmark">kas<i></i></div><div class="day">${esc(dayl)}</div><h1>${head}${nx&&dayDiff(nx.d.when)<=7?`<span class="pdot pulse"></span>`:""}</h1></div>
-    <button class="me-av press" data-a="tab" data-x="me" aria-label="Me">${P.photoId?`<img src="${esc(imgSrc(P.photoId))}" alt="" onerror="this.remove()">`:"K"}</button></div>`;
+  const top=`<div class="home-bar"><div class="wordmark" aria-label="Kas Upgrade">kas<i></i></div>
+    <button class="me-av press" data-a="tab" data-x="me" aria-label="Me">${P.photoId?`<img src="${esc(imgSrc(P.photoId))}" alt="" onerror="this.remove()">`:"K"}</button></div>
+    <h1 class="home-h" title="${esc(dayl)}">${head}${nx&&dayDiff(nx.d.when)<=7?`<span class="pdot pulse" aria-hidden="true"></span>`:""}</h1>`;
   if(S.loading)return top+loadingBlock();
   /* featured */
   const soon=ups.find(({d})=>dayDiff(d.when)<=2);
@@ -303,19 +304,17 @@ SCREENS.home=function(){
   if(soon){const sp=spotOf(soon.d);
     const vimg=photoOf(sp)||"";
     feat=`<button class="feature press" data-a="date" data-x="${esc(soon.p.id)}:${esc(soon.d.id)}">${vimg?`<img src="${esc(vimg)}" alt="" onerror="this.remove()">`:`<span class="glow"></span>`}<span class="shade"></span>
-      <span class="tag"><i></i>${esc(relDay(soon.d.when))}</span>
       <span class="who">${av(soon.p,54)}<span style="min-width:0"><b>${esc(first(soon.p.name))}</b><span>${esc([fmtTime(soon.d.when),placeName(soon.d)].filter(Boolean).join(" · "))}</span></span></span><span class="go">${ic("arrow","sm")}</span></button>`}
   else{const tdy=todayStr();const ev=eventsSorted().find(e=>e.date===tdy&&hasPh(e));const fav=S.spots.filter(s=>!s.closed&&hasPh(s)&&(s.fav||s.rating>=4));const pick=ev||fav[new Date().getDate()%Math.max(1,fav.length)]||S.spots.find(hasPh);
     feat=`<button class="feature press" data-a="tab" data-x="discover">${pick?`<img src="${esc(photoOf(pick))}" alt="" onerror="this.remove()">`:`<span class="glow"></span>`}<span class="shade"></span>
       <span class="tag"><i></i>Tonight</span><span class="copy"><b>Make your next night a good one.</b><span>${pick?esc(pick.name)+(pick.area?" · "+esc(pick.area):""):"Find your kind of night"}</span></span><span class="go">${ic("arrow","sm")}</span></button>`}
-  const quick=`<div class="quick">
-    <button class="press" data-a="plan"><span class="qi">${ic("heart")}</span>Plan a Date</button>
-    <button class="press" data-a="addperson"><span class="qi">${ic("userplus")}</span>Add Person</button>
-    <button class="press" data-a="tab" data-x="plans"><span class="qi">${ic("plans")}</span>My Plans</button>
-    <button class="press" data-a="places"><span class="qi">${ic("bookmark")}</span>Saved Places</button></div>`;
+  const quick=`<div class="qrow">
+    <button class="press qp main" data-a="plan">${ic("heart","sm")}Plan a date</button>
+    <button class="press qp" data-a="addperson">${ic("userplus","sm")}Add person</button>
+    <button class="press qp" data-a="places">${ic("bookmark","sm")}Places</button></div>`;
   /* plans rail */
   const evs=eventsSorted().filter(e=>savedEvents().includes(e.id)).map(e=>({e,t:e.date+"T"+(/^\d\d:\d\d$/.test(e.time||"")?e.time:"20:00")}));
-  const items=[...ups.map(x=>({...x,t:x.d.when})),...evs].sort((a,b)=>String(a.t).localeCompare(String(b.t))).slice(0,8);
+  const items=[...ups.filter(x=>!soon||x.d!==soon.d).map(x=>({...x,t:x.d.when})),...evs].sort((a,b)=>String(a.t).localeCompare(String(b.t))).slice(0,8);
   const plans=items.length?rail("hplans",items,it=>it.e?eventPlanCard(it.e):datePlanCard(it.p,it.d))
     :`<button class="empty-card press" data-a="plan"><span class="tx"><b>Nothing planned yet</b><span>Pick someone and a spot in a few taps.</span></span><span class="iconbtn acc">${ic("plus","sm")}</span></button>`;
   /* for you */

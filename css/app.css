@@ -736,3 +736,41 @@ body.has-push .tabbar{transform:translateY(calc(100% + var(--sb) + 20px))}
 .pp .card .cta.ghost{background:var(--s1);color:var(--fg)}
 .pp .kv .r{border-top-color:var(--line)}
 .pp a.card[style*="display:flex"]{border-top:1px solid var(--line)}
+
+/* home v4.2 — polish */
+.home-bar{display:flex;align-items:center;justify-content:space-between;padding:2px var(--pad) 0}
+.home-h{font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1.08;padding:14px var(--pad) 0;text-wrap:balance}
+.home-h .pdot{top:-5px}
+.feature{margin-top:14px}
+.catcard .lbl b{color:#fff}
+.catcard .lbl span{color:rgba(255,255,255,.82)}
+.catcard .ci{color:#fff}
+.qrow{display:flex;gap:8px;padding:0 var(--pad);margin-top:14px;overflow-x:auto;scrollbar-width:none}
+.qrow::-webkit-scrollbar{display:none}
+.qp{flex:none;height:44px;padding:0 16px;border-radius:22px;display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:650;color:var(--fg);background:var(--bg);border:1px solid var(--line)}
+.qp.main{background:var(--inv);color:var(--on-inv);border-color:transparent}
+.qp .ic{width:17px;height:17px}
+.nudge{flex-direction:row;align-items:center;gap:12px;padding:12px 12px 12px 14px;margin-top:10px}
+.qrow+.nudge{margin-top:18px}
+.nudge .row{flex:1;min-width:0}
+.nudge .row b{color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nudge .row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nudge>.cta{width:auto;flex:none;height:40px;padding:0 16px;font-size:14px;background:var(--acc);color:#fff}
+.nudge>.cta .ic{display:none}
+.nudge .row>.ic{color:var(--fg)}
+.av{position:relative}
+/* browser surfaces carry the palette */
+::selection{background:var(--acc-soft);color:var(--fg)}
+input,textarea{caret-color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+/* the one authored moment lives on Home; other tabs just appear */
+#tab.enter>*{animation:none}
+#tab.enter>.home-h,#tab.enter>.feature,#tab.enter>.qrow,#tab.enter>.nudge{animation:rise .55s var(--ease) both}
+#tab.enter>.feature{animation-delay:.05s}
+#tab.enter>.qrow{animation-delay:.1s}
+#tab.enter>.nudge{animation-delay:.14s}
+@media (prefers-reduced-motion:reduce){#tab.enter>*{animation:none!important}}
+.qrow{overflow:visible}
+.qp{flex:1 1 0;min-width:0;justify-content:center;padding:0 8px;gap:6px;font-size:13.5px}
+.nudge .row b{white-space:normal;line-height:1.25;text-wrap:balance}
+.qp:not(.main) .ic{display:none}
