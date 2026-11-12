@@ -42,8 +42,8 @@ window.kuKeypad=function(o){
   const d=document.createElement("div");d.id=o.id;d.className="kp";
   const me=g("ku.meimg");const fidSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9.5v1.5M15 9.5v1.5M12 9.5V13h-1M9.5 16a3.5 3.5 0 0 0 5 0"/></svg>';
   if(o.faceId){d.dataset.hasFid="1";d.dataset.mode="fid"}else d.dataset.mode="pin";
-  d.innerHTML=`<div class="kp-brand"><img src="icon-180.png?v=1794503657150" alt="">Kas Upgrade</div>
-    <div class="kp-mid">${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png?v=1794503657150" alt="">`}
+  d.innerHTML=`<div class="kp-brand"><img src="icon-180.png?v=1794503805005" alt="">Kas Upgrade</div>
+    <div class="kp-mid">${me?`<img class="kp-me" src="${me}" alt="" onerror="this.outerHTML='<img class=kp-ic src=icon-180.png alt>'">`:`<img class="kp-ic" src="icon-180.png?v=1794503805005" alt="">`}
       <h2>Welcome back, Kas.</h2><div class="kp-sub">Your private space.</div>
       <div class="kp-dots" id="${o.id}-d">${"<i></i>".repeat(o.len||4)}</div><div class="kp-msg" id="${o.id}-s">${o.faceId?"":(o.sub||"Enter your code")}</div></div>
     <div class="kp-bottom">

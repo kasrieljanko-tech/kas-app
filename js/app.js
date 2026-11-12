@@ -289,7 +289,7 @@ const SCREENS={};
 SCREENS.home=function(){
   const h=new Date().getHours();const greet=h<5?"Good night":h<12?"Good morning":h<17?"Good afternoon":"Good evening";
   const P=S.profile||{};
-  const top=`<div class="home-top"><div><div class="kicker">Kas Upgrade</div><h1>${greet}, Kas 👋</h1></div>
+  const top=`<div class="home-top"><div><div class="kicker brandk"><img src="icon-180.png?v=1794503805005" alt="">Kas Upgrade</div><h1>${greet}, Kas 👋</h1></div>
     <button class="me-av press" data-a="tab" data-x="me" aria-label="Me">${P.photoId?`<img src="${esc(imgSrc(P.photoId))}" alt="" onerror="this.remove()">`:"K"}</button></div>`;
   if(S.loading)return top+loadingBlock();
   const ups=allUpcoming();
