@@ -18,6 +18,7 @@ const KINDS=["Serious","Religious","Sneaky link"];
 const REGIONS=["New York","Brazil","Israel","Other"];
 const PRATES=[["chat","Chat"],["looks","Looks"],["feel","How I feel"]];
 const HEART='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>';
+const FICON={"Job":"briefcase","School":"book","From":"house","Lives in":"pin","Met on":"heart","Birthday":"cake","Observance":"kosher"};
 const RWORD=["Not rated","Meh","Okay","Good","Great","Wow"];
 const AREAS=["Williamsburg / Greenpoint","Manhattan","Near home","Astoria / LIC","Anywhere in Brooklyn"];
 const STYLES=["Cocktail bars","Music / dancing","Something active or different","Nice dinner"];
@@ -189,6 +190,10 @@ const P={
   star:'<path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/>',
   wave:'<path d="M3 14c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 2-2"/>',
   tack:'<path d="M9 3.5h6l-1 5.5 3 3v2H7v-2l3-3z"/><path d="M12 14v6.5"/>',
+  briefcase:'<rect x="3.5" y="7" width="17" height="12.5" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17"/>',
+  book:'<path d="M4 5.5c2.5-1 5.5-1 8 .8 2.5-1.8 5.5-1.8 8-.8v13c-2.5-1-5.5-1-8 .8-2.5-1.8-5.5-1.8-8-.8z"/><path d="M12 6.3v13"/>',
+  house:'<path d="M4 11 12 4.5l8 6.5"/><path d="M6 9.5V19.5h12V9.5"/><path d="M10 19.5v-5h4v5"/>',
+  cake:'<path d="M5 20v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7M4 20h16"/><path d="M5 15.5c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0M12 11V8"/><path d="M12 4.5c.8.8.8 2 0 2.5-.8-.5-.8-1.7 0-2.5z"/>',
   user:'<circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>'
 };
 const ic=(n,cls)=>`<svg class="ic ${cls||""}" viewBox="0 0 24 24" aria-hidden="true">${P[n]||P.spark}</svg>`;
@@ -235,6 +240,9 @@ function pop(){if(!S.stack.length)return;const ls=liveScreens();const el=ls[ls.l
   if(el){el.classList.add("out");setTimeout(()=>el.remove(),260)}renderTab(false)}
 function keepScroll(el,fn){const top=el.scrollTop;const rails={};el.querySelectorAll("[data-rail]").forEach(r=>rails[r.dataset.rail]=r.scrollLeft);fn();el.scrollTop=top;el.querySelectorAll("[data-rail]").forEach(r=>{if(rails[r.dataset.rail])r.scrollLeft=rails[r.dataset.rail]})}
 function busy(el){const a=document.activeElement;return a&&el.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)}
+document.addEventListener("input",e=>{const t=e.target;if(!t||t.getAttribute("inputmode")!=="tel")return;let d=t.value.replace(/\D/g,"");if(d.length===11&&d[0]==="1")d=d.slice(1);if(d.length>10||/^\+/.test(t.value)&&!/^\+1/.test(t.value))return;
+  const f=d.length<4?d:d.length<7?`(${d.slice(0,3)}) ${d.slice(3)}`:`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;if(f!==t.value){t.value=f;try{t.setSelectionRange(f.length,f.length)}catch(x){}}});
+function fmtPhone(v){const d=String(v||"").replace(/\D/g,"");const t=d.length===11&&d[0]==="1"?d.slice(1):d;return t.length===10?`(${t.slice(0,3)}) ${t.slice(3,6)}-${t.slice(6)}`:(v||"")}
 function themeLabel(){const t=window.kuTheme?kuTheme.get():"auto";return t==="auto"?"Automatic":t==="light"?"Light":"Dark"}
 function renderTab(reset){const el=$("tab");if(reset){el.classList.remove("enter");void el.offsetWidth;el.classList.add("enter");clearTimeout(el._en);el._en=setTimeout(()=>el.classList.remove("enter"),900)}
   TABS.forEach(([k])=>{const b=$("t-"+k);if(b){if(k===S.tab)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}});
@@ -518,7 +526,7 @@ PUSH.person=function(v){
   const rows=[["Job",p.job],["School",p.school],["From",p.from],["Lives in",[p.city,p.region].filter(Boolean).join(", ")],["Met on",p.whereMet],["Birthday",bd],["Observance",[p.keepsKosher?"Keeps kosher":"",p.shomerShabbat?"Shomer Shabbat":""].filter(Boolean).join(" · ")]].filter(r=>r[1]);
   const about=`<div class="card"><h3 style="display:flex;justify-content:space-between">About Her<button class="textbtn" style="font-size:13px" data-a="editperson" data-x="${esc(p.id)}">Edit</button></h3>
     <div class="tags" style="margin-bottom:${rows.length?12:0}px">${likes.map(l=>`<span class="tag acc">${esc(l)}</span>`).join("")}<button class="tag add" data-a="addlike" data-x="${esc(p.id)}">${ic("plus","xs")} ${likes.length?"Add":"What she likes"}</button></div>
-    ${rows.length?`<div class="kv">${rows.map(([k,v])=>`<div class="r"><span>${k}</span><b>${esc(v)}</b></div>`).join("")}</div>`:""}</div>`;
+    ${rows.length?`<div class="facts">${rows.map(([k,v])=>`<div class="fact"><span class="fi">${ic(FICON[k]||"spark","sm")}</span><span class="fv"><small>${k}</small>${esc(v)}</span></div>`).join("")}</div>`:""}</div>`;
   const notes=`<div class="card press" role="button" data-a="pnotes" data-x="${esc(p.id)}"><h3>Notes</h3>${p.notes?`<p class="note">${esc(p.notes)}</p>`:`<p class="note ph-text">Things she told you, her dog's name…</p>`}${p.review?`<h3 style="margin-top:16px">Your take</h3><p class="note">${esc(p.review)}</p>`:""}</div>`;
   const dr=(d,isUp)=>{const w=parseLocal(d.when);return `<button class="it" data-a="date" data-x="${esc(p.id)}:${esc(d.id)}"><span class="dbox${isUp?" up":""}"><small>${esc(w.toLocaleDateString("en-US",{month:"short"}))}</small><b>${w.getDate()}</b></span><span class="tx"><b>${esc(placeName(d))}</b><span>${esc(fmtTime(d.when))}${d.rating?" · "+"♥".repeat(d.rating):""}${d.spent?" · "+money(d.spent):""}${d.debrief&&d.debrief.vibe&&d.debrief.vibe.length?" · "+esc(d.debrief.vibe.slice(0,2).join(", ")):""}</span></span>${ic("chev","xs")}</button>`};
   const ups=upcoming(p);const spent=(p.dates||[]).reduce((t,d)=>t+(d.spent||0),0);
@@ -718,7 +726,7 @@ function editPerson(person){
   let file=null,removePh=false;
   const body=`<div class="photo-edit"><span id="pe-ph">${ph(p.photoId?imgSrc(p.photoId):"",p.name||"?")}</span><div class="btns"><label class="pillbtn acc" for="pe-file">${ic("cam","xs")} ${p.photoId?"Change photo":"Add photo"}</label>${p.photoId?`<button type="button" class="pillbtn" id="pe-rm">Remove</button>`:""}</div><input type="file" id="pe-file" accept="image/*" hidden></div>
     <div class="fgroup">${F.text("pe-name","Name",p.name,"Her name")}${F.text("pe-age","Age",p.age,"","inputmode=numeric")}<div class="f"><label for="pe-bday">Birthday</label><input id="pe-bday" type="date" value="${esc(p.birthday||"")}"></div>${F.sel("pe-status","Status",PSTAT,p.status||"Talking",false)}${F.sel("pe-kind","Type",KINDS,p.kind,"Not set")}</div>
-    <div class="flabel">Contact</div><div class="fgroup">${F.text("pe-phone","Phone",p.contact,"Optional","inputmode=tel")}${F.text("pe-ig","Instagram",p.instagram?"@"+igHandle(p.instagram):"","@handle","autocapitalize=off")}${F.text("pe-met","Met on",p.whereMet,"Hinge, a party…")}</div>
+    <div class="flabel">Contact</div><div class="fgroup">${F.text("pe-phone","Phone",fmtPhone(p.contact),"Optional","inputmode=tel")}${F.text("pe-ig","Instagram",p.instagram?"@"+igHandle(p.instagram):"","@handle","autocapitalize=off")}${F.text("pe-met","Met on",p.whereMet,"Hinge, a party…")}</div>
     <div class="flabel">About her</div><div class="fgroup">${F.text("pe-job","Job",p.job,"")}${F.text("pe-school","School",p.school,"")}${F.text("pe-from","From",p.from,"Brazil, Tel Aviv…")}${F.text("pe-city","City",p.city,"Upper West Side…")}${F.sel("pe-region","Lives in",REGIONS,p.region,"Not set")}${F.text("pe-addr","Address",p.address,"Street, apt")}${F.text("pe-likes","Likes",p.likes,"Sushi, live music…")}</div>
     <div class="fgroup">${F.tog("pe-kosher","Keeps kosher",p.keepsKosher)}${F.tog("pe-shabbat","Shomer Shabbat",p.shomerShabbat)}</div>
     <div class="flabel">Notes</div><div class="fgroup">${F.area("pe-next","Next step",p.nextStep,"Text her Thursday about Friday",1)}${F.area("pe-notes","Notes",p.notes,"Things she told you…")}${F.area("pe-review","Your take",p.review,"Green flags, red flags…")}</div>
