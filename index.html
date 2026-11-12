@@ -8,22 +8,32 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kas Upgrade">
-<meta name="theme-color" content="#090C12">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark">
+<script>
+/* theme: "auto" follows the iPhone, or forced light / dark (set in Me) */
+(function(){var mq=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)");
+function pref(){try{return localStorage.getItem("ku.theme")||"auto"}catch(e){return "auto"}}
+function apply(){var p=pref(),d=p==="dark"||(p==="auto"&&mq&&mq.matches);var h=document.documentElement;h.setAttribute("data-theme",d?"dark":"light");
+  var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute("content",d?"#100E0D":"#FFFFFF");
+  var sb=document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');if(sb)sb.setAttribute("content",d?"black-translucent":"default")}
+window.kuTheme={get:pref,set:function(v){try{localStorage.setItem("ku.theme",v)}catch(e){}apply()}};
+apply();if(mq){if(mq.addEventListener)mq.addEventListener("change",apply);else if(mq.addListener)mq.addListener(apply)}})();
+</script>
 <title>Kas Upgrade</title>
-<link rel="apple-touch-icon" href="icon-180.png?v=1794503805005">
-<link rel="icon" href="icon-180.png?v=1794503805005">
+<link rel="apple-touch-icon" href="icon-180.png?v=1794507354784">
+<link rel="icon" href="icon-180.png?v=1794507354784">
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="css/app.css?v=1794319610764">
-<meta name="ku-build" content="1794503805005">
+<link rel="stylesheet" href="css/app.css?v=1794507354784">
+<meta name="ku-build" content="1794507354784">
 <script>
 /* auto-update: reload once when a newer build is deployed */
-(function(){var B="1794503805005";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();
+(function(){var B="1794507354784";function chk(){fetch("./?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/ku-build" content="(\d+)/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("ku.rl")===m[1])return;sessionStorage.setItem("ku.rl",m[1])}catch(e){}location.reload()}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()})})();
 </script>
-<script src="config.js?v=1794503805005"></script>
-<script src="shim.js?v=1794503805005"></script>
+<script src="config.js?v=1794507354784"></script>
+<script src="shim.js?v=1794507354784"></script>
 </head>
 <body>
-<script src="js/app.js?v=1794319610764"></script>
+<script src="js/app.js?v=1794507354784"></script>
 </body>
 </html>

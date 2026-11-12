@@ -233,7 +233,8 @@ function pop(){if(!S.stack.length)return;const ls=liveScreens();const el=ls[ls.l
   if(el){el.classList.add("out");setTimeout(()=>el.remove(),260)}renderTab(false)}
 function keepScroll(el,fn){const top=el.scrollTop;const rails={};el.querySelectorAll("[data-rail]").forEach(r=>rails[r.dataset.rail]=r.scrollLeft);fn();el.scrollTop=top;el.querySelectorAll("[data-rail]").forEach(r=>{if(rails[r.dataset.rail])r.scrollLeft=rails[r.dataset.rail]})}
 function busy(el){const a=document.activeElement;return a&&el.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)}
-function renderTab(reset){const el=$("tab");
+function themeLabel(){const t=window.kuTheme?kuTheme.get():"auto";return t==="auto"?"Automatic":t==="light"?"Light":"Dark"}
+function renderTab(reset){const el=$("tab");if(reset){el.classList.remove("enter");void el.offsetWidth;el.classList.add("enter");clearTimeout(el._en);el._en=setTimeout(()=>el.classList.remove("enter"),900)}
   TABS.forEach(([k])=>{const b=$("t-"+k);if(b){if(k===S.tab)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")}});
   const html=()=>{el.innerHTML=SCREENS[S.tab]();after(el)};
   if(reset){html();el.scrollTop=0}else if(!busy(el))keepScroll(el,html);else el.dataset.dirty="1"}
@@ -289,17 +290,21 @@ const SCREENS={};
 SCREENS.home=function(){
   const h=new Date().getHours();const greet=h<5?"Good night":h<12?"Good morning":h<17?"Good afternoon":"Good evening";
   const P=S.profile||{};
-  const top=`<div class="home-top"><div><div class="kicker brandk"><img src="icon-180.png?v=1794503805005" alt="">Kas Upgrade</div><h1>${greet}, Kas 👋</h1></div>
+  const ups=S.loading?[]:allUpcoming();
+  const nx=ups[0];let head=`${greet}, Kas`;
+  if(nx){const n=dayDiff(nx.d.when),nm=esc(first(nx.p.name));head=n<=0?`${relDay(nx.d.when)} with ${nm}`:n===1?`Tomorrow: ${nm}`:n<=7?`${n} days till ${nm}`:head}
+  const dayl=new Date().toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"});
+  const top=`<div class="home-top"><div><div class="wordmark">kas<i></i></div><div class="day">${esc(dayl)}</div><h1>${head}${nx&&dayDiff(nx.d.when)<=7?`<span class="pdot pulse"></span>`:""}</h1></div>
     <button class="me-av press" data-a="tab" data-x="me" aria-label="Me">${P.photoId?`<img src="${esc(imgSrc(P.photoId))}" alt="" onerror="this.remove()">`:"K"}</button></div>`;
   if(S.loading)return top+loadingBlock();
-  const ups=allUpcoming();
   /* featured */
   const soon=ups.find(({d})=>dayDiff(d.when)<=2);
   let feat;
-  if(soon){const sp=spotOf(soon.d);const img=photoOf(sp)||(soon.p.photoId?imgSrc(soon.p.photoId):"");
-    feat=`<button class="feature press" data-a="date" data-x="${esc(soon.p.id)}:${esc(soon.d.id)}">${img?`<img src="${esc(img)}" alt="" onerror="this.remove()">`:`<span class="glow"></span>`}<span class="shade"></span>
+  if(soon){const sp=spotOf(soon.d);
+    const vimg=photoOf(sp)||"";
+    feat=`<button class="feature press" data-a="date" data-x="${esc(soon.p.id)}:${esc(soon.d.id)}">${vimg?`<img src="${esc(vimg)}" alt="" onerror="this.remove()">`:`<span class="glow"></span>`}<span class="shade"></span>
       <span class="tag"><i></i>${esc(relDay(soon.d.when))}</span>
-      <span class="copy"><b>${esc(first(soon.p.name))} at ${esc(placeName(soon.d))}</b><span>${esc([fmtTime(soon.d.when),sp&&sp.area].filter(Boolean).join(" · "))}</span></span><span class="go">${ic("arrow","sm")}</span></button>`}
+      <span class="who">${av(soon.p,54)}<span style="min-width:0"><b>${esc(first(soon.p.name))}</b><span>${esc([fmtTime(soon.d.when),placeName(soon.d)].filter(Boolean).join(" · "))}</span></span></span><span class="go">${ic("arrow","sm")}</span></button>`}
   else{const tdy=todayStr();const ev=eventsSorted().find(e=>e.date===tdy&&hasPh(e));const fav=S.spots.filter(s=>!s.closed&&hasPh(s)&&(s.fav||s.rating>=4));const pick=ev||fav[new Date().getDate()%Math.max(1,fav.length)]||S.spots.find(hasPh);
     feat=`<button class="feature press" data-a="tab" data-x="discover">${pick?`<img src="${esc(photoOf(pick))}" alt="" onerror="this.remove()">`:`<span class="glow"></span>`}<span class="shade"></span>
       <span class="tag"><i></i>Tonight</span><span class="copy"><b>Make your next night a good one.</b><span>${pick?esc(pick.name)+(pick.area?" · "+esc(pick.area):""):"Find your kind of night"}</span></span><span class="go">${ic("arrow","sm")}</span></button>`}
@@ -479,7 +484,7 @@ SCREENS.me=function(){
     <div class="grouptitle">Insights</div>
     <div class="group"><div class="gi"><span class="gic">${ic("dollar","sm")}</span><span class="lab">Spent this month</span><span class="val">${money(spentM)}</span></div><div class="gi"><span class="gic">${ic("star","sm")}</span><span class="lab">Places you've been</span><span class="val">${S.spots.filter(s=>s.status==="Been").length}</span></div></div>
     <div class="grouptitle">App</div>
-    <div class="group">${gi("privacy",null,"shield","Privacy & Security")}${gi("faceid",null,"faceid","Face ID",null,false,`<span class="toggle${fid?" on":""}"></span>`)}${gi("pin",null,"lock","PIN")}${gi("appearance",null,"palette","Appearance","Dark")}${gi("integrations",null,"link","Integrations")}${gi("calconn",null,"cal","Calendar connection","iPhone")}${gi("aikey",null,"ai","AI settings")}</div>
+    <div class="group">${gi("privacy",null,"shield","Privacy & Security")}${gi("faceid",null,"faceid","Face ID",null,false,`<span class="toggle${fid?" on":""}"></span>`)}${gi("pin",null,"lock","PIN")}${gi("appearance",null,"palette","Appearance",themeLabel())}${gi("integrations",null,"link","Integrations")}${gi("calconn",null,"cal","Calendar connection","iPhone")}${gi("aikey",null,"ai","AI settings")}</div>
     <p style="text-align:center;color:var(--mut2);font-size:12px;margin-top:26px">Kas Upgrade 3.0 · Private</p>`;
 };
 
@@ -493,9 +498,8 @@ PUSH.person=function(v){
   const p=S.people.find(x=>x.id===v.id);if(!p)return navbar("")+`<div class="empty"><b>Not found</b></div>`;
   const photos=personPhotos(p);const age=pAge(p);
   const sub=[p.city||p.region,p.whereMet].filter(Boolean).join(" · ");
-  const hero=`<div class="hero">${photos.length?`<div class="gal" data-wire="gal">${photos.map(id=>ph(imgSrc(id),p.name)).join("")}</div>`:`<span class="ph" style="position:absolute;inset:0;${grad(p.name)}"></span><span class="ini-big">${esc(initials(p.name))}</span>`}
-    <span class="shade"></span>${photos.length>1?`<span class="dots">${photos.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</span>`:""}
-    <div class="name"><h1>${esc(first(p.name))}${age?", "+age:""}</h1>${sub?`<p>${esc(sub)}</p>`:""}<button class="status-pill" data-a="pstatus" data-x="${esc(p.id)}">${esc(p.status||"Talking")}${p.kind?" · "+esc(p.kind):""} ${ic("chev","xs")}</button></div></div>`;
+  const hero=`<div class="phead"><div class="top">${ph(photos[0]?imgSrc(photos[0]):"",p.name,"pav")}<div style="min-width:0"><h1>${esc(first(p.name))}${age?", "+age:""}</h1>${sub?`<p>${esc(sub)}</p>`:""}<button class="status-pill" data-a="pstatus" data-x="${esc(p.id)}">${esc(p.status||"Talking")}${p.kind?" · "+esc(p.kind):""} ${ic("chev","xs")}</button></div></div>
+    ${photos.length>1?`<div class="pstrip">${photos.slice(1).map(id=>ph(imgSrc(id),p.name)).join("")}</div>`:""}</div>`;
   const dg=digits(p),ig=igHandle(p.instagram);
   const acts=`<div class="actions4">
     ${dg?`<a class="press" href="sms:+${dg}">${ic("msg")}Text</a>`:`<button class="press off" data-a="editperson" data-x="${esc(p.id)}">${ic("msg")}Text</button>`}
@@ -531,7 +535,7 @@ PUSH.person=function(v){
     ${photos.length?`<div class="memgrid">${photos.map(id=>`<button class="ph${id===p.photoId?" on":""}" data-a="pphoto" data-x="${esc(p.id)}|${esc(id)}"><img src="${esc(imgSrc(id))}" alt="" loading="lazy" onerror="this.remove()"></button>`).join("")}</div>`:`<p class="note ph-text">Add her photos to make this feel like her.</p>`}</div>`;
   const g=giftFor(p);
   const gift=`<a class="card press" style="display:flex;align-items:center;gap:14px" href="${esc(g.url)}" target="_blank" rel="noopener"><span class="gic" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--acc-soft);color:var(--acc2)">${ic("gift","sm")}</span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><b style="font-size:15px">Gift idea · ${esc(g.label)}</b><span style="font-size:13px;color:var(--mut)">${esc(g.why)} · ${esc(g.site)}</span></span>${ic("chev","sm")}</a>`;
-  return navbar(p.name,`<button class="iconbtn glass" data-a="pmore" data-x="${esc(p.id)}" aria-label="More">${ic("more","sm")}</button>`,true)+hero+acts
+  return navbar("",`<button class="iconbtn" data-a="pmore" data-x="${esc(p.id)}" aria-label="More">${ic("more","sm")}</button>`)+hero+acts
     +`<div class="stack" style="gap:10px;margin-top:18px">${next}${about}${notes}${dates}${ratings}${placesC}${mem}${gift}</div>`;
 };
 
@@ -1147,7 +1151,8 @@ const A={
   rmline:async(el)=>{const [k,i]=el.dataset.x.split(":");const n=S.notes||{};const arr=[...(n[k]||[])];arr.splice(+i,1);try{await S.db.doc("me/notes").set({...n,[k]:arr,updatedAt:Date.now()});toast("Removed")}catch(e){toast("Couldn't save. Try again.")}},
   addline:(el)=>{const k=el.dataset.x;sheet({title:k==="openers"?"New opener":"New game",right:`<button class="done" id="al-save">Add</button>`,body:`<div class="fgroup">${F.area("al","Line","","",4)}</div>`,wire:api=>{api.q("#al").focus();api.q("#al-save").onclick=async()=>{const v=val(api,"al");if(!v||!needDb())return;const n=S.notes||{};try{await S.db.doc("me/notes").set({...n,[k]:[...(n[k]||[]),v],updatedAt:Date.now()});api.close();toast("Added")}catch(e){toast("Couldn't save. Try again.")}}}})},
   taste:(el)=>tasteSheet(el.dataset.x),looking:()=>lookingSheet(),privacy:()=>privacySheet(),faceid:(el)=>toggleFaceId(el.querySelector(".toggle")),pin:()=>pinSheet(),
-  appearance:()=>infoSheet("Appearance",`<div class="fgroup"><div class="f"><span style="flex:1">Dark</span><span style="color:var(--acc2)">${ic("check","sm")}</span></div></div><p class="fhint" style="margin:0">Kas Upgrade is designed for dark mode only.</p>`),
+  appearance:()=>{const cur=()=>(window.kuTheme?kuTheme.get():"auto");const body=()=>`<div class="fgroup">${[["auto","Automatic","Follows your iPhone"],["light","Light",""],["dark","Dark",""]].map(([k,l,h])=>`<button class="f" data-th="${k}" style="width:100%;text-align:left"><span style="flex:1">${l}${h?`<small style="display:block;color:var(--mut);font-size:13px">${h}</small>`:""}</span>${cur()===k?`<span style="color:var(--acc2)">${ic("check","sm")}</span>`:""}</button>`).join("")}</div>`;
+    sheet({title:"Appearance",body:body(),wire:api=>{api.el.addEventListener("click",e=>{const b=e.target.closest("[data-th]");if(!b)return;window.kuTheme&&kuTheme.set(b.dataset.th);api.setBody(body());refresh()})}})},
   integrations:()=>infoSheet("Integrations",`<div class="fgroup"><div class="f"><span style="flex:1">Google Sheet storage</span><span style="color:var(--good)">${S.db?"Connected":"…"}</span></div><div class="f"><span style="flex:1">iPhone Calendar</span><span style="color:var(--good)">Via calendar files</span></div><button class="f" data-a="aikey" style="width:100%"><span style="flex:1;text-align:left">Screenshot AI</span>${ic("chev","xs")}</button></div><p class="fhint" style="margin:0">Events, movies and new ideas are added by Claude into your sheet.</p>`),
   calconn:()=>infoSheet("Calendar connection",`<p class="note">Dates go to your iPhone calendar. Tap <b>Add to Calendar</b> on any date — it opens a calendar file with reminders the day before, 2 hours before, and a “text her to confirm” alert that morning.</p>`),
   aikey:()=>aiKeySheet(),
