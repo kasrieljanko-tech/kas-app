@@ -501,11 +501,10 @@ PUSH.person=function(v){
   const hero=`<div class="phead"><div class="top">${ph(photos[0]?imgSrc(photos[0]):"",p.name,"pav")}<div style="min-width:0"><h1>${esc(first(p.name))}${age?", "+age:""}</h1>${sub?`<p>${esc(sub)}</p>`:""}<button class="status-pill" data-a="pstatus" data-x="${esc(p.id)}">${esc(p.status||"Talking")}${p.kind?" · "+esc(p.kind):""} ${ic("chev","xs")}</button></div></div>
     ${photos.length>1?`<div class="pstrip">${photos.slice(1).map(id=>ph(imgSrc(id),p.name)).join("")}</div>`:""}</div>`;
   const dg=digits(p),ig=igHandle(p.instagram);
-  const acts=`<div class="actions4">
-    ${dg?`<a class="press" href="sms:+${dg}">${ic("msg")}Text</a>`:`<button class="press off" data-a="editperson" data-x="${esc(p.id)}">${ic("msg")}Text</button>`}
-    ${dg?`<a class="press" href="tel:+${dg}">${ic("phone")}Call</a>`:`<button class="press off" data-a="editperson" data-x="${esc(p.id)}">${ic("phone")}Call</button>`}
-    ${ig?`<a class="press" href="https://www.instagram.com/${esc(ig)}/" target="_blank" rel="noopener">${ic("ig")}Instagram</a>`:`<button class="press off" data-a="editperson" data-x="${esc(p.id)}">${ic("ig")}Instagram</button>`}
-    <button class="press" data-a="plan" data-x="${esc(p.id)}">${ic("heart")}Plan Date</button></div>`;
+  const acts=`<div class="pacts">
+    ${dg?`<a class="press pa main" href="sms:+${dg}"><span>${ic("msg")}</span>Text</a><a class="press pa" href="tel:+${dg}"><span>${ic("phone")}</span>Call</a>`:`<button class="press pa" data-a="editperson" data-x="${esc(p.id)}"><span>${ic("phone")}</span>Add number</button>`}
+    ${ig?`<a class="press pa" href="https://www.instagram.com/${esc(ig)}/" target="_blank" rel="noopener"><span>${ic("ig")}</span>Instagram</a>`:""}
+    <button class="press pa" data-a="plan" data-x="${esc(p.id)}"><span>${ic("heart")}</span>Plan date</button></div>`;
   const up=upcoming(p)[0],past=pastDates(p);
   let next;
   if(up){const sp=spotOf(up);next=`<div class="card"><h3>Next</h3><button class="next press" style="width:100%;text-align:left" data-a="date" data-x="${esc(p.id)}:${esc(up.id)}">${ph(photoOf(sp),placeName(up))}<span class="tx"><b>${esc(placeName(up))}</b><span>${esc(fmtWhen(up.when))}${sp&&sp.area?" · "+esc(sp.area):""}</span>${confState(up)}</span>${ic("chev","sm")}</button>
@@ -522,7 +521,7 @@ PUSH.person=function(v){
   const notes=`<div class="card press" role="button" data-a="pnotes" data-x="${esc(p.id)}"><h3>Notes</h3>${p.notes?`<p class="note">${esc(p.notes)}</p>`:`<p class="note ph-text">Things she told you, her dog's name…</p>`}${p.review?`<h3 style="margin-top:16px">Your take</h3><p class="note">${esc(p.review)}</p>`:""}</div>`;
   const dr=(d,isUp)=>{const w=parseLocal(d.when);return `<button class="it" data-a="date" data-x="${esc(p.id)}:${esc(d.id)}"><span class="dbox${isUp?" up":""}"><small>${esc(w.toLocaleDateString("en-US",{month:"short"}))}</small><b>${w.getDate()}</b></span><span class="tx"><b>${esc(placeName(d))}</b><span>${esc(fmtTime(d.when))}${d.rating?" · "+"♥".repeat(d.rating):""}${d.spent?" · "+money(d.spent):""}${d.debrief&&d.debrief.vibe&&d.debrief.vibe.length?" · "+esc(d.debrief.vibe.slice(0,2).join(", ")):""}</span></span>${ic("chev","xs")}</button>`};
   const ups=upcoming(p);const spent=(p.dates||[]).reduce((t,d)=>t+(d.spent||0),0);
-  const dates=`<div class="card"><h3 style="display:flex;justify-content:space-between">Dates${past.length?" · "+past.length+" so far":""}${spent?`<span style="font-weight:500">${money(spent)} total</span>`:""}</h3><div class="tl">
+  const dates=(!ups.length&&!past.length)?"":`<div class="card"><h3 style="display:flex;justify-content:space-between">Dates${past.length?" · "+past.length+" so far":""}${spent?`<span style="font-weight:500">${money(spent)} total</span>`:""}</h3><div class="tl">
     ${ups.length?`<div class="sublbl">Upcoming</div>`+ups.map(d=>dr(d,true)).join(""):""}
     ${past.length?`<div class="sublbl">Past</div>`+past.slice(0,8).map(d=>dr(d,false)).join(""):""}
     ${!ups.length&&!past.length?`<p class="note ph-text">No dates yet.</p>`:""}</div>
@@ -535,8 +534,8 @@ PUSH.person=function(v){
     ${photos.length?`<div class="memgrid">${photos.map(id=>`<button class="ph${id===p.photoId?" on":""}" data-a="pphoto" data-x="${esc(p.id)}|${esc(id)}"><img src="${esc(imgSrc(id))}" alt="" loading="lazy" onerror="this.remove()"></button>`).join("")}</div>`:`<p class="note ph-text">Add her photos to make this feel like her.</p>`}</div>`;
   const g=giftFor(p);
   const gift=`<a class="card press" style="display:flex;align-items:center;gap:14px" href="${esc(g.url)}" target="_blank" rel="noopener"><span class="gic" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--acc-soft);color:var(--acc2)">${ic("gift","sm")}</span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><b style="font-size:15px">Gift idea · ${esc(g.label)}</b><span style="font-size:13px;color:var(--mut)">${esc(g.why)} · ${esc(g.site)}</span></span>${ic("chev","sm")}</a>`;
-  return navbar("",`<button class="iconbtn" data-a="pmore" data-x="${esc(p.id)}" aria-label="More">${ic("more","sm")}</button>`)+hero+acts
-    +`<div class="stack" style="gap:10px;margin-top:18px">${next}${about}${notes}${dates}${ratings}${placesC}${mem}${gift}</div>`;
+  return navbar("",`<button class="iconbtn" data-a="pmore" data-x="${esc(p.id)}" aria-label="More">${ic("more","sm")}</button>`)+`<div class="pp">`+hero+acts
+    +`<div class="stack">${next}${about}${notes}${dates}${ratings}${placesC}${mem}${gift}</div></div>`;
 };
 
 /* ---------- PLACES ---------- */

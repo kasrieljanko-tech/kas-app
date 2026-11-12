@@ -714,3 +714,25 @@ body.has-push .tabbar{transform:translateY(calc(100% + var(--sb) + 20px))}
 #tab.enter .feature>img{animation:settle 1.4s var(--ease) both}
 @keyframes settle{from{transform:scale(1.08)}to{transform:scale(1.02)}}
 @media (prefers-reduced-motion:reduce){#tab.enter>*,#tab.enter .feature>img,.pulse{animation:none}}
+
+/* profile v4.1: centered header, round action buttons, open sections instead of boxes */
+.pp .phead{align-items:center;text-align:center;padding-top:0}
+.pp .phead .top{flex-direction:column;gap:12px}
+.pp .phead .pav{width:116px;height:116px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.pp .phead .pav .ini{font-size:40px}
+.pp .phead h1{font-size:34px}
+.pp .phead .status-pill{margin-top:12px}
+.pp .pstrip{justify-content:center}
+.pacts{display:flex;justify-content:center;gap:22px;padding:0 var(--pad);margin-top:20px}
+.pacts .pa{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--fg);min-width:56px}
+.pacts .pa>span{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--s1);color:var(--fg)}
+.pacts .pa.main>span{background:var(--acc);color:#fff;box-shadow:0 6px 16px rgba(255,61,127,.35)}
+.pp>.stack{margin-top:22px;gap:0}
+.pp .card{background:none;border-radius:0;margin:0 var(--pad);padding:20px 0;border-top:1px solid var(--line)}
+.pp .card+.card{margin-top:0}
+.pp .card h3{font-size:17px;font-weight:800;letter-spacing:-.025em;color:var(--fg);margin-bottom:12px}
+.pp .card h3 .textbtn,.pp .card h3 button{font-weight:600;letter-spacing:0}
+.pp .card .cta{background:var(--inv);color:var(--on-inv)}
+.pp .card .cta.ghost{background:var(--s1);color:var(--fg)}
+.pp .kv .r{border-top-color:var(--line)}
+.pp a.card[style*="display:flex"]{border-top:1px solid var(--line)}
