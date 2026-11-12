@@ -519,7 +519,7 @@ PUSH.person=function(v){
   const photos=personPhotos(p);const age=pAge(p);
   const sub=[p.city||p.region,p.whereMet].filter(Boolean).join(" · ");
   const hero=`<div class="phead"><div class="top">${ph(photos[0]?imgSrc(photos[0]):"",p.name,"pav")}<div style="min-width:0"><h1>${esc(first(p.name))}${age?", "+age:""}</h1>${sub?`<p>${esc(sub)}</p>`:""}<button class="status-pill" data-a="pstatus" data-x="${esc(p.id)}">${esc(p.status||"Talking")}${p.kind?" · "+esc(p.kind):""} ${ic("chev","xs")}</button></div></div>
-    ${photos.length>1?`<div class="pstrip">${photos.slice(1).map(id=>ph(imgSrc(id),p.name)).join("")}</div>`:""}</div>`;
+    <div class="pstrip">${photos.slice(1).map(id=>`<button class="press" data-a="pphoto" data-x="${esc(p.id)}|${esc(id)}" aria-label="Photo">${ph(imgSrc(id),p.name)}</button>`).join("")}<label class="padd press" for="ph-add-${esc(p.id)}">${ic("plus")}<span>Add photo</span></label><input type="file" id="ph-add-${esc(p.id)}" accept="image/*" hidden data-wire="pvphoto" data-x="${esc(p.id)}"></div></div>`;
   const dg=digits(p),ig=igHandle(p.instagram);
   const acts=`<div class="pacts">
     ${dg?`<a class="press pa main" href="sms:+${dg}"><span>${ic("msg")}</span>Text</a><a class="press pa" href="tel:+${dg}"><span>${ic("phone")}</span>Call</a>`:`<button class="press pa" data-a="editperson" data-x="${esc(p.id)}"><span>${ic("phone")}</span>Add number</button>`}
