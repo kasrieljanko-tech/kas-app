@@ -17,6 +17,8 @@ const PSTAT=["Talking","Date set","Dating","Done"];
 const KINDS=["Serious","Religious","Sneaky link"];
 const REGIONS=["New York","Brazil","Israel","Other"];
 const PRATES=[["chat","Chat"],["looks","Looks"],["feel","How I feel"]];
+const HEART='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>';
+const RWORD=["Not rated","Meh","Okay","Good","Great","Wow"];
 const AREAS=["Williamsburg / Greenpoint","Manhattan","Near home","Astoria / LIC","Anywhere in Brooklyn"];
 const STYLES=["Cocktail bars","Music / dancing","Something active or different","Nice dinner"];
 const BUDGETS=["Under $80","$80–150","$150–300","Depends on the girl"];
@@ -526,7 +528,8 @@ PUSH.person=function(v){
     ${!ups.length&&!past.length?`<p class="note ph-text">No dates yet.</p>`:""}</div>
     <button class="textbtn" style="margin-top:10px" data-a="plan" data-x="${esc(p.id)}">+ Plan a date</button></div>`;
   const rt=p.ratings||{};
-  const ratings=`<div class="card"><h3>Ratings</h3>${PRATES.map(([k,l])=>`<div class="rate-row"><span>${l}</span><span class="hearts sm">${[1,2,3,4,5].map(n=>`<button class="${n<=(rt[k]||0)?"on":""}" data-a="prate" data-x="${esc(p.id)}:${k}:${n}" aria-label="${l} ${n}">♥</button>`).join("")}</span></div>`).join("")}</div>`;
+  const rvals=PRATES.map(([k])=>rt[k]||0).filter(Boolean);const ravg=rvals.length?(rvals.reduce((a,b)=>a+b,0)/rvals.length):0;
+  const ratings=`<div class="card"><h3 style="display:flex;justify-content:space-between;align-items:baseline">Your rating${ravg?`<span class="ravg">${ravg.toFixed(1)}<small>/5</small></span>`:""}</h3><div class="rlist">${PRATES.map(([k,l])=>{const v=rt[k]||0;return `<div class="rrow"><div class="rl"><b>${l}</b><span class="${v?"on":""}">${RWORD[v]}</span></div><span class="hearts big">${[1,2,3,4,5].map(n=>`<button class="${n<=v?"on":""}" data-a="prate" data-x="${esc(p.id)}:${k}:${n}" aria-label="${l} ${n} of 5">${HEART}</button>`).join("")}</span></div>`}).join("")}</div></div>`;
   const places=[...new Map(past.map(d=>[d.spotId||d.spotName,d])).values()].filter(d=>d.spotId||d.spotName);
   const placesC=places.length?`<div class="card"><h3>Places together</h3><div class="tags">${places.map(d=>{const s=spotOf(d);return s?`<button class="tag" data-a="spot" data-x="${esc(s.id)}">${esc(s.name)}</button>`:`<span class="tag">${esc(d.spotName)}</span>`}).join("")}</div></div>`:"";
   const mem=`<div class="card"><h3 style="display:flex;justify-content:space-between">Memories<label class="textbtn" style="font-size:13px" for="pv-photo-${esc(p.id)}">Add photo</label></h3><input type="file" id="pv-photo-${esc(p.id)}" accept="image/*" hidden data-wire="pvphoto" data-x="${esc(p.id)}">
@@ -884,7 +887,7 @@ function openDate(pid,did){
         <div class="listpick">${list.map(x=>`<button data-sp="${esc(x.id)}">${ph(photoOf(x),x.name)}<span class="tx"><b>${esc(x.name)}</b><span>${esc([x.area,typeLabel(x.type)].filter(Boolean).join(" · "))}</span></span>${x.id===st.spotId?ic("check","sm"):""}</button>`).join("")||`<span class="fhint">No saved places match.</span>`}</div>
         <div class="fgroup"><div class="f"><input id="dd-addr" placeholder="Or type an address" style="text-align:left" autocomplete="street-address"></div></div><button class="cta sm ghost" id="dd-addr-ok">Use this address</button>`
       :`<div class="next">${ph(photoOf(sp),sp?sp.name:st.spotName||"?")}<span class="tx"><b>${esc(sp?sp.name:st.spotName||"Somewhere")}</b><span>${esc(where)}</span>${murl?`<a href="${esc(murl)}" target="_blank" rel="noopener" style="font-size:13px;color:var(--acc2);font-weight:560">Directions</a>`:""}</span><button class="pillbtn" id="dd-chg">Change</button></div>`}
-      ${past?`<div class="flabel">How was it?</div><div class="hearts">${[1,2,3,4,5].map(n=>`<button class="${n<=(d0.rating||0)?"on":""}" data-rt="${n}">♥</button>`).join("")}</div>
+      ${past?`<div class="flabel">How was it?</div><div class="hearts">${[1,2,3,4,5].map(n=>`<button class="${n<=(d0.rating||0)?"on":""}" data-rt="${n}">${HEART}</button>`).join("")}</div>
         <div class="btnrow"><button class="pillbtn${d0.outcome==="great"?" acc":""}" data-oc="great">See her again</button><button class="pillbtn${d0.outcome==="unsure"?" acc":""}" data-oc="unsure">Not sure</button><button class="pillbtn${d0.outcome==="done"?" acc":""}" data-oc="done">Not it</button></div>`:""}
       <div class="flabel">Day</div><div class="daypick">${days.map((d,i)=>{const k=dkey(d);return `<button aria-pressed="${st.wd===k}" data-sd="${k}"><small>${i===0&&k===dkey(t0)?"Today":d.toLocaleDateString("en-US",{weekday:"short"})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString("en-US",{month:"short"})}</small></button>`}).join("")}</div>
       <div class="flabel">Time</div><div class="daypick">${times.map(t=>`<button class="chip" style="width:auto;height:38px;padding:0 14px;flex-direction:row" aria-pressed="${st.wt===t}" data-stm="${t}">${fmtT(t)}</button>`).join("")}</div>
@@ -943,7 +946,7 @@ const VIBES_AFTER=["Great chemistry","Easy conversation","She's funny","Kissed",
 function openDebrief(pid,did){const p=S.people.find(x=>x.id===pid);if(!p)return;const d=(p.dates||[]).find(x=>x.id===did);if(!d)return;
   const prev=d.debrief||{};const st={rating:d.rating||0,outcome:d.outcome||"",vibe:[...(prev.vibe||[])]};const fn=first(p.name);
   const body=`<p class="lead">${esc(placeName(d))} · ${esc(fmtDay(d.when))}. Quick check-in — it saves to ${esc(fn)}'s profile.</p>
-    <div class="flabel">How was it?</div><div class="hearts" id="db-h">${[1,2,3,4,5].map(n=>`<button data-n="${n}" aria-label="${n}">♥</button>`).join("")}</div>
+    <div class="flabel">How was it?</div><div class="hearts" id="db-h">${[1,2,3,4,5].map(n=>`<button data-n="${n}" aria-label="${n}">${HEART}</button>`).join("")}</div>
     <div class="flabel">See her again?</div><div class="seg" style="margin:0" id="db-o">${[["great","Yes"],["unsure","Not sure"],["done","No"]].map(([k,l])=>`<button data-o="${k}">${l}</button>`).join("")}</div>
     <div class="flabel">The vibe</div><div class="chips wrap-ok" style="padding:0" id="db-v">${VIBES_AFTER.map(v=>`<button class="chip" data-v="${esc(v)}">${esc(v)}</button>`).join("")}</div>
     <div class="fgroup">${F.area("db-talk","What did you talk about?",prev.talked||"","Her family, work, a trip she's planning…",3)}${F.area("db-rem","Remember for next time",prev.remember||"","Doesn't drink, loves sushi, has a dog named Milo…",2)}</div>
