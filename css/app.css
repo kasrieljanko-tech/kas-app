@@ -774,3 +774,16 @@ input,textarea{caret-color:var(--acc)}
 .qp{flex:1 1 0;min-width:0;justify-content:center;padding:0 8px;gap:6px;font-size:13.5px}
 .nudge .row b{white-space:normal;line-height:1.25;text-wrap:balance}
 .qp:not(.main) .ic{display:none}
+
+/* Liquid-glass tab bar (iOS 26 style) */
+.tabbar{background:rgba(255,255,255,.42);border:.5px solid rgba(255,255,255,.7);
+  backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);
+  box-shadow:0 10px 30px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.8),inset 0 -1px 0 rgba(0,0,0,.04)}
+html[data-theme="dark"] .tabbar{background:rgba(40,36,34,.38);border-color:rgba(255,255,255,.14);
+  box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}
+.tabbar button[aria-current="page"]{background:rgba(18,18,18,.88);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 4px 12px rgba(0,0,0,.18)}
+html[data-theme="dark"] .tabbar button[aria-current="page"]{background:rgba(255,255,255,.9);color:#100E0D;box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(0,0,0,.3)}
+.tabbar button{color:var(--fg2)}
+.navbar{background:transparent}
+.navbar .iconbtn{background:rgba(255,255,255,.55);border:.5px solid rgba(255,255,255,.7);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);box-shadow:0 4px 14px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.8);color:var(--fg)}
+html[data-theme="dark"] .navbar .iconbtn{background:rgba(40,36,34,.5);border-color:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
