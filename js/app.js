@@ -761,6 +761,7 @@ function editPerson(person){
         await ref.set({...strip(p),updatedAt:Date.now()});api.close();toast(person?"Saved":"Added");
         if(person&&person.status!=="Done"&&p.status==="Done")setTimeout(()=>motivation(p.name),300);
         if(!person)setTimeout(()=>openPerson(ref.id),250);
+        if(PHONE&&p.birthday&&p.birthday!==((person&&person.birthday)||"")){const pp={...p,id:ref.id};setTimeout(()=>sheet({title:"Birthday",body:`<p class="lead">Add ${esc(first(p.name))}'s birthday to your iPhone calendar? It repeats every year with a reminder the day before.</p>`,foot:`<a class="cta" href="${esc(icsBdayUrl(pp))}" target="_blank" rel="noopener" data-sx>${ic("cal","sm")} Add to Calendar</a><button class="cta ghost" data-sx>Not now</button>`}),person?350:900)}
       }catch(e){b.disabled=false;b.textContent="Save";toast(uploadErr(e))}}}})}
 function openPerson(id){push({v:"person",id})}
 
