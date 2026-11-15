@@ -324,8 +324,7 @@ SCREENS.home=function(){
     feat=`<button class="bigdate press" data-a="date" data-x="${esc(soon.p.id)}:${esc(soon.d.id)}">
       <span class="bd-when">${esc(w.toLocaleDateString("en-US",{weekday:"long"}))} · ${esc(fmtTime(soon.d.when))}</span>
       <span class="bd-big" style="font-size:${fs}px"><span>${esc(nm)}</span><em>at</em><span>${esc(pl)}</span></span>
-      <span class="bd-row">${av(soon.p,58)}${vimg?`<img class="bd-v" src="${esc(vimg)}" alt="" onerror="this.remove()">`:""}<span class="bd-tx"><b>${esc(togo)}</b><span>${esc([(sp&&sp.area)||"",soon.d.confirmed?"Confirmed":""].filter(Boolean).join(" · ")||"Tap for details")}</span></span></span></button>
-      <div class="bd-next">${waiting?`<button class="press" data-a="person" data-x="${esc(waiting.id)}"><small>Waiting on you</small><b>${esc(first(waiting.name))}</b></button>`:""}${idea?`<button class="press" data-a="spot" data-x="${esc(idea.id)}"><small>Tonight?</small><b>${esc(idea.name)}</b></button>`:""}</div>`}
+      <span class="bd-row">${av(soon.p,58)}${vimg?`<img class="bd-v" src="${esc(vimg)}" alt="" onerror="this.remove()">`:""}<span class="bd-tx"><b>${esc(togo)}</b><span>${esc([(sp&&sp.area)||"",soon.d.confirmed?"Confirmed":""].filter(Boolean).join(" · ")||"Tap for details")}</span></span></span></button>`}
   else{const tdy=todayStr();const ev=eventsSorted().find(e=>e.date===tdy&&hasPh(e));const fav=S.spots.filter(s=>!s.closed&&hasPh(s)&&(s.fav||s.rating>=4));const pick=ev||fav[new Date().getDate()%Math.max(1,fav.length)]||S.spots.find(hasPh);
     feat=`<button class="feature press" data-a="tab" data-x="discover">${pick?`<img src="${esc(photoOf(pick))}" alt="" onerror="this.remove()">`:`<span class="glow"></span>`}<span class="shade"></span>
       <span class="tag"><i></i>Tonight</span><span class="copy"><b>Make your next night a good one.</b><span>${pick?esc(pick.name)+(pick.area?" · "+esc(pick.area):""):"Find your kind of night"}</span></span><span class="go">${ic("arrow","sm")}</span></button>`}
@@ -344,7 +343,7 @@ SCREENS.home=function(){
     const img=k==="movies"?((S.movies&&S.movies.movies||[]).map(m=>m.cover_image_url).find(Boolean)||""):(list.map(photoOf).find(Boolean)||"");
     const n=k==="movies"?((S.movies&&S.movies.movies)||[]).length:list.length;
     return `<button class="catcard press" data-a="dcat" data-x="${k}">${img?`<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:`<span class="fill" style="${grad(l)}"></span>`}<span class="shade"></span><span class="ci">${ic(c[2],"sm")}</span><span class="lbl"><b>${l}</b><span>${n?n+(k==="events"?" coming up":k==="movies"?" showing":" picks"):"Explore"}</span></span></button>`});
-  return (soon?top.replace(/<h1 class="home-h"[\s\S]*?<\/h1>/,""):top.replace('<h1 class="home-h"',stories+'<h1 class="home-h"'))+feat+quick+nudges()+sechead("Your Plans",`<button data-a="tab" data-x="plans">See all</button>`)+plans
+  return (soon?top.replace(/<h1 class="home-h"[\s\S]*?<\/h1>/,""):top.replace('<h1 class="home-h"',stories+'<h1 class="home-h"'))+feat+moves()+quick+sechead("Your Plans",`<button data-a="tab" data-x="plans">See all</button>`)+plans
     +sechead("For You This Week",`<button data-a="tab" data-x="discover">Discover</button>`)+`<div class="rail" data-rail="hfy">${fy.join("")}</div>`;
 };
 function confState(d){const hrs=(parseLocal(d.when)-Date.now())/36e5;
@@ -354,6 +353,23 @@ function confState(d){const hrs=(parseLocal(d.when)-Date.now())/36e5;
 function datePlanCard(p,d){const sp=spotOf(d);const img=p.photoId?imgSrc(p.photoId):photoOf(sp);
   return `<button class="plancard press" data-a="date" data-x="${esc(p.id)}:${esc(d.id)}">${ph(img,p.name)}<span class="tx"><span class="when">${esc(relDay(d.when))} · ${esc(fmtTime(d.when))}</span><b>${esc(first(p.name))}</b><span class="pl">${esc(placeName(d))}${sp&&sp.area?" · "+esc(sp.area):""}</span>${confState(d)}</span></button>`}
 function eventPlanCard(e){return `<button class="plancard press" data-a="idea" data-x="${esc(e.id)}">${ph(photoOf(e),e.name)}<span class="tx"><span class="when">${esc(relDayShort(e.date))}${e.time?" · "+esc(e.time):""}</span><b>${esc(e.name)}</b><span class="pl">${esc(e.venue||e.area||"")}</span><span class="state"><i style="background:var(--warn)"></i>Event</span></span></button>`}
+function moves(){
+  const out=[],seen=new Set(),t0=new Date();t0.setHours(0,0,0,0);
+  const row=(p,dot,title,sub,btn,cls,a,x)=>`<div class="mv"><button class="mv-who press" data-a="person" data-x="${esc(p.id)}" aria-label="${esc(first(p.name))}">${av(p,44)}${dot?`<s></s>`:""}</button><button class="mv-t press" data-a="${a}" data-x="${esc(x)}"><b>${title}</b><span>${sub}</span></button><button class="mv-b ${cls} press" data-a="${a}" data-x="${esc(x)}">${btn}</button></div>`;
+  const db=allPast().find(({p,d})=>vis(p)&&!d.debriefed&&!d.rated&&-dayDiff(d.when)<=14);
+  if(db){seen.add(db.p.id);const ago=-dayDiff(db.d.when);out.push(row(db.p,false,`How was ${esc(first(db.p.name))}?`,`${esc(placeName(db.d))} · ${ago<=0?"tonight":ago===1?"last night":esc(fmtDay(db.d.when))}`,"Rate","g","debrief",db.p.id+":"+db.d.id))}
+  const fu=S.people.filter(vis).map(p=>({p,d:recentFollowUp(p)})).filter(x=>x.d&&!seen.has(x.p.id)).sort((a,b)=>parseLocal(b.d.when)-parseLocal(a.d.when))[0];
+  if(fu){seen.add(fu.p.id);out.push(row(fu.p,true,`Text ${esc(first(fu.p.name))}`,`Follow up after ${esc(placeName(fu.d))}`,"Write","p","followup",fu.p.id+":"+fu.d.id))}
+  allUpcoming().filter(({p,d})=>vis(p)&&!d.confirmed&&(parseLocal(d.when)-Date.now())/36e5<=48&&!seen.has(p.id)).slice(0,1).forEach(({p,d})=>{seen.add(p.id);
+    out.push(row(p,true,`Confirm ${esc(relDay(d.when).toLowerCase()==="tonight"?"tonight":relDay(d.when))} with ${esc(first(p.name))}`,`${esc(placeName(d))} · ${esc(fmtTime(d.when))}`,"Confirm","p","confirm",p.id+":"+d.id))});
+  const bd=S.people.filter(p=>p.birthday&&p.status!=="Done"&&vis(p)).map(p=>({p,n:nextBday(p.birthday)})).filter(x=>x.n&&(x.n-t0)/864e5<=14).sort((a,b)=>a.n-b.n)[0];
+  if(bd){const n=Math.round((bd.n-t0)/864e5);out.push(row(bd.p,false,`${esc(first(bd.p.name))}'s birthday ${n===0?"is today":n===1?"is tomorrow":"in "+n+" days"}`,`${esc(giftFor(bd.p).label)}?`,"Open","g","person",bd.p.id))}
+  const quiet=S.people.filter(p=>vis(p)&&p.status==="Talking"&&!upcoming(p).length&&!seen.has(p.id)).sort((a,b)=>(a.updatedAt||0)-(b.updatedAt||0))[0];
+  if(quiet&&out.length<4)out.push(row(quiet,false,`Ask ${esc(first(quiet.name))} out`,`Talking · no date yet`,"Plan","k","plan",quiet.id));
+  if(!out.length)return "";
+  return `<div class="moves"><div class="mv-h"><b>Your moves</b><span>${out.length} ${out.length===1?"thing":"things"}</span></div>${out.slice(0,4).join("")}</div>`;
+}
+
 function nudges(){
   const out=[];
   /* morning-after check-in comes first, then the text to her */

@@ -1010,3 +1010,22 @@ html[data-theme="dark"] .opt .oi:has(.i-cam),html[data-theme="dark"] .fact .fi:h
 .pstrip{padding:2px 0}
 .padd{flex:none;width:76px;height:96px;border-radius:14px;border:1.5px dashed var(--line);background:var(--s1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11.5px;font-weight:650;color:var(--mut)}
 .padd .ic{width:22px;height:22px;color:var(--fg)}
+
+/* Home: Your moves */
+.moves{margin:22px var(--pad) 0}
+.mv-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.mv-h b{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.mv-h span{font-size:13px;font-weight:700;color:var(--acc2)}
+.mv{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.mv:nth-child(2){border-top:0}
+.mv-who{position:relative;flex:none;border-radius:50%}
+.mv-who s{position:absolute;right:-1px;top:-1px;width:12px;height:12px;border-radius:50%;background:var(--acc);border:2px solid var(--bg)}
+.mv-t{flex:1;min-width:0;text-align:left;display:flex;flex-direction:column;gap:1px}
+.mv-t b{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mv-t span{font-size:13px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mv-b{flex:none;height:36px;padding:0 14px;border-radius:18px;font-size:13px;font-weight:700}
+.mv-b.p{background:var(--acc);color:#fff}
+.mv-b.k{background:var(--inv);color:var(--on-inv)}
+.mv-b.g{background:var(--s1);color:var(--fg)}
+.moves+.qrow{margin-top:18px}
+#tab.enter>.moves{animation:rise .55s var(--ease) both .18s}
