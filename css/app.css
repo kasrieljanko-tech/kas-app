@@ -1029,3 +1029,13 @@ html[data-theme="dark"] .opt .oi:has(.i-cam),html[data-theme="dark"] .fact .fi:h
 .mv-b.g{background:var(--s1);color:var(--fg)}
 .moves+.qrow{margin-top:18px}
 #tab.enter>.moves{animation:rise .55s var(--ease) both .18s}
+
+/* privacy mode: hide people's faces and names at a glance */
+.hb-r{display:flex;align-items:center;gap:8px}
+.incog-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--s1);color:var(--fg)}
+.incog-btn[aria-pressed="true"]{background:var(--inv);color:var(--on-inv)}
+.incog-btn .ic{width:20px;height:20px}
+html.incog .av,html.incog .pav,html.incog .prow .ph,html.incog .pstrip .ph,html.incog .whocard .ph,html.incog .plancard .ph,html.incog .pcard .ph{filter:blur(9px) saturate(.6)}
+html.incog .bd-big>span:first-child,html.incog .mv-t b,html.incog .prow b,html.incog .phead h1,html.incog .story .sn,
+html.incog .plancard b,html.incog .bigplan b,html.incog .summary .who b,html.incog .whocard b,html.incog .navbar .t,html.incog .pcard b{filter:blur(7px)}
+html.incog .av,html.incog .pav{transition:filter .25s}
