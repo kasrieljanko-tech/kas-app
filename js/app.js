@@ -537,7 +537,7 @@ PUSH.person=function(v){
   const p=S.people.find(x=>x.id===v.id);if(!p)return navbar("")+`<div class="empty"><b>Not found</b></div>`;
   const photos=personPhotos(p);const age=pAge(p);
   const sub=[p.city||p.region,p.whereMet].filter(Boolean).join(" · ");
-  const hero=`<div class="phead"><div class="top">${ph(photos[0]?imgSrc(photos[0]):"",p.name,"pav")}<div style="min-width:0"><h1>${esc(first(p.name))}${age?", "+age:""}</h1>${sub?`<p>${esc(sub)}</p>`:""}<button class="status-pill" data-a="pstatus" data-x="${esc(p.id)}">${esc(p.status||"Talking")}${p.kind?" · "+esc(p.kind):""} ${ic("chev","xs")}</button></div></div>
+  const hero=`<div class="phead"><div class="top">${ph(photos[0]?imgSrc(photos[0]):"",p.name,"pav")}<div style="min-width:0"><h1>${esc(first(p.name))}${age?", "+age:""}</h1>${sub?`<p>${esc(sub)}</p>`:""}<button class="status-pill" data-a="pstatus" data-x="${esc(p.id)}">${esc(p.status||"Talking")}${p.kind?" · "+esc(p.kind):""} ${ic("chev","xs")}</button>${fmtPhone(p.contact)?`<a class="pphone" href="tel:+${digits(p)}">${esc(fmtPhone(p.contact))}</a>`:""}</div></div>
     <div class="pstrip">${photos.slice(1).map(id=>`<button class="press" data-a="pphoto" data-x="${esc(p.id)}|${esc(id)}" aria-label="Photo">${ph(imgSrc(id),p.name)}</button>`).join("")}<label class="padd press" for="ph-add-${esc(p.id)}">${ic("plus")}<span>Add photo</span></label><input type="file" id="ph-add-${esc(p.id)}" accept="image/*" hidden data-wire="pvphoto" data-x="${esc(p.id)}"></div></div>`;
   const dg=digits(p),ig=igHandle(p.instagram);
   const acts=`<div class="pacts">

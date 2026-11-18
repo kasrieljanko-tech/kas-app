@@ -1039,3 +1039,6 @@ html.incog .av,html.incog .pav,html.incog .prow .ph,html.incog .pstrip .ph,html.
 html.incog .bd-big>span:first-child,html.incog .mv-t b,html.incog .prow b,html.incog .phead h1,html.incog .story .sn,
 html.incog .plancard b,html.incog .bigplan b,html.incog .summary .who b,html.incog .whocard b,html.incog .navbar .t,html.incog .pcard b{filter:blur(7px)}
 html.incog .av,html.incog .pav{transition:filter .25s}
+
+.phead .pphone{display:block;margin-top:8px;font-size:15px;font-weight:600;color:var(--fg2);text-decoration:none;font-variant-numeric:tabular-nums}
+html,body{height:100%;min-height:100dvh}
