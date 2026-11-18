@@ -627,7 +627,7 @@ input[type=range]{accent-color:var(--acc)}
 .large-title{font-size:32px;font-weight:800;letter-spacing:-.04em}
 
 /* floating tab bar */
-.tabbar{left:12px;right:12px;bottom:calc(var(--sb) + 10px);height:var(--tab-h);padding:0 6px;border-radius:32px;border:1px solid var(--line);border-top:1px solid var(--line);
+.tabbar{left:12px;right:12px;bottom:max(8px,calc(var(--sb) - 18px));height:var(--tab-h);padding:0 6px;border-radius:32px;border:1px solid var(--line);border-top:1px solid var(--line);
   background:var(--float);box-shadow:var(--float-shadow);backdrop-filter:none;-webkit-backdrop-filter:none;align-items:center}
 .tabbar button{height:52px;margin:0 2px;border-radius:26px;justify-content:center;gap:2px;color:var(--mut);font-size:10px;font-weight:650;transition:background .25s var(--ease),color .25s var(--ease)}
 .tabbar button .ic{width:21px;height:21px;stroke-width:1.8}
